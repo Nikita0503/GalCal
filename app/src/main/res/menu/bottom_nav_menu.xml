@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+  <item
+    android:id="@+id/mothCalendarView"
+    android:enabled="true"
+    android:icon="@drawable/ic_month_tab"
+    android:title="Month_tab"
+    app:showAsAction="ifRoom" />
+  <item
+    android:id="@+id/weekFragment"
+    android:enabled="true"
+    android:icon="@drawable/ic_week_tab"
+    android:title="Week_tab"
+    app:showAsAction="ifRoom" />
+  <item
+    android:id="@+id/addEventFragment"
+    android:enabled="true"
+    android:icon="@drawable/ic_add_event_tab"
+    android:title="AddEvent"
+    app:showAsAction="ifRoom" />
+  <item
+    android:id="@+id/homeTabFragment"
+    android:enabled="true"
+    android:icon="@drawable/ic_home_tab"
+    android:title="Home"
+    app:showAsAction="ifRoom" />
+  <item
+    android:id="@+id/settingsFragment"
+
+    android:enabled="true"
+    android:icon="@drawable/ic_settings_tab"
+    android:title="Settings"
+    app:showAsAction="ifRoom" />
+
+</menu>
