@@ -9,4 +9,9 @@
     <string name="successful_registration">Registration successful</string>
     <string name="change_password">To change your password, go to your email</string>
     <string name="new_password_successful">Password has been changed successfully</string>
+    <string name="month">Month</string>
+    <string name="week">Week</string>
+    <string name="add_event">Add event</string>
+    <string name="home">Home</string>
+    <string name="settings">Settings</string>
 </resources>

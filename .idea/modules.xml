@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GalCal.iml" filepath="$PROJECT_DIR$/GalCal.iml" />
-      <module fileurl="file://C:\Users\Nikita\Desktop\GalCal\GalCal\GalCal.iml" filepath="C:\Users\Nikita\Desktop\GalCal\GalCal\GalCal.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\Nikita\Desktop\GalCal\GalCal\app\app.iml" filepath="C:\Users\Nikita\Desktop\GalCal\GalCal\app\app.iml" />
     </modules>
   </component>
 </project>

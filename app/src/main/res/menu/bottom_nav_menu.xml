@@ -5,25 +5,25 @@
     android:id="@+id/mothCalendarView"
     android:enabled="true"
     android:icon="@drawable/ic_month_tab"
-    android:title="Month_tab"
+    android:title="@string/month"
     app:showAsAction="ifRoom" />
   <item
     android:id="@+id/weekFragment"
     android:enabled="true"
     android:icon="@drawable/ic_week_tab"
-    android:title="Week_tab"
+    android:title="@string/week"
     app:showAsAction="ifRoom" />
   <item
     android:id="@+id/addEventFragment"
     android:enabled="true"
     android:icon="@drawable/ic_add_event_tab"
-    android:title="AddEvent"
+    android:title="@string/add_event"
     app:showAsAction="ifRoom" />
   <item
     android:id="@+id/homeTabFragment"
     android:enabled="true"
     android:icon="@drawable/ic_home_tab"
-    android:title="Home"
+    android:title="@string/settings"
     app:showAsAction="ifRoom" />
   <item
     android:id="@+id/settingsFragment"

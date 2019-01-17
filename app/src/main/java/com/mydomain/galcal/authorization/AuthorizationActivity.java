@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mydomain.galcal.BaseContract;
-import com.mydomain.galcal.calendar.CalendarActivity;
+import com.mydomain.galcal.MainActivity;
 import com.mydomain.galcal.R;
 import com.mydomain.galcal.registration.RegistrationActivity;
 
@@ -77,7 +77,7 @@ public class AuthorizationActivity extends AppCompatActivity implements BaseCont
     }
 
     public void openCalendarActivity(String token){
-        Intent intent = new Intent(getApplicationContext(), CalendarActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("token", token);
         startActivity(intent);
     }

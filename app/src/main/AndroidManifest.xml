@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".registration.RegistrationActivity" />
-        <activity android:name=".calendar.CalendarActivity" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".resetPassword.ResetPasswordActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
