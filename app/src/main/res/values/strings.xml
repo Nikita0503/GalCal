@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">GalCal</string>
+    <string name="required">Required</string>
+    <string name="passwords_error">Passwords are not the same</string>
+    <string name="email_error">email is not correct</string>
+    <string name="welcome">Welcome!</string>
+    <string name="authorization_error">Wrong login or password</string>
+    <string name="user_is_exist">User with this email address exists. Login or reset password</string>
+    <string name="successful_registration">Registration successful</string>
+    <string name="change_password">To change your password, go to your email</string>
+    <string name="new_password_successful">Password has been changed successfully</string>
+</resources>
