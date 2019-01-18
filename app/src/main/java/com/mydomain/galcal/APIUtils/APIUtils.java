@@ -3,6 +3,8 @@ package com.mydomain.galcal.APIUtils;
 import android.util.Log;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import com.mydomain.galcal.data.ChangeEmailData;
+import com.mydomain.galcal.data.ChangePasswordData;
 import com.mydomain.galcal.data.SendRestoreLinkData;
 import com.mydomain.galcal.data.SetNewPasswordData;
 import com.mydomain.galcal.data.UserData;
@@ -42,7 +44,19 @@ public class APIUtils {
     public Completable sendRequestForRestorePassword(String data, String password){
         Retrofit retrofit = getClient(BASE_URL);
         APIService apiService = retrofit.create(APIService.class);
-        return apiService.sendRequestToResetPassword(new SetNewPasswordData(data, password));
+        return apiService.sendRequestForResetPassword(new SetNewPasswordData(data, password));
+    }
+
+    public Completable sendRequestForChangePassword(String token, String password){
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        return apiService.sendRequestForChangePassword("Bearer " + token, new ChangePasswordData(password));
+    }
+
+    public Completable sendRequestForChangeEmail(String token, String email){
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        return apiService.sendRequestForChangeEmail("Bearer " + token, new ChangeEmailData(email));
     }
 
     public static Retrofit getClient(String baseUrl) {

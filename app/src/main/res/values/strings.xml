@@ -9,9 +9,14 @@
     <string name="successful_registration">Registration successful</string>
     <string name="change_password">To change your password, go to your email</string>
     <string name="new_password_successful">Password has been changed successfully</string>
+    <string name="new_email_successful">Email has been changed successfully</string>
     <string name="month">Month</string>
     <string name="week">Week</string>
     <string name="add_event">Add event</string>
     <string name="home">Home</string>
     <string name="settings">Settings</string>
+    <string name="change_password_dialog">Change password</string>
+    <string name="change_email_dialog">Change email</string>
+    <string name="send_email">Send email...</string>
+    <string name="dont_have_apps_for_email">There are no email clients installed</string>
 </resources>

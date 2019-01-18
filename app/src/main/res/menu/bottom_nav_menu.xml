@@ -23,11 +23,10 @@
     android:id="@+id/homeTabFragment"
     android:enabled="true"
     android:icon="@drawable/ic_home_tab"
-    android:title="@string/settings"
+    android:title="@string/home"
     app:showAsAction="ifRoom" />
   <item
     android:id="@+id/settingsFragment"
-
     android:enabled="true"
     android:icon="@drawable/ic_settings_tab"
     android:title="Settings"

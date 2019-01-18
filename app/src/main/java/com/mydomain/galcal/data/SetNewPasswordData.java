@@ -5,8 +5,8 @@ package com.mydomain.galcal.data;
  */
 
 public class SetNewPasswordData {
-    String data;
-    String password;
+    public String data;
+    public String password;
 
     public SetNewPasswordData(String data, String password) {
         this.data = data;

@@ -1,8 +1,10 @@
 package com.mydomain.galcal.authorization;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,10 +24,18 @@ public class AuthorizationActivity extends AppCompatActivity implements BaseCont
     private EditText mEditTextPassword;
     private Button mLoginButton;
     private Button mSingUpButton;
-
+    private SharedPreferences mPref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPref = getSharedPreferences("GalCal", MODE_PRIVATE);
+        String token = mPref.getString("token", "");
+        if(!token.equals("")){
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("token", token);
+            startActivity(intent);
+        }
+        Log.d("TAG", token);
         setContentView(R.layout.authorization_activity);
         mPresenter = new AuthorizationPresenter(this);
         mPresenter.onStart();
@@ -76,7 +86,10 @@ public class AuthorizationActivity extends AppCompatActivity implements BaseCont
         });
     }
 
-    public void openCalendarActivity(String token){
+    public void openMainActivity(String token){
+        SharedPreferences.Editor editor = mPref.edit();
+        editor.putString("token", token);
+        editor.commit();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("token", token);
         startActivity(intent);
