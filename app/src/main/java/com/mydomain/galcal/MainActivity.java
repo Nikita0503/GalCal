@@ -53,12 +53,14 @@ public class MainActivity extends AppCompatActivity {
                         mFragment = new AddEventFragment();
                         break;
                     case R.id.homeTabFragment:
-                        mFragment = new HomeFragment();
+                        HomeFragment fragmentHome = new HomeFragment();
+                        fragmentHome.setToken(mToken);
+                        mFragment = fragmentHome;
                         break;
                     case R.id.settingsFragment:
-                        SettingsFragment fragment = new SettingsFragment();
-                        fragment.setToken(mToken);
-                        mFragment = fragment;
+                        SettingsFragment fragmentSettings = new SettingsFragment();
+                        fragmentSettings.setToken(mToken);
+                        mFragment = fragmentSettings;
                         break;
                 }
                 final FragmentTransaction transaction = mFragmentManager.beginTransaction();

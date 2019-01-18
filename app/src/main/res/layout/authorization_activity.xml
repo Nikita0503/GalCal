@@ -47,6 +47,14 @@
         android:scaleType="centerCrop"
         android:src="@drawable/login4" />
 
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:src="@drawable/login5" />
+
   </ViewFlipper>
 
   <TextView
