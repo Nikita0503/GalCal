@@ -19,4 +19,6 @@
     <string name="change_email_dialog">Change email</string>
     <string name="send_email">Send email...</string>
     <string name="dont_have_apps_for_email">There are no email clients installed</string>
+    <string name="hello">Hi,</string>
+    <string name="dont_have_events">You have no events today</string>
 </resources>

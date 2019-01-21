@@ -30,9 +30,11 @@ public class AuthorizationActivity extends AppCompatActivity implements BaseCont
         super.onCreate(savedInstanceState);
         mPref = getSharedPreferences("GalCal", MODE_PRIVATE);
         String token = mPref.getString("token", "");
+        String userName = mPref.getString("userName", "");
         if(!token.equals("")){
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra("token", token);
+            intent.putExtra("userName", userName);
             startActivity(intent);
         }
         Log.d("TAG", token);
@@ -87,11 +89,14 @@ public class AuthorizationActivity extends AppCompatActivity implements BaseCont
     }
 
     public void openMainActivity(String token){
+        String userName = mEditTextEmail.getText().toString();
         SharedPreferences.Editor editor = mPref.edit();
         editor.putString("token", token);
+        editor.putString("userName", userName);
         editor.commit();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("token", token);
+        intent.putExtra("userName", userName);
         startActivity(intent);
     }
 

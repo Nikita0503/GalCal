@@ -3,12 +3,16 @@ package com.mydomain.galcal.APIUtils;
 import android.util.Log;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import com.mydomain.galcal.data.BackgroundImageInfo;
 import com.mydomain.galcal.data.ChangeEmailData;
 import com.mydomain.galcal.data.ChangePasswordData;
+import com.mydomain.galcal.data.DayEventData;
 import com.mydomain.galcal.data.SendRestoreLinkData;
 import com.mydomain.galcal.data.SetNewPasswordData;
 import com.mydomain.galcal.data.UserData;
 import com.mydomain.galcal.data.AuthorizationResponse;
+
+import java.util.ArrayList;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
@@ -58,6 +62,13 @@ public class APIUtils {
         APIService apiService = retrofit.create(APIService.class);
         return apiService.sendRequestForChangeEmail("Bearer " + token, new ChangeEmailData(email));
     }
+
+    public Single<ArrayList<DayEventData>> getTodayEventList(String token, String startTime, String endTime){
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        return apiService.getTodayEventList("Bearer " + token, startTime, endTime);
+    }
+
 
     public static Retrofit getClient(String baseUrl) {
         Retrofit retrofit = new Retrofit.Builder()
