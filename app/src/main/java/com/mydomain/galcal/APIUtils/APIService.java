@@ -1,5 +1,6 @@
 package com.mydomain.galcal.APIUtils;
 
+import com.mydomain.galcal.data.AddEventData;
 import com.mydomain.galcal.data.BackgroundImageInfo;
 import com.mydomain.galcal.data.ChangeEmailData;
 import com.mydomain.galcal.data.ChangePasswordData;
@@ -14,11 +15,15 @@ import java.util.ArrayList;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.HEAD;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -47,5 +52,15 @@ public interface APIService {
     @GET("event/")
     Single<ArrayList<DayEventData>> getTodayEventList(@Header("Authorization") String header, @Query("start_time") String startTime, @Query("end_time") String endTime);
 
+    @POST("event/")
+    Completable createNewEvent(@Header("Authorization") String header, @Body AddEventData data);
 
+    @DELETE("event/{id}/")
+    Completable deleteEvent(@Header("Authorization") String header, @Path("id") String id);
+
+    @PUT("event/{id}/")
+    Completable editEvent(@Header("Authorization") String header, @Path("id") String id, @Body AddEventData data);
+
+    @GET("background/")
+    Single<ArrayList<BackgroundImageInfo>> getBackgroundImageInfo(@Header("Authorization") String header, @Query("start_time") String startTime);
 }

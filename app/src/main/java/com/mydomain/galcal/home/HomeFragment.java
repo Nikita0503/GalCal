@@ -39,7 +39,7 @@ public class HomeFragment extends Fragment implements BaseContract.BaseView{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = new HomePresenter(this);
+        mPresenter = new HomePresenter(this, mToken);
         mPresenter.onStart();
     }
 

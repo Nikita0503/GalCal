@@ -3,6 +3,7 @@ package com.mydomain.galcal.APIUtils;
 import android.util.Log;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import com.mydomain.galcal.data.AddEventData;
 import com.mydomain.galcal.data.BackgroundImageInfo;
 import com.mydomain.galcal.data.ChangeEmailData;
 import com.mydomain.galcal.data.ChangePasswordData;
@@ -69,6 +70,29 @@ public class APIUtils {
         return apiService.getTodayEventList("Bearer " + token, startTime, endTime);
     }
 
+    public Completable createNewEvent(String token, AddEventData data){
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        return apiService.createNewEvent("Bearer " + token, data);
+    }
+
+    public Completable deleteEvent(String token, String id){
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        return apiService.deleteEvent("Bearer " + token, id);
+    }
+
+    public Completable editEvent(String token, String id, AddEventData data){ //не пашет null в remind_time
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        return apiService.editEvent("Bearer " + token, id, data);
+    }
+
+    public Single<ArrayList<BackgroundImageInfo>> getBackgroundImageInfo(String token, String startTime){
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        return apiService.getBackgroundImageInfo("Bearer " + token, startTime);
+    }
 
     public static Retrofit getClient(String baseUrl) {
         Retrofit retrofit = new Retrofit.Builder()

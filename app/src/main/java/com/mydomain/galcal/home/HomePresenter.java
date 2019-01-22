@@ -34,12 +34,14 @@ import okhttp3.ResponseBody;
 
 public class HomePresenter implements BaseContract.BasePresenter {
 
+    private String mToken;
     private HomeFragment mFragment;
     private CompositeDisposable mDisposables;
     private APIUtils mApiUtils;
 
-    public HomePresenter(HomeFragment fragment) {
+    public HomePresenter(HomeFragment fragment, String token) {
         mFragment = fragment;
+        mToken = token;
     }
 
     @Override
@@ -53,8 +55,8 @@ public class HomePresenter implements BaseContract.BasePresenter {
         String time = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
         String startTime = time + "T00:00";
         String endTime = time + "T23:59";
-        Log.d("TAG", startTime);
-        Log.d("TAG", endTime);
+        //Log.d("TAG", startTime);
+        //Log.d("TAG", endTime);
         Disposable fetchTodayEventList = mApiUtils.getTodayEventList(token, startTime, endTime)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -64,8 +66,6 @@ public class HomePresenter implements BaseContract.BasePresenter {
                         setEventsCount(data.size());
                         setDate();
                         createAdapter(data);
-                        Calendar c = Calendar.getInstance();
-                        System.out.println(c.get(Calendar.DAY_OF_WEEK));
                         for(int i = 0; i < data.size(); i++){
                             Log.d("TAG", data.get(i).title);
                         }
@@ -122,7 +122,7 @@ public class HomePresenter implements BaseContract.BasePresenter {
     }
 
     private void createAdapter(ArrayList<DayEventData> data){
-        HomeEventsListAdapter adapter = new HomeEventsListAdapter(data);
+        HomeEventsListAdapter adapter = new HomeEventsListAdapter(mToken, data, mFragment);
         mFragment.setAdapter(adapter);
     }
 

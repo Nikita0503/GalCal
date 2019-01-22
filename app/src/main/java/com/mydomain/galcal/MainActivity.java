@@ -27,6 +27,9 @@ import com.mydomain.galcal.settings.SettingsFragment;
 import com.mydomain.galcal.week.WeekFragment;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity implements BaseContract.BaseView {
 
     private String mToken;
@@ -36,7 +39,9 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     private Fragment mFragment;
     private FragmentManager mFragmentManager;
 
+    private AddEventFragment mAddEventFragment;
     private HomeFragment mHomeFragment;
+    private SettingsFragment mSettingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +55,17 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mBottomNavigation = (BottomNavigationView)findViewById(R.id.bottom_navigation);
         mFragmentManager = getSupportFragmentManager();
 
+        mAddEventFragment = new AddEventFragment();
+        mAddEventFragment.setToken(mToken);
+
         mHomeFragment = new HomeFragment();
         mHomeFragment.setToken(mToken);
         mHomeFragment.setUserName(mUserName);
 
-        final FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        mSettingsFragment = new SettingsFragment();
+        mSettingsFragment.setToken(mToken);
+
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
         transaction.replace(R.id.main_container, new CalendarFragment()).commit();
         mBottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -68,22 +79,26 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                         mFragment = new WeekFragment();
                         break;
                     case R.id.addEventFragment:
-                        mFragment = new AddEventFragment();
+                        mFragment = mAddEventFragment;
                         break;
                     case R.id.homeTabFragment:
                         mFragment = mHomeFragment;
                         break;
-                    case R.id.settingsFragment:
-                        SettingsFragment fragmentSettings = new SettingsFragment();
-                        fragmentSettings.setToken(mToken);
-                        mFragment = fragmentSettings;
+                    case R.id.settingsFragment:;
+                        mFragment = mSettingsFragment;
                         break;
                 }
-                final FragmentTransaction transaction = mFragmentManager.beginTransaction();
+                FragmentTransaction transaction = mFragmentManager.beginTransaction();
                 transaction.replace(R.id.main_container, mFragment).commit();
                 return true;
             }
         });
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T00:00:00Z'");
+        Calendar calendar = Calendar.getInstance();
+
+        String date = dateFormat.format(Calendar.getInstance().getTime());
+        Log.d("TAG", "now " + date);
+        mPresenter.fetchBackgroundImageInfo(mToken, date);
     }
 
 
