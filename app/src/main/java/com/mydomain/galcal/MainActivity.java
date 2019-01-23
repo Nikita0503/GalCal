@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     private Fragment mFragment;
     private FragmentManager mFragmentManager;
 
+    private CalendarFragment mCalendarFragment;
     private WeekFragment mWeekFragment;
     private AddEventFragment mAddEventFragment;
     private HomeFragment mHomeFragment;
@@ -60,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mUserName = intent.getStringExtra("userName");
         mBottomNavigation = (BottomNavigationView)findViewById(R.id.bottom_navigation);
         mFragmentManager = getSupportFragmentManager();
+
+        mCalendarFragment = new CalendarFragment();
 
         mWeekFragment = new WeekFragment();
         mWeekFragment.setToken(mToken);
@@ -82,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                 int id = item.getItemId();
                 switch (id){    // попробовать не пересоздавать фрагмент (new SomeFragment() -> SomeFragment())
                     case R.id.mothCalendarView:
-                        mFragment = new CalendarFragment();
+                        mFragment = mCalendarFragment;
                         break;
                     case R.id.weekFragment:
                         mFragment = mWeekFragment;
