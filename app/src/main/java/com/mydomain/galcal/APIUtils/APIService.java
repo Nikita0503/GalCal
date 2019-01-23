@@ -63,4 +63,6 @@ public interface APIService {
 
     @GET("background/")
     Single<ArrayList<BackgroundImageInfo>> getBackgroundImageInfo(@Header("Authorization") String header, @Query("start_time") String startTime);
+
+
 }

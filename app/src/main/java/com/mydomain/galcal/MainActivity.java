@@ -2,6 +2,7 @@ package com.mydomain.galcal;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mydomain.galcal.addEvent.AddEventFragment;
@@ -39,14 +41,18 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     private Fragment mFragment;
     private FragmentManager mFragmentManager;
 
+    private WeekFragment mWeekFragment;
     private AddEventFragment mAddEventFragment;
     private HomeFragment mHomeFragment;
     private SettingsFragment mSettingsFragment;
+
+    private ImageView mImageViewBackground;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mImageViewBackground = (ImageView) findViewById(R.id.imageViewBackground);
         mPresenter = new MainPresenter(this);
         mPresenter.onStart();
         Intent intent = getIntent();
@@ -54,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mUserName = intent.getStringExtra("userName");
         mBottomNavigation = (BottomNavigationView)findViewById(R.id.bottom_navigation);
         mFragmentManager = getSupportFragmentManager();
+
+        mWeekFragment = new WeekFragment();
+        mWeekFragment.setToken(mToken);
 
         mAddEventFragment = new AddEventFragment();
         mAddEventFragment.setToken(mToken);
@@ -76,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                         mFragment = new CalendarFragment();
                         break;
                     case R.id.weekFragment:
-                        mFragment = new WeekFragment();
+                        mFragment = mWeekFragment;
                         break;
                     case R.id.addEventFragment:
                         mFragment = mAddEventFragment;
@@ -94,14 +103,30 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
             }
         });
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T00:00:00Z'");
-        Calendar calendar = Calendar.getInstance();
 
         String date = dateFormat.format(Calendar.getInstance().getTime());
         Log.d("TAG", "now " + date);
         mPresenter.fetchBackgroundImageInfo(mToken, date);
     }
 
+    public void openHomeTab(){
+        mBottomNavigation.setSelectedItemId(R.id.homeTabFragment);
+    }
 
+    public void openWeekTab(){
+        mBottomNavigation.setSelectedItemId(R.id.weekFragment);
+    }
+
+    public void setBackgroundImage(String image){
+        Picasso.with(getApplicationContext()) //передаем контекст приложения
+                .load(image)
+                .fit()
+                .into(mImageViewBackground);
+    }
+
+    public void setBackgroundInfo(BackgroundImageInfo info){
+        mHomeFragment.setBackgroundImageInfo(info);
+    }
 
     @Override
     public void showMessage(String message) {

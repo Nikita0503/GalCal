@@ -94,6 +94,7 @@ public class APIUtils {
         return apiService.getBackgroundImageInfo("Bearer " + token, startTime);
     }
 
+
     public static Retrofit getClient(String baseUrl) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)

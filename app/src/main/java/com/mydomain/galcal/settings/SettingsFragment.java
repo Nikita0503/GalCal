@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.mydomain.galcal.BaseContract;
 import com.mydomain.galcal.R;
+import com.mydomain.galcal.authorization.AuthorizationActivity;
 
 /**
  * Created by Nikita on 17.01.2019.
@@ -96,6 +97,8 @@ public class SettingsFragment extends Fragment implements BaseContract.BaseView{
                 String savedText = pref.getString("token", "");
                 Log.d("TAG", savedText);
                 getActivity().finish();
+                Intent intent = new Intent(getContext(), AuthorizationActivity.class);
+                startActivity(intent);
             }
         });
         return view;

@@ -35,9 +35,11 @@ import okhttp3.ResponseBody;
 public class HomePresenter implements BaseContract.BasePresenter {
 
     private String mToken;
+    private String mDate;
     private HomeFragment mFragment;
     private CompositeDisposable mDisposables;
     private APIUtils mApiUtils;
+
 
     public HomePresenter(HomeFragment fragment, String token) {
         mFragment = fragment;
@@ -50,9 +52,18 @@ public class HomePresenter implements BaseContract.BasePresenter {
         mApiUtils = new APIUtils();
     }
 
+    public void setDate(String date){
+        mDate = date;
+    }
+
     public void fetchTodayEventList(String token){
         //String time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(Calendar.getInstance().getTime());
-        String time = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+        String time;
+        if(mDate==null) {
+            time = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+        }else{
+            time = mDate;
+        }
         String startTime = time + "T00:00";
         String endTime = time + "T23:59";
         //Log.d("TAG", startTime);
@@ -117,7 +128,17 @@ public class HomePresenter implements BaseContract.BasePresenter {
     }
 
     private void setDate(){
-        String date = new SimpleDateFormat("E, MMM d", Locale.ENGLISH).format(Calendar.getInstance().getTime());
+        String date = null;
+        if(mDate==null){
+            date = new SimpleDateFormat("E, MMM d", Locale.ENGLISH).format(Calendar.getInstance().getTime());
+        }else{
+            try {
+
+                date = new SimpleDateFormat("E, MMM d", Locale.ENGLISH).format(new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(mDate));
+            }catch (Exception c){
+
+            }
+        }
         mFragment.setDateToTextView(date);
     }
 

@@ -36,6 +36,7 @@ public class AuthorizationActivity extends AppCompatActivity implements BaseCont
             intent.putExtra("token", token);
             intent.putExtra("userName", userName);
             startActivity(intent);
+            finish();
         }
         Log.d("TAG", token);
         setContentView(R.layout.authorization_activity);
@@ -98,6 +99,7 @@ public class AuthorizationActivity extends AppCompatActivity implements BaseCont
         intent.putExtra("token", token);
         intent.putExtra("userName", userName);
         startActivity(intent);
+        finish();
     }
 
     @Override
