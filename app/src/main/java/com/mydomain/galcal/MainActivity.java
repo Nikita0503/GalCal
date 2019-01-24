@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mFragmentManager = getSupportFragmentManager();
 
         mCalendarFragment = new CalendarFragment();
+        mCalendarFragment.setToken(mToken);
 
         mWeekFragment = new WeekFragment();
         mWeekFragment.setToken(mToken);
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mSettingsFragment.setToken(mToken);
 
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.main_container, new CalendarFragment()).commit();
+        transaction.replace(R.id.main_container, mCalendarFragment).commit();
         mBottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

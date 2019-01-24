@@ -36,6 +36,12 @@ public class EditEventPresenter implements BaseContract.BasePresenter {
         mFragment = fragment;
     }
 
+    @Override
+    public void onStart() {
+        mDisposables = new CompositeDisposable();
+        mApiUtils = new APIUtils();
+    }
+
     public void deleteEvent(String token, DayEventData data){
         Disposable disposable = mApiUtils.deleteEvent(token, String.valueOf(data.id))
                 .subscribeOn(Schedulers.io())
@@ -100,11 +106,7 @@ public class EditEventPresenter implements BaseContract.BasePresenter {
         mDisposables.add(disposable);
     }
 
-    @Override
-    public void onStart() {
-        mDisposables = new CompositeDisposable();
-        mApiUtils = new APIUtils();
-    }
+
 
     @Override
     public void onStop() {

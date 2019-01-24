@@ -82,21 +82,25 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
         holder.textViewDate.setText(mList.get(position).date);
         if(mList.get(position).events.size()==0){
             holder.textViewEvent1.setText("No events");
+        }else {
+            if (mList.get(position).events.size() >= 1) {
+                holder.textViewEvent1.setText(mList.get(position).events.get(0).title);
+                if (mList.get(position).events.size() >= 2) {
+                    holder.textViewEvent2.setText(mList.get(position).events.get(1).title);
+                    if (mList.get(position).events.size() >= 3) {
+                        holder.textViewEvent3.setText(mList.get(position).events.get(2).title);
+                        if (mList.get(position).events.size() > 3) {
+                            holder.textViewShowAllEvents.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            }
         }
-        if(mList.get(position).events.size()>=1){
-            holder.textViewEvent1.setText(mList.get(position).events.get(0).title);
-        }
-        if(mList.get(position).events.size()>=2){
-            holder.textViewEvent2.setText(mList.get(position).events.get(1).title);
-        }
-        if(mList.get(position).events.size()>=3){
-            holder.textViewEvent3.setText(mList.get(position).events.get(2).title);
-        }
-        if(mList.get(position).events.size()>3){
-            holder.textViewShowAllEvents.setVisibility(View.VISIBLE);
-        }
+
+
+
         Log.d("Queue", "= " + position);
-        if(position==mList.size()-15) {
+        if(position==mList.size()-14) {
             mFragment.fetchNewEvents();
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
