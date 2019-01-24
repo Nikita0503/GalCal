@@ -256,7 +256,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                 location = mEditTextLocation.getText().toString();
 
                 AddEventData data = new AddEventData(title, "personal", allDay, finalDateStart, finalDateEnd, location, notes, remindTime);
-                mPresenter.sendNewEventData(mToken, data);
+                mPresenter.sendNewEventData(mToken, data, remindTime);
             }
         });
         return view;

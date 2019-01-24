@@ -1,9 +1,17 @@
 package com.mydomain.galcal.addEvent;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.util.Log;
+
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 import com.mydomain.galcal.APIUtils.APIUtils;
 import com.mydomain.galcal.BaseContract;
 import com.mydomain.galcal.MainActivity;
+import com.mydomain.galcal.TimeNotification;
 import com.mydomain.galcal.data.AddEventData;
 import com.mydomain.galcal.home.HomeFragment;
 
@@ -44,7 +52,7 @@ public class AddEventPresenter implements BaseContract.BasePresenter {
         mApiUtils = new APIUtils();
     }
 
-    public void sendNewEventData(String token, final AddEventData data){
+    public void sendNewEventData(String token, final AddEventData data, final String reminder){
         Disposable newEvent = mApiUtils.createNewEvent(token, data)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -64,7 +72,26 @@ public class AddEventPresenter implements BaseContract.BasePresenter {
                                 activity.updateHomeTab();
                                 activity.firstCreating = true;
                                 activity.fetchEventsForYear();
-
+                                if(reminder != null) {
+                                    SharedPreferences pref = mFragment.getActivity().getSharedPreferences("GalCal", mFragment.getActivity().MODE_PRIVATE);
+                                    String userName = pref.getString("userName", "").split("@")[0];
+                                    AlarmManager am = (AlarmManager) mFragment.getActivity().getSystemService(Context.ALARM_SERVICE);
+                                    Intent intent = new Intent(mFragment.getContext(), TimeNotification.class);
+                                    intent.putExtra("userName", userName);
+                                    intent.putExtra("event", data.title);
+                                    PendingIntent pendingIntent = PendingIntent.getBroadcast(mFragment.getContext(), 0,
+                                            intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                                    am.cancel(pendingIntent);
+                                    Log.d("FINAL", "тюнсь");
+                                    Log.d("FINAL", data.startTime);
+                                    SimpleDateFormat timeStamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+                                    Date dateRemind = timeStamp.parse(data.startTime);
+                                    dateRemind.setTime(dateRemind.getTime() - 1800000);
+                                    Log.d("FINAL", timeStamp.format(dateRemind));
+                                    am.set(AlarmManager.RTC_WAKEUP, dateRemind.getTime(), pendingIntent);
+                                }else{
+                                    Log.d("FINAL", "не тюнсь");
+                                }
                             }
                         }catch (Exception c){
                             c.printStackTrace();

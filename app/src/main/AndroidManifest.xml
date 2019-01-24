@@ -33,6 +33,7 @@
                     android:pathPrefix="/forgotpassword" />
             </intent-filter>
         </activity>
+        <receiver android:name=".TimeNotification" />
     </application>
 
 </manifest>

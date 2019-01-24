@@ -84,22 +84,19 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
         if(mList.get(position).events.size()==0){
             holder.textViewEvent1.setText("No events");
         }else {
-            if (mList.get(position).events.size() == 1) {
+            if (mList.get(position).events.size() >= 1) {
                 holder.textViewEvent1.setText(mList.get(position).events.get(0).title);
+
             }
-            if (mList.get(position).events.size() == 2) {
-                holder.textViewEvent1.setText(mList.get(position).events.get(0).title);
+            if (mList.get(position).events.size() >= 2) {
                 holder.textViewEvent2.setText(mList.get(position).events.get(1).title);
+
             }
-            if (mList.get(position).events.size() == 3) {
-                holder.textViewEvent1.setText(mList.get(position).events.get(0).title);
-                holder.textViewEvent2.setText(mList.get(position).events.get(1).title);
+            if (mList.get(position).events.size() >= 3) {
                 holder.textViewEvent3.setText(mList.get(position).events.get(2).title);
+
             }
             if (mList.get(position).events.size() > 3) {
-                holder.textViewEvent1.setText(mList.get(position).events.get(0).title);
-                holder.textViewEvent2.setText(mList.get(position).events.get(1).title);
-                holder.textViewEvent3.setText(mList.get(position).events.get(2).title);
                 holder.textViewShowAllEvents.setVisibility(View.VISIBLE);
             }
         }

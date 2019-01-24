@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="88dp">
+    android:layout_height="wrap_content">
 
   <TextView
       android:id="@+id/date"
@@ -25,25 +25,21 @@ JUN" />
       android:id="@+id/event1_title"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="8dp"
       android:layout_marginEnd="8dp"
       android:layout_marginStart="20dp"
       android:layout_marginTop="8dp"
       android:ellipsize="end"
+      android:maxLines="3"
       android:textColor="@color/colorWhite"
-
       android:textSize="12sp"
-      app:layout_constraintBottom_toBottomOf="@+id/date"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toEndOf="@+id/date"
       app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintVertical_bias="0.0"
       tools:text="12:00pm: Meeting with boss" />
 
   <TextView
       android:id="@+id/see_all_events"
-      android:visibility="invisible"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginBottom="8dp"
@@ -52,42 +48,11 @@ JUN" />
       android:text="See all events &gt;"
       android:textColor="@color/colorPrimaryDark"
       android:textSize="12sp"
+      android:visibility="invisible"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.965"
-      app:layout_constraintStart_toStartOf="@+id/imageView3"
-      app:layout_constraintTop_toBottomOf="@+id/event2"
-      app:layout_constraintVertical_bias="0.562" />
-
-  <TextView
-      android:id="@+id/event2"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="8dp"
-      android:layout_marginTop="8dp"
-      android:ellipsize="end"
-      android:textColor="@color/colorWhite"
-      android:textSize="12sp"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.0"
-      app:layout_constraintStart_toStartOf="@+id/event1_title"
-      app:layout_constraintTop_toBottomOf="@+id/event1_title"
-      tools:text="12:00pm: Meeting with boss" />
-
-  <TextView
-      android:id="@+id/event3"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
-      android:ellipsize="end"
-      android:textColor="@color/colorWhite"
-      android:textSize="12sp"
-      app:layout_constraintBottom_toBottomOf="@+id/see_all_events"
-      app:layout_constraintEnd_toStartOf="@+id/see_all_events"
-      app:layout_constraintHorizontal_bias="0.0"
-      app:layout_constraintStart_toStartOf="@+id/event2"
-      app:layout_constraintTop_toBottomOf="@+id/event2"
-      tools:text="12:00pm: Meeting with boss" />
+      app:layout_constraintStart_toStartOf="@+id/imageView3" />
 
 
   <ImageView
