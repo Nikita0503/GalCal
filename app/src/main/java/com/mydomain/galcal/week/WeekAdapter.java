@@ -80,29 +80,36 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.textViewDate.setText(mList.get(position).date);
+        Log.d("TAG5", "Pos: "+position+", "+mList.get(position).events.size());
         if(mList.get(position).events.size()==0){
             holder.textViewEvent1.setText("No events");
         }else {
-            if (mList.get(position).events.size() >= 1) {
+            if (mList.get(position).events.size() == 1) {
                 holder.textViewEvent1.setText(mList.get(position).events.get(0).title);
-                if (mList.get(position).events.size() >= 2) {
-                    holder.textViewEvent2.setText(mList.get(position).events.get(1).title);
-                    if (mList.get(position).events.size() >= 3) {
-                        holder.textViewEvent3.setText(mList.get(position).events.get(2).title);
-                        if (mList.get(position).events.size() > 3) {
-                            holder.textViewShowAllEvents.setVisibility(View.VISIBLE);
-                        }
-                    }
-                }
+            }
+            if (mList.get(position).events.size() == 2) {
+                holder.textViewEvent1.setText(mList.get(position).events.get(0).title);
+                holder.textViewEvent2.setText(mList.get(position).events.get(1).title);
+            }
+            if (mList.get(position).events.size() == 3) {
+                holder.textViewEvent1.setText(mList.get(position).events.get(0).title);
+                holder.textViewEvent2.setText(mList.get(position).events.get(1).title);
+                holder.textViewEvent3.setText(mList.get(position).events.get(2).title);
+            }
+            if (mList.get(position).events.size() > 3) {
+                holder.textViewEvent1.setText(mList.get(position).events.get(0).title);
+                holder.textViewEvent2.setText(mList.get(position).events.get(1).title);
+                holder.textViewEvent3.setText(mList.get(position).events.get(2).title);
+                holder.textViewShowAllEvents.setVisibility(View.VISIBLE);
             }
         }
 
 
 
         Log.d("Queue", "= " + position);
-        if(position==mList.size()-14) {
+        /*if(position==mList.size()-14) {
             mFragment.fetchNewEvents();
-        }
+        }*/
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,9 +120,9 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
         });
     }
 
-    public void addEvents(ArrayList<DayOfWeekEventData> list, ArrayList<DayEventData> events){
+    public void addEvents(ArrayList<DayOfWeekEventData> list){
         mList.addAll(list);
-        mEvents.addAll(events);
+        //mEvents.addAll(events);
         notifyDataSetChanged();
         //Log.d("TAG3", mToken);
         /*final ArrayList<String> dates = new ArrayList<String>();

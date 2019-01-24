@@ -34,6 +34,7 @@ import java.util.Locale;
 public class WeekFragment extends Fragment implements BaseContract.BaseView{
 
     private String mToken;
+    private ArrayList<DayEventData> mEvents;
     private WeekPresenter mPresenter;
     private RecyclerView mRecyclerView;
     private WeekAdapter mAdapter;
@@ -51,7 +52,7 @@ public class WeekFragment extends Fragment implements BaseContract.BaseView{
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new WeekAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
-        mPresenter.setToken(mToken);
+        //mPresenter.setToken(mToken);
         Log.d("TAG", "onCreateView");
         fetchNewEvents();
         //Log.d("TAG3", mToken);
@@ -64,12 +65,17 @@ public class WeekFragment extends Fragment implements BaseContract.BaseView{
         //Log.d("TAG3", mToken);
     }
 
-    public void fetchNewEvents(){
-        mPresenter.fetchEventsByDates();
+    public void setEvents(ArrayList<DayEventData> events){
+        mEvents = events;
     }
 
-    public void addNewEvents(ArrayList<DayOfWeekEventData> eventData, ArrayList<DayEventData> events){
-        mAdapter.addEvents(eventData, events);
+    public void fetchNewEvents(){
+        mPresenter.fetchEventsByDates(mEvents);
+    }
+
+    public void addNewEvents(ArrayList<DayOfWeekEventData> events){
+        mAdapter.addEvents(events);
+
     }
 
     public void openHomeTab(String dateStr){

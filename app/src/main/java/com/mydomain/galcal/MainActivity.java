@@ -24,18 +24,22 @@ import android.widget.Toast;
 import com.mydomain.galcal.addEvent.AddEventFragment;
 import com.mydomain.galcal.calendar.CalendarFragment;
 import com.mydomain.galcal.data.BackgroundImageInfo;
+import com.mydomain.galcal.data.DayEventData;
 import com.mydomain.galcal.home.HomeFragment;
 import com.mydomain.galcal.settings.SettingsFragment;
 import com.mydomain.galcal.week.WeekFragment;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements BaseContract.BaseView {
 
+    public boolean firstCreating;
     private String mToken;
     private String mUserName;
+    private ArrayList<DayEventData> mEvents;
     private MainPresenter mPresenter;
     private BottomNavigationView mBottomNavigation;
     private Fragment mFragment;
@@ -53,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        firstCreating = true;
         mImageViewBackground = (ImageView) findViewById(R.id.imageViewBackground);
         mPresenter = new MainPresenter(this);
         mPresenter.onStart();
@@ -60,10 +65,11 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mToken = intent.getStringExtra("token");
         mUserName = intent.getStringExtra("userName");
         mBottomNavigation = (BottomNavigationView)findViewById(R.id.bottom_navigation);
+        mBottomNavigation.setClickable(false);
         mFragmentManager = getSupportFragmentManager();
 
         mCalendarFragment = new CalendarFragment();
-        mCalendarFragment.setToken(mToken);
+        //mCalendarFragment.setToken(mToken);
 
         mWeekFragment = new WeekFragment();
         mWeekFragment.setToken(mToken);
@@ -78,17 +84,19 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mSettingsFragment = new SettingsFragment();
         mSettingsFragment.setToken(mToken);
 
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.main_container, mCalendarFragment).commit();
+        //FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        //transaction.replace(R.id.main_container, mCalendarFragment).commit();
         mBottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 switch (id){    // попробовать не пересоздавать фрагмент (new SomeFragment() -> SomeFragment())
                     case R.id.mothCalendarView:
+                        mCalendarFragment.setEvents(mEvents);
                         mFragment = mCalendarFragment;
                         break;
                     case R.id.weekFragment:
+                        mWeekFragment.setEvents(mEvents);
                         mFragment = mWeekFragment;
                         break;
                     case R.id.addEventFragment:
@@ -111,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         String date = dateFormat.format(Calendar.getInstance().getTime());
         Log.d("TAG", "now " + date);
         mPresenter.fetchBackgroundImageInfo(mToken, date);
+        fetchEventsForYear();
     }
 
     public void openHomeTab(){
@@ -121,11 +130,31 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mBottomNavigation.setSelectedItemId(R.id.weekFragment);
     }
 
+
     public void setBackgroundImage(String image){
         Picasso.with(getApplicationContext()) //передаем контекст приложения
                 .load(image)
                 .fit()
                 .into(mImageViewBackground);
+    }
+
+    public void fetchEventsForYear(){
+        mPresenter.fetchEventsForYear(mToken);
+    }
+
+    public void setEventsForYear(ArrayList<DayEventData> events){
+        mEvents = events;
+        mCalendarFragment.setEvents(mEvents);
+        mWeekFragment.setEvents(mEvents);
+        if(firstCreating) {
+            mBottomNavigation.setSelectedItemId(R.id.mothCalendarView);
+            firstCreating = false;
+            mBottomNavigation.setClickable(true);
+        }
+    }
+
+    public void updateHomeTab(){
+        mHomeFragment.homeTabData = null;
     }
 
     public void setBackgroundInfo(BackgroundImageInfo info){

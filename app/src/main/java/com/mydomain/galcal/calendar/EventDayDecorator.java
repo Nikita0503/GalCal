@@ -39,11 +39,11 @@ public class EventDayDecorator implements DayViewDecorator {
             String currentDate = year+"-"+month+"-"+day;
             SimpleDateFormat oldDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
             SimpleDateFormat newDateFormat = new SimpleDateFormat("yyyy-M-d", Locale.ENGLISH);
-            Date date;
+            Date dateStart;
             String dateStr;
             for (int i = 0; i < mEvents.size(); i++) {
-                date = oldDateFormat.parse(mEvents.get(i).startTime);
-                dateStr = newDateFormat.format(date);
+                dateStart = oldDateFormat.parse(mEvents.get(i).startTime);
+                dateStr = newDateFormat.format(dateStart);
                 if(currentDate.equals(dateStr)){
                     if(mEvents.get(i).isHoliday) {
                         return false;

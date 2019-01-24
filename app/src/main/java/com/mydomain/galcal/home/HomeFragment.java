@@ -20,6 +20,7 @@ import com.mydomain.galcal.BaseContract;
 import com.mydomain.galcal.MainActivity;
 import com.mydomain.galcal.R;
 import com.mydomain.galcal.data.BackgroundImageInfo;
+import com.mydomain.galcal.data.HomeTabData;
 import com.mydomain.galcal.settings.SettingsPresenter;
 
 import java.text.SimpleDateFormat;
@@ -32,6 +33,7 @@ import java.util.Date;
 
 public class HomeFragment extends Fragment implements BaseContract.BaseView{
 
+    public HomeTabData homeTabData;
     private String mToken;
     private String mUserName;
     private String mDate;
@@ -92,9 +94,16 @@ public class HomeFragment extends Fragment implements BaseContract.BaseView{
             mPresenter.setDate(mDate);
             Log.d("TAGS", mDate);
         }
-
-        mPresenter.fetchTodayEventList(mToken);
-
+        if(homeTabData==null) {
+            mPresenter.fetchTodayEventList(mToken);
+            homeTabData = new HomeTabData();
+        }else{
+            mTextViewEventsCount.setVisibility(View.VISIBLE);
+            mTextViewEventsCount.setText(homeTabData.answer);
+            mTextViewDate.setText(homeTabData.date);
+            mRecyclerView.setAdapter(homeTabData.adapter);
+            Log.d("TAG2", homeTabData.answer.toString());
+        }
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(Calendar.getInstance().getTime());
         Log.d("TAG", timeStamp.toString()); //работает
         return view;
@@ -116,14 +125,21 @@ public class HomeFragment extends Fragment implements BaseContract.BaseView{
     public void setEventsCountTodayToTextView(SpannableString text){
         mTextViewEventsCount.setVisibility(View.VISIBLE);
         mTextViewEventsCount.setText(text);
+        homeTabData.answer = text;
+        Log.d("TAG", homeTabData.answer.toString());
     }
 
     public void setDateToTextView(String date){
         mTextViewDate.setText(date);
+        homeTabData.date = date;
+        Log.d("TAG", homeTabData.date);
     }
 
     public void setAdapter(HomeEventsListAdapter adapter){
         mRecyclerView.setAdapter(adapter);
+        homeTabData.adapter = adapter;
+        Log.d("TAG", "adapter");
+
     }
 
     public void setBackgroundImageInfo(BackgroundImageInfo imageInfo){

@@ -3,6 +3,7 @@ package com.mydomain.galcal.addEvent;
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 import com.mydomain.galcal.APIUtils.APIUtils;
 import com.mydomain.galcal.BaseContract;
+import com.mydomain.galcal.MainActivity;
 import com.mydomain.galcal.data.AddEventData;
 import com.mydomain.galcal.home.HomeFragment;
 
@@ -11,6 +12,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -39,14 +44,31 @@ public class AddEventPresenter implements BaseContract.BasePresenter {
         mApiUtils = new APIUtils();
     }
 
-    public void sendNewEventData(String token, AddEventData data){
+    public void sendNewEventData(String token, final AddEventData data){
         Disposable newEvent = mApiUtils.createNewEvent(token, data)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
+
                         mFragment.showMessage("Event created successfully");
+                        MainActivity activity = (MainActivity) mFragment.getActivity();
+                        activity.fetchEventsForYear();
+                        try {
+                            SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+                            SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-M-d", Locale.ENGLISH);
+                            Date date = Calendar.getInstance().getTime();
+                            Date date1 = oldFormat.parse(data.startTime);
+                            if(newFormat.format(date).equals(newFormat.format(date1))) {
+                                activity.updateHomeTab();
+                                activity.firstCreating = true;
+                                activity.fetchEventsForYear();
+
+                            }
+                        }catch (Exception c){
+                            c.printStackTrace();
+                        }
                     }
 
                     @Override

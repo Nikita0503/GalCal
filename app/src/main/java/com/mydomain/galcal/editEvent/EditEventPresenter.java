@@ -6,6 +6,7 @@ import android.view.View;
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 import com.mydomain.galcal.APIUtils.APIUtils;
 import com.mydomain.galcal.BaseContract;
+import com.mydomain.galcal.MainActivity;
 import com.mydomain.galcal.data.AddEventData;
 import com.mydomain.galcal.data.DayEventData;
 
@@ -14,6 +15,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -42,7 +47,7 @@ public class EditEventPresenter implements BaseContract.BasePresenter {
         mApiUtils = new APIUtils();
     }
 
-    public void deleteEvent(String token, DayEventData data){
+    public void deleteEvent(String token, final DayEventData data){
         Disposable disposable = mApiUtils.deleteEvent(token, String.valueOf(data.id))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -51,6 +56,19 @@ public class EditEventPresenter implements BaseContract.BasePresenter {
                     public void onComplete() {
                         mFragment.showMessage("Event deleted successfully");
                         mFragment.getFragmentManager().popBackStack();
+                        MainActivity activity = (MainActivity) mFragment.getActivity();
+                        activity.fetchEventsForYear();
+                        try {
+                            SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+                            SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-M-d", Locale.ENGLISH);
+                            Date date = Calendar.getInstance().getTime();
+                            Date date1 = oldFormat.parse(data.startTime);
+                            if(newFormat.format(date).equals(newFormat.format(date1))) {
+                                activity.updateHomeTab();
+                            }
+                        }catch (Exception c){
+                            c.printStackTrace();
+                        }
                     }
 
                     @Override
@@ -83,6 +101,8 @@ public class EditEventPresenter implements BaseContract.BasePresenter {
                     public void onComplete() {
                         mFragment.showMessage("Event edited successfully");
                         mFragment.getFragmentManager().popBackStack();
+                        MainActivity mainActivity = (MainActivity) mFragment.getActivity();
+                        mainActivity.fetchEventsForYear();
                     }
 
                     @Override

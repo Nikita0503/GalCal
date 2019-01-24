@@ -31,8 +31,8 @@ import java.util.Locale;
 
 public class CalendarFragment extends Fragment implements BaseContract.BaseView {
 
-    private String mToken;
-    private CalendarPresenter mPresenter;
+    //private String mToken;
+    //private CalendarPresenter mPresenter;
     private ArrayList<DayEventData> mList;
     private CalendarAdapter mAdapter;
     private TextView mTextView;
@@ -42,9 +42,10 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = new CalendarPresenter(this);
-        mPresenter.onStart();
+        //mPresenter = new CalendarPresenter(this);
+        //mPresenter.onStart();
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,30 +85,31 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
                 }
             }
         });
+        EventDayDecorator dayDecorator = new EventDayDecorator(getContext(), mList);
+        HolidayDecorator holidayDecorator = new HolidayDecorator(getContext(), mList);
+        mCalendarView.addDecorator(dayDecorator);
+        mCalendarView.addDecorator(holidayDecorator);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewCalendar);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new CalendarAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
-        mPresenter.setToken(mToken);
+        //mPresenter.setToken(mToken);
         Log.d("TAG", "onCreateView");
-        mPresenter.fetchEvents();
+        //mPresenter.fetchEvents();
         return view;
     }
 
 
     public void setEvents(ArrayList<DayEventData> list){
         mList = list;
-        EventDayDecorator dayDecorator = new EventDayDecorator(getContext(), list);
-        HolidayDecorator holidayDecorator = new HolidayDecorator(getContext(), list);
-        mCalendarView.addDecorator(dayDecorator);
-        mCalendarView.addDecorator(holidayDecorator);
+
     }
 
-    public void setToken(String token){
+    /*public void setToken(String token){
         mToken = token;
         Log.d("TAG", "setToken()");
         //Log.d("TAG3", mToken);
-    }
+    }*/
 
     @Override
     public void showMessage(String message) {
@@ -117,6 +119,6 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
     @Override
     public void onDestroy(){
         super.onDestroy();
-        mPresenter.onStop();
+        //mPresenter.onStop();
     }
 }

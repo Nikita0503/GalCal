@@ -55,6 +55,56 @@ public class WeekPresenter implements BaseContract.BasePresenter {
         mToken = token;
     }
 
+    public void fetchEventsByDates(ArrayList<DayEventData> data){
+        final ArrayList<String> dates = new ArrayList<String>();
+        final SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd");
+        final SimpleDateFormat newFormant = new SimpleDateFormat("E'\n'd'\n'MMM", Locale.ENGLISH);
+        int month = mLastDate.getActualMaximum(Calendar.DAY_OF_MONTH);
+        for (int i = 0; i < month; i++) {
+            Date date = mLastDate.getTime();
+            dates.add(oldFormat.format(date));
+            //String day = newFormant.format(date);
+            //mList.add(new DayOfWeekEventData(day, new ArrayList<DayEventData>()));
+            date.setTime(date.getTime() + 86400000);
+            mLastDate.setTime(date);
+        }
+        ArrayList<DayOfWeekEventData> list = new ArrayList<DayOfWeekEventData>();
+        try {
+            for(int i = 0; i < dates.size(); i++){
+                ArrayList<DayEventData> events = new ArrayList<DayEventData>();
+                for(int j = 0; j < data.size(); j++){
+                    Date date1 = oldFormat.parse(dates.get(i));
+                    Date date2 = oldFormat.parse(data.get(j).startTime);
+                    if(oldFormat.format(date1).equals(oldFormat.format(date2))){
+                        events.add(data.get(j));
+                    }
+                }
+                Date date1 = oldFormat.parse(dates.get(i));
+                list.add(new DayOfWeekEventData(newFormant.format(date1),events));
+                Log.d("TAG",newFormant.format(date1));
+
+            }
+            mFragment.addNewEvents(list);
+                            /*SimpleDateFormat apiFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                            ArrayList<DayOfWeekEventData> list = new ArrayList<DayOfWeekEventData>();
+                            for (int i = 0; i < data.size(); i++) {
+                                Date date = apiFormat.parse(data.get(i).startTime);
+                                list.add(new DayOfWeekEventData(newFormant.format(date), data));
+                            }*/
+
+
+
+            //mFragment.addNewEvents(list);
+            /*for (int i = 0; i < data.size(); i++) {
+                Log.d("TAG", data.get(i).title);
+            }*/
+        }catch (Exception c){
+            c.printStackTrace();
+        }
+
+
+    }
+
     public void fetchEventsByDates(){
         final ArrayList<String> dates = new ArrayList<String>();
         final SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -92,7 +142,7 @@ public class WeekPresenter implements BaseContract.BasePresenter {
                                 Log.d("TAG",newFormant.format(date1));
 
                             }
-                            mFragment.addNewEvents(list, data);
+                            mFragment.addNewEvents(list);
                             /*SimpleDateFormat apiFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
                             ArrayList<DayOfWeekEventData> list = new ArrayList<DayOfWeekEventData>();
                             for (int i = 0; i < data.size(); i++) {

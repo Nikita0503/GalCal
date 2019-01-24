@@ -136,7 +136,7 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                 mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        Toast.makeText(getContext(), selectedHour+":"+selectedMinute, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), selectedHour+":"+selectedMinute, Toast.LENGTH_SHORT).show();
                         mTextViewStartTime.setText(selectedHour+":"+selectedMinute);
                     }
                 }, hour, minute, true);//Yes 24 hour time
@@ -155,7 +155,7 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                 timePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        Toast.makeText(getContext(), selectedHour+":"+selectedMinute, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), selectedHour+":"+selectedMinute, Toast.LENGTH_SHORT).show();
                         mTextViewEndTime.setText(selectedHour+":"+selectedMinute);
                     }
                 }, hour, minute, true);//Yes 24 hour time
@@ -179,7 +179,7 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                         calendar.set(year, month, day);
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
                         String date = dateFormat.format(calendar.getTime());
-                        Toast.makeText(getContext(), date, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), date, Toast.LENGTH_SHORT).show();
                         mTextViewStartDate.setText(date);
                     }
                 }, year, month, day);
@@ -203,7 +203,7 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                         calendar.set(year, month, day);
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
                         String date = dateFormat.format(calendar.getTime());
-                        Toast.makeText(getContext(), date, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), date, Toast.LENGTH_SHORT).show();
                         mTextViewEndDate.setText(date);
                     }
                 }, year, month, day);
