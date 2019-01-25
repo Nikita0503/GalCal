@@ -11,11 +11,14 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.Circle;
 import com.mydomain.galcal.BaseContract;
 import com.mydomain.galcal.R;
 import com.mydomain.galcal.data.AddEventData;
@@ -45,6 +48,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
     private EditText mEditTextNotes;
     private Switch mSwitchAllDay;
     private Switch mSwitchReminder;
+    private ProgressBar mProgressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,9 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         mEditTextNotes = (EditText) view.findViewById(R.id.notes_ed);
         mSwitchAllDay = (Switch) view.findViewById(R.id.all_day_switch);
         mSwitchReminder = (Switch) view.findViewById(R.id.reminder_switch);
+        mProgressBar = (ProgressBar)view.findViewById(R.id.spin_kit);
+        Sprite doubleBounce = new Circle();
+        mProgressBar.setIndeterminateDrawable(doubleBounce);
         mTextViewStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -257,6 +264,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
 
                 AddEventData data = new AddEventData(title, "personal", allDay, finalDateStart, finalDateEnd, location, notes, remindTime);
                 mPresenter.sendNewEventData(mToken, data, remindTime);
+                mProgressBar.setVisibility(View.VISIBLE);
             }
         });
         return view;
@@ -269,6 +277,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
     @Override
     public void showMessage(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        mProgressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override

@@ -13,9 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.Circle;
 import com.mydomain.galcal.BaseContract;
 import com.mydomain.galcal.MainActivity;
 import com.mydomain.galcal.R;
@@ -33,6 +36,7 @@ import java.util.Date;
 
 public class HomeFragment extends Fragment implements BaseContract.BaseView{
 
+    public boolean can;
     public HomeTabData homeTabData;
     private String mToken;
     private String mUserName;
@@ -44,7 +48,7 @@ public class HomeFragment extends Fragment implements BaseContract.BaseView{
     private TextView mTextViewDate;
     private ImageView mImageView;
     private RecyclerView mRecyclerView;
-
+    private ProgressBar mProgressBar;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +59,9 @@ public class HomeFragment extends Fragment implements BaseContract.BaseView{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.home_fragment, container, false);
-
+        mProgressBar = (ProgressBar)view.findViewById(R.id.spin_kit);
+        Sprite doubleBounce = new Circle();
+        mProgressBar.setIndeterminateDrawable(doubleBounce);
         mTextViewUserName = (TextView) view.findViewById(R.id.name);
         if(mUserName==null){
             SharedPreferences pref = getActivity().getSharedPreferences("GalCal", getActivity().MODE_PRIVATE);
@@ -94,9 +100,10 @@ public class HomeFragment extends Fragment implements BaseContract.BaseView{
             mPresenter.setDate(mDate);
             Log.d("TAGS", mDate);
         }
-        if(homeTabData==null) {
+        if(!can) {
             mPresenter.fetchTodayEventList(mToken);
             homeTabData = new HomeTabData();
+            mProgressBar.setVisibility(View.VISIBLE);
         }else{
             mTextViewEventsCount.setVisibility(View.VISIBLE);
             mTextViewEventsCount.setText(homeTabData.answer);
@@ -127,6 +134,7 @@ public class HomeFragment extends Fragment implements BaseContract.BaseView{
         mTextViewEventsCount.setText(text);
         homeTabData.answer = text;
         Log.d("TAG", homeTabData.answer.toString());
+        mProgressBar.setVisibility(View.INVISIBLE);
     }
 
     public void setDateToTextView(String date){
@@ -139,7 +147,7 @@ public class HomeFragment extends Fragment implements BaseContract.BaseView{
         mRecyclerView.setAdapter(adapter);
         homeTabData.adapter = adapter;
         Log.d("TAG", "adapter");
-
+        can = true;
     }
 
     public void setBackgroundImageInfo(BackgroundImageInfo imageInfo){
@@ -165,9 +173,13 @@ public class HomeFragment extends Fragment implements BaseContract.BaseView{
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                        getFragmentManager().popBackStack();
-                        MainActivity mainActivity = (MainActivity) getActivity();
-                        mainActivity.openWeekTab();
+                        try {
+                            getFragmentManager().popBackStack();
+                            MainActivity mainActivity = (MainActivity) getActivity();
+                            mainActivity.openWeekTab();
+                        }catch (Exception c){
+                            c.printStackTrace();
+                        }
                         return true;
                     }
                     return false;

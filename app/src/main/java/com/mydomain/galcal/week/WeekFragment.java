@@ -98,7 +98,7 @@ public class WeekFragment extends Fragment implements BaseContract.BaseView{
             FragmentManager manager = getActivity().getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.main_container, homeFragment);
-            transaction.addToBackStack(null);
+            //0transaction.addToBackStack(null);
             transaction.commit();
         }catch (Exception c){
             c.printStackTrace();

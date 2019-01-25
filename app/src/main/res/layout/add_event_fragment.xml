@@ -6,7 +6,20 @@
     android:layout_height="match_parent"
     android:background="@drawable/week_fragment_background">
 
-
+    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Large.Circle"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="45dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:SpinKit_Color="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/delete"

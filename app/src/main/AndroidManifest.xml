@@ -17,6 +17,22 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter  android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+
+
+
+
+                <data
+                    android:scheme="https"
+                    android:host="galcal.sooprit.com"
+                    android:path="/launch" />
+
+            </intent-filter>
         </activity>
         <activity android:name=".registration.RegistrationActivity" android:screenOrientation="portrait" />
         <activity android:name=".MainActivity" android:screenOrientation="portrait" />

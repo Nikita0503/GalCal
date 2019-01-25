@@ -7,7 +7,20 @@
     android:background="@drawable/home_tab_background">
 
 
-
+    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Large.Circle"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="45dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:SpinKit_Color="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/name"
@@ -17,7 +30,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="48dp"
         android:letterSpacing="0.01"
-        android:text="Hi, Chris"
+        android:text=""
         android:textColor="@color/colorWhite"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:letterSpacing="0.01"
-        android:text="you have 10 events today"
+        android:text=""
         android:textColor="@color/colorWhite"
         android:textSize="14sp"
         android:visibility="invisible"
@@ -48,7 +61,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/orbitron_medium"
-        android:text="Thur, June 1"
+        android:text=""
         android:textColor="@color/colorPrimaryDark"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"

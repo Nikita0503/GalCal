@@ -80,10 +80,10 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.textViewDate.setText(mList.get(position).date);
-        Log.d("TAG5", "Pos: "+position+", "+mList.get(position).events.size());
-        if(mList.get(position).events.size()==0){
-            holder.textViewEvent1.setText("No events");
-        }else {
+        Log.d("TAG5", "time: "+mList.get(position).date.replaceAll("\n", " ")+", "+mList.get(position).events.size());
+            if (mList.get(position).events.size() == 0) {
+                holder.textViewEvent2.setText("No events");
+            }
             if (mList.get(position).events.size() >= 1) {
                 holder.textViewEvent1.setText(mList.get(position).events.get(0).title);
 
@@ -99,11 +99,11 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
             if (mList.get(position).events.size() > 3) {
                 holder.textViewShowAllEvents.setVisibility(View.VISIBLE);
             }
-        }
 
 
 
-        Log.d("Queue", "= " + position);
+
+        //Log.d("Queue", "= " + position);
         /*if(position==mList.size()-14) {
             mFragment.fetchNewEvents();
         }*/
@@ -235,6 +235,16 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
             mDisposables.add(disposable);*/
 
 
+    }
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     @Override

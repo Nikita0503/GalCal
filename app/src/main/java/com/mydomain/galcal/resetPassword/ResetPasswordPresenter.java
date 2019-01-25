@@ -1,9 +1,12 @@
 package com.mydomain.galcal.resetPassword;
 
+import android.content.Intent;
+
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 import com.mydomain.galcal.APIUtils.APIUtils;
 import com.mydomain.galcal.BaseContract;
 import com.mydomain.galcal.R;
+import com.mydomain.galcal.authorization.AuthorizationActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,6 +49,9 @@ public class ResetPasswordPresenter implements BaseContract.BasePresenter {
                     @Override
                     public void onComplete() {
                         mActivity.showMessage(mActivity.getResources().getString(R.string.new_password_successful));
+                        Intent intent = new Intent(mActivity.getApplicationContext(), AuthorizationActivity.class);
+                        mActivity.startActivity(intent);
+                        mActivity.finish();
                     }
 
                     @Override

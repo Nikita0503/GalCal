@@ -19,8 +19,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.Circle;
+import com.github.ybq.android.spinkit.style.DoubleBounce;
 import com.mydomain.galcal.addEvent.AddEventFragment;
 import com.mydomain.galcal.calendar.CalendarFragment;
 import com.mydomain.galcal.data.BackgroundImageInfo;
@@ -52,20 +56,23 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     private SettingsFragment mSettingsFragment;
 
     private ImageView mImageViewBackground;
-
+    private ProgressBar mProgressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         firstCreating = true;
         mImageViewBackground = (ImageView) findViewById(R.id.imageViewBackground);
+        mProgressBar = (ProgressBar)findViewById(R.id.spin_kit);
+        Sprite doubleBounce = new Circle();
+        mProgressBar.setIndeterminateDrawable(doubleBounce);
         mPresenter = new MainPresenter(this);
         mPresenter.onStart();
         Intent intent = getIntent();
         mToken = intent.getStringExtra("token");
         mUserName = intent.getStringExtra("userName");
         mBottomNavigation = (BottomNavigationView)findViewById(R.id.bottom_navigation);
-        mBottomNavigation.setClickable(false);
+        mBottomNavigation.setVisibility(View.INVISIBLE);
         mFragmentManager = getSupportFragmentManager();
 
         mCalendarFragment = new CalendarFragment();
@@ -92,11 +99,12 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                 int id = item.getItemId();
                 switch (id){    // попробовать не пересоздавать фрагмент (new SomeFragment() -> SomeFragment())
                     case R.id.mothCalendarView:
-                        mCalendarFragment.setEvents(mEvents);
+
+                        //mCalendarFragment.setEvents(mEvents);
                         mFragment = mCalendarFragment;
                         break;
                     case R.id.weekFragment:
-                        mWeekFragment.setEvents(mEvents);
+                        //mWeekFragment.setEvents(mEvents);
                         mFragment = mWeekFragment;
                         break;
                     case R.id.addEventFragment:
@@ -140,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
     public void fetchEventsForYear(){
         mPresenter.fetchEventsForYear(mToken);
+        mProgressBar.setVisibility(View.VISIBLE);
     }
 
     public void setEventsForYear(ArrayList<DayEventData> events){
@@ -147,13 +156,16 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mCalendarFragment.setEvents(mEvents);
         mWeekFragment.setEvents(mEvents);
         if(firstCreating) {
+            mBottomNavigation.setVisibility(View.VISIBLE);
             mBottomNavigation.setSelectedItemId(R.id.mothCalendarView);
             firstCreating = false;
             mBottomNavigation.setClickable(true);
         }
+        mProgressBar.setVisibility(View.INVISIBLE);
     }
 
     public void updateHomeTab(){
+        mHomeFragment.can = false;
         mHomeFragment.homeTabData = null;
     }
 

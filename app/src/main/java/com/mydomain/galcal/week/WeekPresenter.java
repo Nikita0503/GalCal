@@ -59,7 +59,7 @@ public class WeekPresenter implements BaseContract.BasePresenter {
         final ArrayList<String> dates = new ArrayList<String>();
         final SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd");
         final SimpleDateFormat newFormant = new SimpleDateFormat("E'\n'd'\n'MMM", Locale.ENGLISH);
-        int month = mLastDate.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int month = mLastDate.getActualMaximum(Calendar.DAY_OF_YEAR);
         for (int i = 0; i < month; i++) {
             Date date = mLastDate.getTime();
             dates.add(oldFormat.format(date));
@@ -81,7 +81,7 @@ public class WeekPresenter implements BaseContract.BasePresenter {
                 }
                 Date date1 = oldFormat.parse(dates.get(i));
                 list.add(new DayOfWeekEventData(newFormant.format(date1),events));
-                Log.d("TAG",newFormant.format(date1));
+                //Log.d("TAG",newFormant.format(date1));
 
             }
             mFragment.addNewEvents(list);
