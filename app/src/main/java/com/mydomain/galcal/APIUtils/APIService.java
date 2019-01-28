@@ -64,5 +64,6 @@ public interface APIService {
     @GET("background/")
     Single<ArrayList<BackgroundImageInfo>> getBackgroundImageInfo(@Header("Authorization") String header, @Query("start_time") String startTime);
 
-
+    @GET("user/confirm-email/{key}")
+    Completable sendConfirm(@Path("key") String key);
 }

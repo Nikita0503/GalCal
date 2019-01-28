@@ -97,9 +97,17 @@ public class HomeFragment extends Fragment implements BaseContract.BaseView{
             }
         });
         if(mDate!=null){
+            Log.d("TAG6", "ochko");
+            Log.d("TAG6", mDate);
             mPresenter.setDate(mDate);
             Log.d("TAGS", mDate);
+            can = false;
+            if(!can){
+                Log.d("TAG6", "ochko2");
+                mPresenter.fetchTodayEventList(mToken);
+            }
         }
+
         if(!can) {
             mPresenter.fetchTodayEventList(mToken);
             homeTabData = new HomeTabData();

@@ -92,8 +92,8 @@ public class EditEventPresenter implements BaseContract.BasePresenter {
         mDisposables.add(disposable);
     }
 
-    public void editEvent(String token, String id, AddEventData data){
-        Disposable disposable = mApiUtils.editEvent(token, id, data)
+    public void editEvent(String token, String id, final AddEventData data){
+        final Disposable disposable = mApiUtils.editEvent(token, id, data)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableCompletableObserver() {
@@ -103,6 +103,17 @@ public class EditEventPresenter implements BaseContract.BasePresenter {
                         mFragment.getFragmentManager().popBackStack();
                         MainActivity mainActivity = (MainActivity) mFragment.getActivity();
                         mainActivity.fetchEventsForYear();
+                        try {
+                            SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+                            SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-M-d", Locale.ENGLISH);
+                            Date date = Calendar.getInstance().getTime();
+                            Date date1 = oldFormat.parse(data.startTime);
+                            if(newFormat.format(date).equals(newFormat.format(date1))) {
+                                mainActivity.updateHomeTab();
+                            }
+                        }catch (Exception c){
+                            c.printStackTrace();
+                        }
                     }
 
                     @Override

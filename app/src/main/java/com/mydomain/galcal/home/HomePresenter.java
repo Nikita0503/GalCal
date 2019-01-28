@@ -145,6 +145,7 @@ public class HomePresenter implements BaseContract.BasePresenter {
     private void createAdapter(ArrayList<DayEventData> data){
         HomeEventsListAdapter adapter = new HomeEventsListAdapter(mToken, data, mFragment);
         mFragment.setAdapter(adapter);
+        Log.d("TAG6","jopa");
     }
 
     @Override

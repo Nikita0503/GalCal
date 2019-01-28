@@ -94,6 +94,11 @@ public class APIUtils {
         return apiService.getBackgroundImageInfo("Bearer " + token, startTime);
     }
 
+    public Completable sendConfirm(String key){
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        return apiService.sendConfirm(key);
+    }
 
     public static Retrofit getClient(String baseUrl) {
         Retrofit retrofit = new Retrofit.Builder()
