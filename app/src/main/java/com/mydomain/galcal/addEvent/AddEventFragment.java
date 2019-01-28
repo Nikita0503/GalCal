@@ -27,6 +27,7 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -87,11 +88,14 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
 
         mCalendarViewFrom = (MaterialCalendarView) view.findViewById(R.id.calendarViewFrom);
         mCalendarViewTo = (MaterialCalendarView) view.findViewById(R.id.calendarViewTo);
+        Calendar calendar = Calendar.getInstance();
+        mCalendarViewFrom.setDateSelected(CalendarDay.today(), true);
         mCalendarViewFrom.setWeekDayLabels(new String[]{"M", "T", "W", "T", "F", "S", "S"});
         mCalendarViewFrom.setHeaderTextAppearance(R.style.TitleTextAppearance);
         mCalendarViewFrom.setWeekDayTextAppearance(R.style.WeekAppearance);
         mCalendarViewFrom.setDateTextAppearance(R.style.DayAppearance);
         mCalendarViewFrom.setVisibility(View.GONE);
+        mCalendarViewTo.setDateSelected(CalendarDay.today(), true);
         mCalendarViewTo.setWeekDayLabels(new String[]{"M", "T", "W", "T", "F", "S", "S"});
         mCalendarViewTo.setHeaderTextAppearance(R.style.TitleTextAppearance);
         mCalendarViewTo.setWeekDayTextAppearance(R.style.WeekAppearance);
@@ -116,6 +120,8 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                 if(mSwitchAllDay.isChecked()){
                     mCalendarViewTo.setVisibility(View.VISIBLE);
                 }else {
+                    Calendar calendar = Calendar.getInstance();
+                    mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
                     mTimePickerFrom.setVisibility(View.VISIBLE);
                     ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewEndDate.getLayoutParams();
                     layoutParams1.topToBottom = R.id.timePickerFrom;
@@ -141,6 +147,8 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                     c.printStackTrace();
                 }
                 if(!mSwitchAllDay.isChecked()){
+                    Calendar calendar = Calendar.getInstance();
+                    mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
                     mTimePickerTo.setVisibility(View.VISIBLE);
                     ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewLocation.getLayoutParams();
                     layoutParams1.topToBottom = R.id.timePickerTo;
@@ -173,6 +181,8 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                     layoutParams1.topToBottom = R.id.date_from;
                     mTextViewEndDate.setLayoutParams(layoutParams1);
                 }else{
+                    Calendar calendar = Calendar.getInstance();
+                    mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
                     mTimePickerFrom.setVisibility(View.VISIBLE);
                     mTimePickerTo.setVisibility(View.GONE);
                     mCalendarViewFrom.setVisibility(View.GONE);
@@ -206,6 +216,8 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                     layoutParams1.topToBottom = R.id.date_to;
                     mTextViewLocation.setLayoutParams(layoutParams1);
                 }else{
+                    Calendar calendar = Calendar.getInstance();
+                    mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
                     mTimePickerTo.setVisibility(View.VISIBLE);
                     mTimePickerFrom.setVisibility(View.GONE);
                     mCalendarViewFrom.setVisibility(View.GONE);
@@ -315,6 +327,8 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         mSwitchAllDay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
+                    mTimePickerFrom.setVisibility(View.GONE);
+                    mTimePickerTo.setVisibility(View.GONE);
                     mTextViewStartTime.setVisibility(View.INVISIBLE);
                     mTextViewEndTime.setVisibility(View.INVISIBLE);
                     mTextViewStartTime.setText("Time");

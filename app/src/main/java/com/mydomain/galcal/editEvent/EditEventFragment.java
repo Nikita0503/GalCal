@@ -1,26 +1,37 @@
 package com.mydomain.galcal.editEvent;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.Circle;
 import com.mydomain.galcal.BaseContract;
 import com.mydomain.galcal.R;
 import com.mydomain.galcal.data.AddEventData;
 import com.mydomain.galcal.data.DayEventData;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,11 +54,18 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
     private TextView mTextViewEndTime;
     private TextView mTextViewStartDate;
     private TextView mTextViewEndDate;
+    private TextView mTextViewLocation;
     private EditText mEditTextTitleEvent;
     private EditText mEditTextLocation;
     private EditText mEditTextNotes;
     private Switch mSwitchAllDay;
     private Switch mSwitchReminder;
+    private MaterialCalendarView mCalendarViewFrom;
+    private MaterialCalendarView mCalendarViewTo;
+    private TimePicker mTimePickerFrom;
+    private TimePicker mTimePickerTo;
+    private ProgressBar mProgressBar;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,11 +76,34 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.edit_event_fragment, container, false);
+        mProgressBar = (ProgressBar)view.findViewById(R.id.spin_kit);
+        Sprite doubleBounce = new Circle();
+        mProgressBar.setIndeterminateDrawable(doubleBounce);
+        mTextViewLocation = (TextView) view.findViewById(R.id.location_tv);
         mTextViewDelete = (TextView) view.findViewById(R.id.delete);
         mTextViewDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.deleteEvent(mToken, mData);
+                final Dialog dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.delete_dialog);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
+                Button buttonOk = (Button) dialog.findViewById(R.id.buttonDelete);
+                Button buttonCancel = (Button) dialog.findViewById(R.id.buttonCancel);
+                buttonCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+                buttonOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mPresenter.deleteEvent(mToken, mData);
+                        dialog.dismiss();
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+                });
+                dialog.show();
             }
         });
         mTextViewEdit = (TextView) view.findViewById(R.id.edit);
@@ -75,6 +116,30 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
         mEditTextNotes = (EditText) view.findViewById(R.id.notes_ed);
         mSwitchAllDay = (Switch) view.findViewById(R.id.all_day_switch);
         mSwitchReminder = (Switch) view.findViewById(R.id.reminder_switch);
+
+
+        mTimePickerFrom = (TimePicker) view.findViewById(R.id.timePickerFrom);
+        mTimePickerFrom.setVisibility(View.GONE);
+
+        mTimePickerTo = (TimePicker) view.findViewById(R.id.timePickerTo);
+        mTimePickerTo.setVisibility(View.GONE);
+        Calendar calendar = Calendar.getInstance();
+
+        mCalendarViewFrom = (MaterialCalendarView) view.findViewById(R.id.calendarViewFrom);
+        mCalendarViewTo = (MaterialCalendarView) view.findViewById(R.id.calendarViewTo);
+        mCalendarViewFrom.setDateSelected(CalendarDay.today(), true);
+        mCalendarViewFrom.setWeekDayLabels(new String[]{"M", "T", "W", "T", "F", "S", "S"});
+        mCalendarViewFrom.setHeaderTextAppearance(R.style.TitleTextAppearance);
+        mCalendarViewFrom.setWeekDayTextAppearance(R.style.WeekAppearance);
+        mCalendarViewFrom.setDateTextAppearance(R.style.DayAppearance);
+        mCalendarViewFrom.setVisibility(View.GONE);
+        mCalendarViewTo.setDateSelected(CalendarDay.today(), true);
+        mCalendarViewTo.setWeekDayLabels(new String[]{"M", "T", "W", "T", "F", "S", "S"});
+        mCalendarViewTo.setHeaderTextAppearance(R.style.TitleTextAppearance);
+        mCalendarViewTo.setWeekDayTextAppearance(R.style.WeekAppearance);
+        mCalendarViewTo.setDateTextAppearance(R.style.DayAppearance);
+        mCalendarViewTo.setVisibility(View.GONE);
+
 
         mEditTextTitleEvent.setText(mData.title);
         mSwitchAllDay.setChecked(mData.isAllDay);
@@ -125,15 +190,99 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
         }
         //mSwitchReminder.setChecked(mData.re);
         mEditTextNotes.setText(mData.notes);
+        mCalendarViewFrom.setOnDateChangedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
+
+                mCalendarViewFrom.setVisibility(View.GONE);
+                try {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("d M yyyy", Locale.ENGLISH);
+                    Date date = dateFormat.parse(calendarDay.getDay() + " " + calendarDay.getMonth() + " " + calendarDay.getYear());
+                    SimpleDateFormat newFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+                    //Toast.makeText(getContext(), date, Toast.LENGTH_SHORT).show();
+                    mTextViewStartDate.setText(newFormat.format(date));
+                }catch (Exception c){
+                    c.printStackTrace();
+                }
+                if(mSwitchAllDay.isChecked()){
+                    mCalendarViewTo.setVisibility(View.VISIBLE);
+                }else {
+                    mTimePickerFrom.setVisibility(View.VISIBLE);
+                    Calendar calendar = Calendar.getInstance();
+                    mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
+                    ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewEndDate.getLayoutParams();
+                    layoutParams1.topToBottom = R.id.timePickerFrom;
+                    mTextViewEndDate.setLayoutParams(layoutParams1);
+
+
+                    //
+                }
+            }
+        });
+        mCalendarViewTo.setOnDateChangedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
+
+                mCalendarViewTo.setVisibility(View.GONE);
+                try {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("d M yyyy", Locale.ENGLISH);
+                    Date date = dateFormat.parse(calendarDay.getDay() + " " + calendarDay.getMonth() + " " + calendarDay.getYear());
+                    SimpleDateFormat newFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+                    //Toast.makeText(getContext(), date, Toast.LENGTH_SHORT).show();
+                    mTextViewEndDate.setText(newFormat.format(date));
+                }catch (Exception c){
+                    c.printStackTrace();
+                }
+                if(!mSwitchAllDay.isChecked()){
+                    Calendar calendar = Calendar.getInstance();
+                    mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
+                    mTimePickerTo.setVisibility(View.VISIBLE);
+                    ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewLocation.getLayoutParams();
+                    layoutParams1.topToBottom = R.id.timePickerTo;
+                    mTextViewLocation.setLayoutParams(layoutParams1);
+                }
+            }
+        });
+
+        mTimePickerFrom.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                mTextViewStartTime.setText(selectedHour+":"+selectedMinute);
+            }
+        });
+
+        mTimePickerTo.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                mTextViewEndTime.setText(selectedHour+":"+selectedMinute);
+            }
+        });
+
         mTextViewStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mTextViewStartTime.setError(null);
-                Calendar currentTime = Calendar.getInstance();
+                if(mTimePickerFrom.getVisibility()==View.VISIBLE){
+                    mTimePickerFrom.setVisibility(View.GONE);
+                    ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewEndDate.getLayoutParams();
+                    layoutParams1.topToBottom = R.id.date_from;
+                    mTextViewEndDate.setLayoutParams(layoutParams1);
+                }else{
+                    Calendar calendar = Calendar.getInstance();
+                    mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
+                    mTimePickerFrom.setVisibility(View.VISIBLE);
+                    mTimePickerTo.setVisibility(View.GONE);
+                    mCalendarViewFrom.setVisibility(View.GONE);
+                    mCalendarViewTo.setVisibility(View.GONE);
+                    ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewEndDate.getLayoutParams();
+                    layoutParams1.topToBottom = R.id.timePickerFrom;
+                    mTextViewEndDate.setLayoutParams(layoutParams1);
+                }
+                /*Calendar currentTime = Calendar.getInstance();
                 int hour = currentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = currentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(getContext(), android.R.style.Theme_Holo_Light_Dialog,  new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         //Toast.makeText(getContext(), selectedHour+":"+selectedMinute, Toast.LENGTH_SHORT).show();
@@ -141,18 +290,34 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                     }
                 }, hour, minute, true);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
-                mTimePicker.show();
+                mTimePicker.show();*/
             }
         });
         mTextViewEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mTextViewEndTime.setError(null);
-                Calendar currentTime = Calendar.getInstance();
+                if(mTimePickerTo.getVisibility()==View.VISIBLE){
+                    mTimePickerTo.setVisibility(View.GONE);
+                    ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewLocation.getLayoutParams();
+                    layoutParams1.topToBottom = R.id.date_to;
+                    mTextViewLocation.setLayoutParams(layoutParams1);
+                }else{
+                    Calendar calendar = Calendar.getInstance();
+                    mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
+                    mTimePickerTo.setVisibility(View.VISIBLE);
+                    mTimePickerFrom.setVisibility(View.GONE);
+                    mCalendarViewFrom.setVisibility(View.GONE);
+                    mCalendarViewTo.setVisibility(View.GONE);
+                    ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewLocation.getLayoutParams();
+                    layoutParams1.topToBottom = R.id.timePickerTo;
+                    mTextViewLocation.setLayoutParams(layoutParams1);
+                }
+                /*Calendar currentTime = Calendar.getInstance();
                 int hour = currentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = currentTime.get(Calendar.MINUTE);
                 TimePickerDialog timePicker;
-                timePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                timePicker = new TimePickerDialog(getContext(),  android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         //Toast.makeText(getContext(), selectedHour+":"+selectedMinute, Toast.LENGTH_SHORT).show();
@@ -160,14 +325,33 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                     }
                 }, hour, minute, true);//Yes 24 hour time
                 timePicker.setTitle("Select Time");
-                timePicker.show();
+                timePicker.show();*/
             }
         });
         mTextViewStartDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mTextViewStartDate.setError(null);
-                Calendar currentTime = Calendar.getInstance();
+                if(mCalendarViewFrom.getVisibility()==View.VISIBLE){
+                    mCalendarViewFrom.setVisibility(View.GONE);
+                    ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewEndDate.getLayoutParams();
+                    layoutParams1.topToBottom = R.id.date_from;
+                    mTextViewEndDate.setLayoutParams(layoutParams1);
+                }else{
+                    mCalendarViewFrom.setVisibility(View.VISIBLE);
+                    mCalendarViewTo.setVisibility(View.GONE);
+                    mTimePickerFrom.setVisibility(View.GONE);
+                    mTimePickerTo.setVisibility(View.GONE);
+                    ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewEndDate.getLayoutParams();
+                    layoutParams1.topToBottom = R.id.calendarViewFrom;
+                    mTextViewEndDate.setLayoutParams(layoutParams1);
+                    //ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewEndDate.getLayoutParams();
+                    //ConstraintLayout.LayoutParams layoutParams2 = (ConstraintLayout.LayoutParams) mTextViewEndTime.getLayoutParams();
+                    //layoutParams1.topToBottom = R.id.calendarViewFrom;
+                    //layoutParams2.topToBottom = R.id.date_from;
+                    //Toast.makeText(getContext(), "VISIBLE", Toast.LENGTH_SHORT).show();
+                }
+                /*Calendar currentTime = Calendar.getInstance();
                 int day = currentTime.get(Calendar.DAY_OF_MONTH);
                 int month = currentTime.get(Calendar.MONTH);
                 int year = currentTime.get(Calendar.YEAR);
@@ -184,14 +368,29 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                     }
                 }, year, month, day);
                 datePicker.setTitle("Select Date");
-                datePicker.show();
+                datePicker.show();*/
             }
         });
         mTextViewEndDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mTextViewEndDate.setError(null);
-                Calendar currentTime = Calendar.getInstance();
+
+                if(mCalendarViewTo.getVisibility()==View.VISIBLE){
+                    mCalendarViewTo.setVisibility(View.GONE);
+                    ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewLocation.getLayoutParams();
+                    layoutParams1.topToBottom = R.id.date_to;
+                    mTextViewLocation.setLayoutParams(layoutParams1);
+                }else{
+                    mCalendarViewTo.setVisibility(View.VISIBLE);
+                    mCalendarViewFrom.setVisibility(View.GONE);
+                    mTimePickerTo.setVisibility(View.GONE);
+                    mTimePickerFrom.setVisibility(View.GONE);
+                    ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewLocation.getLayoutParams();
+                    layoutParams1.topToBottom = R.id.calendarViewTo;
+                    mTextViewLocation.setLayoutParams(layoutParams1);
+                }
+                /*Calendar currentTime = Calendar.getInstance();
                 int day = currentTime.get(Calendar.DAY_OF_MONTH);
                 int month = currentTime.get(Calendar.MONTH);
                 int year = currentTime.get(Calendar.YEAR);
@@ -208,13 +407,15 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                     }
                 }, year, month, day);
                 datePicker.setTitle("Select Date");
-                datePicker.show();
+                datePicker.show();*/
             }
         });
 
         mSwitchAllDay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
+                    mTimePickerFrom.setVisibility(View.GONE);
+                    mTimePickerTo.setVisibility(View.GONE);
                     mTextViewStartTime.setVisibility(View.INVISIBLE);
                     mTextViewEndTime.setVisibility(View.INVISIBLE);
                     mTextViewStartTime.setText("Time");
@@ -314,6 +515,7 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                 location = mEditTextLocation.getText().toString();
 
                 AddEventData data = new AddEventData(title, "personal", allDay, finalDateStart, finalDateEnd, location, notes, remindTime);
+                mProgressBar.setVisibility(View.VISIBLE);
                 mPresenter.editEvent(mToken, String.valueOf(mData.id), data);
                 //Toast.makeText(getContext(), "Go", Toast.LENGTH_SHORT).show();
             }
@@ -332,6 +534,7 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
 
     @Override
     public void showMessage(String message) {
+        mProgressBar.setVisibility(View.INVISIBLE);
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
