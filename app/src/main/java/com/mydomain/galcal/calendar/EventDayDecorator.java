@@ -40,21 +40,32 @@ public class EventDayDecorator implements DayViewDecorator {
             SimpleDateFormat oldDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
             SimpleDateFormat newDateFormat = new SimpleDateFormat("yyyy-M-d", Locale.ENGLISH);
             Date dateStart;
+            Date dateEnd;
             String dateStr;
+            String dateStrEnd;
             for (int i = 0; i < mEvents.size(); i++) {
-                dateStart = oldDateFormat.parse(mEvents.get(i).startTime);
-                dateStr = newDateFormat.format(dateStart);
-                if(currentDate.equals(dateStr)){
-                    if(mEvents.get(i).isHoliday) {
-                        return false;
-                    }else {
+                if(mEvents.get(i).type.equals("holidays")){
+                    dateStart = oldDateFormat.parse(mEvents.get(i).startTime);
+                    dateStr = newDateFormat.format(dateStart);
+                    if(currentDate.equals(dateStr)){
                         return true;
                     }
-
+                }else {
+                    dateStart = oldDateFormat.parse(mEvents.get(i).startTime);
+                    dateEnd = oldDateFormat.parse(mEvents.get(i).endTime);
+                    dateStr = newDateFormat.format(dateStart);
+                    dateStrEnd = newDateFormat.format(dateEnd);
+                    while (dateStart.before(dateEnd)){
+                        if(currentDate.equals(dateStr)){
+                            return true;
+                        }
+                        dateStart.setTime(dateStart.getTime()+86400000);
+                        dateStr = newDateFormat.format(dateStart);
+                    }
                 }
             }
         }catch (Exception c){
-
+            c.printStackTrace();
         }
         return false;
     }

@@ -119,6 +119,9 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                 }
                 if(mSwitchAllDay.isChecked()){
                     mCalendarViewTo.setVisibility(View.VISIBLE);
+                    ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewLocation.getLayoutParams();
+                    layoutParams1.topToBottom = R.id.calendarViewTo;
+                    mTextViewLocation.setLayoutParams(layoutParams1);
                 }else {
                     Calendar calendar = Calendar.getInstance();
                     mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));

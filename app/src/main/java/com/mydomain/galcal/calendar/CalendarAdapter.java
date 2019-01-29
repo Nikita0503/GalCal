@@ -1,6 +1,8 @@
 package com.mydomain.galcal.calendar;
 
 import android.content.Context;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,17 +54,55 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         try {
             //holder.textViewDate.setText(mList.get(position).date);
             holder.textViewEvent.setText(mEvents.get(position).title);
-            SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-            Date date = oldFormat.parse(mEvents.get(position).startTime);
-            holder.textViewTime.setText(new SimpleDateFormat("HH:mm").format(date));
+            if(mEvents.get(position).type.equals("holidays")) {
+                holder.textViewEvent.setTypeface(holder.textViewEvent.getTypeface(), Typeface.ITALIC);
+            }
+            if(mEvents.get(position).isAllDay){
+                holder.textViewTime.setText("All Day");
+            }else {
+                SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                Date date = oldFormat.parse(mEvents.get(position).startTime);
+                holder.textViewTime.setText(new SimpleDateFormat("HH:mm").format(date));
+            }
         }catch (Exception c){
             c.printStackTrace();
         }
     }
 
     public void setEvents(ArrayList<DayEventData> events){
-        mEvents = events;
-        notifyDataSetChanged();
+        /*try {
+            ArrayList<DayEventData> eventData = new ArrayList<DayEventData>();
+            for (int i = 0; i < events.size(); i++) {
+                SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat timeFormat = new SimpleDateFormat("'T'HH:mm:ss'Z'");
+                String dayTime = timeFormat.format(oldFormat.parse(events.get(i).startTime));
+                String dateStart = newFormat.format(oldFormat.parse(events.get(i).startTime));
+                String dateEnd = newFormat.format(oldFormat.parse(events.get(i).endTime));
+                if(!dateStart.equals(dateEnd)){
+                    Date currentDate = newFormat.parse(dateStart);
+                    Date endDate = newFormat.parse(dateEnd);
+                    while (currentDate.before(endDate)){
+                        String dateDay = newFormat.format(currentDate)+dayTime;
+                        DayEventData dayEventData = new DayEventData();
+                        dayEventData = events.get(i);
+                        dayEventData.todayData = dateDay;
+                        eventData.add(dayEventData);
+                        currentDate.setTime(currentDate.getTime()+86400000);
+                    }
+
+                }else{
+                    String dateDay = events.get(i).startTime;
+                    DayEventData dayEventData = new DayEventData();
+                    dayEventData = events.get(i);
+                    dayEventData.todayData = dateDay;
+                    eventData.add(dayEventData);
+
+                }
+
+            }*/
+            mEvents = events;
+            notifyDataSetChanged();
     }
 
     @Override

@@ -64,13 +64,38 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
                     String currentDate = calendarDay.getYear() + "-" + calendarDay.getMonth() + "-" + calendarDay.getDay();
                     SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-M-d", Locale.ENGLISH);
-                    Date date;
-                    String dateStr;
+                    Date dateStart;
+                    Date dateEnd;
+                    String dateStrStart;
+                    String dateStrEnd;
                     for (int i = 0; i < mList.size(); i++) {
-                        date = oldFormat.parse(mList.get(i).startTime);
-                        dateStr = dateFormat.format(date);
-                        if (currentDate.equals(dateStr)) {
-                            list.add(mList.get(i));
+                        if(mList.get(i).type.equals("holidays")) {
+                            dateStart = oldFormat.parse(mList.get(i).startTime);
+                            dateStrStart = dateFormat.format(dateStart);
+                            if (dateStrStart.equals(currentDate)) {
+                                DayEventData dayEventData = mList.get(i);
+                                //dayEventData.todayData = dayEventData.startTime;
+                                list.add(dayEventData);
+                            }
+                        }else{
+                            dateStart = oldFormat.parse(mList.get(i).startTime);
+                            dateStrStart = dateFormat.format(dateStart);
+                            dateEnd = oldFormat.parse(mList.get(i).endTime);
+                            dateStrEnd = dateFormat.format(dateEnd);
+                            while (!dateStrStart.equals(dateStrEnd)){
+                                if (dateStrStart.equals(currentDate)) {
+                                    DayEventData dayEventData = mList.get(i);
+                                    //dayEventData.todayData = dayEventData.startTime;
+                                    list.add(dayEventData);
+                                }
+                                dateStart.setTime(dateStart.getTime()+86400000);
+                                dateStrStart = dateFormat.format(dateStart);
+                            }
+                            if (dateStrStart.equals(currentDate)) {
+                                DayEventData dayEventData = mList.get(i);
+                                dayEventData.todayData = dayEventData.startTime;
+                                list.add(dayEventData);
+                            }
                         }
                     }
                     if(list.size()==0){

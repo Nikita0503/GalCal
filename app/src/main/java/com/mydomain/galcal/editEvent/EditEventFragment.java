@@ -206,6 +206,9 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                 }
                 if(mSwitchAllDay.isChecked()){
                     mCalendarViewTo.setVisibility(View.VISIBLE);
+                    ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewLocation.getLayoutParams();
+                    layoutParams1.topToBottom = R.id.calendarViewTo;
+                    mTextViewLocation.setLayoutParams(layoutParams1);
                 }else {
                     mTimePickerFrom.setVisibility(View.VISIBLE);
                     Calendar calendar = Calendar.getInstance();

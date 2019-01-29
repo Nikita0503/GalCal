@@ -43,7 +43,7 @@ public class HolidayDecorator implements DayViewDecorator {
                 date = oldDateFormat.parse(mEvents.get(i).startTime);
                 dateStr = newDateFormat.format(date);
                 if (currentDate.equals(dateStr)) {
-                    if(mEvents.get(i).isHoliday) {
+                    if(mEvents.get(i).type.equals("holidays")) {
                         return true;
                     }
                 }
