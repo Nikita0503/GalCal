@@ -168,7 +168,7 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                 String timeEnd;
                 SimpleDateFormat oldDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
-                SimpleDateFormat timeFormat = new SimpleDateFormat("H:m", Locale.ENGLISH);
+                SimpleDateFormat timeFormat = new SimpleDateFormat("H:mm", Locale.ENGLISH);
                 Date start = oldDateFormat.parse(mData.startTime);
                 Date end = oldDateFormat.parse(mData.endTime);
                 dateStart = dateFormat.format(start);
@@ -250,14 +250,22 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
         mTimePickerFrom.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                mTextViewStartTime.setText(selectedHour+":"+selectedMinute);
+                if(selectedMinute<10) {
+                    mTextViewStartTime.setText(selectedHour + ":0" + selectedMinute);
+                }else{
+                    mTextViewStartTime.setText(selectedHour + ":" + selectedMinute);
+                }
             }
         });
 
         mTimePickerTo.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                mTextViewEndTime.setText(selectedHour+":"+selectedMinute);
+                if(selectedMinute<10) {
+                    mTextViewEndTime.setText(selectedHour + ":0" + selectedMinute);
+                }else{
+                    mTextViewEndTime.setText(selectedHour + ":" + selectedMinute);
+                }
             }
         });
 
@@ -479,7 +487,7 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                 String finalDateStart = "";
                 String finalDateEnd = "";
                 try {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy H:m", Locale.ENGLISH);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy H:mm", Locale.ENGLISH);
 
 
                     String allStart = dateStart + " " + timeStart;

@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.bottomnavigation.LabelVisibilityMode;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -73,7 +74,9 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mUserName = intent.getStringExtra("userName");
         mBottomNavigation = (BottomNavigationView)findViewById(R.id.bottom_navigation);
         mBottomNavigation.setVisibility(View.INVISIBLE);
+        mBottomNavigation.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_UNLABELED);
         mFragmentManager = getSupportFragmentManager();
+
 
         mCalendarFragment = new CalendarFragment();
         //mCalendarFragment.setToken(mToken);

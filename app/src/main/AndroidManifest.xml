@@ -36,6 +36,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
         <activity
             android:name=".resetPassword.ResetPasswordActivity"
