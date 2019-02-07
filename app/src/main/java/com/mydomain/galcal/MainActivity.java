@@ -35,9 +35,12 @@ import com.mydomain.galcal.settings.SettingsFragment;
 import com.mydomain.galcal.week.WeekFragment;
 import com.squareup.picasso.Picasso;
 
+import org.threeten.bp.LocalDate;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements BaseContract.BaseView {
 
@@ -125,9 +128,9 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                 return true;
             }
         });
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T00:00:00Z'");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        String date = dateFormat.format(Calendar.getInstance().getTime());
+        String date = LocalDate.now().toString();
         Log.d("TAG", "now " + date);
         mPresenter.fetchBackgroundImageInfo(mToken, date);
         fetchEventsForYear();

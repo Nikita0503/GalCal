@@ -42,7 +42,7 @@ public class RegistrationActivity extends AppCompatActivity implements BaseContr
                 String login = mEditTextEmail.getText().toString();
                 String password = mEditTextPassword.getText().toString();
                 String repeatPassword = mEditTextRepeatPassword.getText().toString();
-                Toast.makeText(getApplicationContext(), "Sing Up", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Sing Up", Toast.LENGTH_SHORT).show();
                 if(login.equals("")) {
                     mEditTextEmail.setError(getResources().getString(R.string.required));
                 }
