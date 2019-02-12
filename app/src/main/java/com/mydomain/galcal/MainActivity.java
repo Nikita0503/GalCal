@@ -39,6 +39,8 @@ import org.threeten.bp.LocalDate;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements BaseContract.BaseView {
 
@@ -130,9 +132,14 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
         String date = LocalDate.now().toString();
         Log.d("TAG", "now " + date);
+
+        Timer mTimer = new Timer();
+        MyTimerTask mMyTimerTask = new MyTimerTask();
+
         mPresenter.fetchBackgroundImageInfo(mToken, date);
         if(isNetworkAvailable()) {
             if(isOnline()) {
+                mTimer.schedule(mMyTimerTask, 1000, 14400000);
                 fetchEventsForYear();
             }else{
                 Dialog dialog = getConnectionDialog("Bad connection. Application may not work correctly");
@@ -237,5 +244,18 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     public void onDestroy(){
         super.onDestroy();
         mPresenter.onStop();
+    }
+
+    class MyTimerTask extends TimerTask {
+
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mPresenter.fetchEventsForYear(mToken);
+                }
+            });
+        }
     }
 }
