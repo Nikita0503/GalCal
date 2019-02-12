@@ -1,8 +1,6 @@
 package com.mydomain.galcal.editEvent;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Switch;
@@ -88,7 +85,7 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                 dialog.setContentView(R.layout.delete_dialog);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
                 Button buttonOk = (Button) dialog.findViewById(R.id.buttonDelete);
-                Button buttonCancel = (Button) dialog.findViewById(R.id.buttonCancel);
+                Button buttonCancel = (Button) dialog.findViewById(R.id.buttonOk);
                 buttonCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

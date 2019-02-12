@@ -117,8 +117,8 @@ public class SettingsFragment extends Fragment implements BaseContract.BaseView{
         dialog.setTitle(getResources().getString(R.string.change_email_dialog));
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
         final EditText editTextEmail = (EditText) dialog.findViewById(R.id.newEmail);
-        Button buttonOk = (Button) dialog.findViewById(R.id.buttonOk);
-        Button buttonCancel = (Button) dialog.findViewById(R.id.buttonCancel);
+        Button buttonOk = (Button) dialog.findViewById(R.id.buttonCancel);
+        Button buttonCancel = (Button) dialog.findViewById(R.id.buttonOk);
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -150,8 +150,8 @@ public class SettingsFragment extends Fragment implements BaseContract.BaseView{
         final EditText editTextOldPassword = (EditText) dialog.findViewById(R.id.oldPassword);
         final EditText editTextNewPassword = (EditText) dialog.findViewById(R.id.newPassword);
         final EditText editTextNewPasswordRepeat = (EditText) dialog.findViewById(R.id.newPasswordRepeat);
-        Button buttonOk = (Button) dialog.findViewById(R.id.buttonOk);
-        Button buttonCancel = (Button) dialog.findViewById(R.id.buttonCancel);
+        Button buttonOk = (Button) dialog.findViewById(R.id.buttonCancel);
+        Button buttonCancel = (Button) dialog.findViewById(R.id.buttonOk);
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

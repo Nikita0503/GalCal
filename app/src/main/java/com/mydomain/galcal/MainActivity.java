@@ -1,12 +1,12 @@
 package com.mydomain.galcal;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.bottomnavigation.LabelVisibilityMode;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -21,11 +21,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.Circle;
-import com.github.ybq.android.spinkit.style.DoubleBounce;
 import com.mydomain.galcal.addEvent.AddEventFragment;
 import com.mydomain.galcal.calendar.CalendarFragment;
 import com.mydomain.galcal.data.BackgroundImageInfo;
@@ -39,8 +39,6 @@ import org.threeten.bp.LocalDate;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements BaseContract.BaseView {
 
@@ -133,7 +131,58 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         String date = LocalDate.now().toString();
         Log.d("TAG", "now " + date);
         mPresenter.fetchBackgroundImageInfo(mToken, date);
-        fetchEventsForYear();
+        if(isNetworkAvailable()) {
+            if(isOnline()) {
+                fetchEventsForYear();
+            }else{
+                Dialog dialog = getConnectionDialog("Bad connection. Application may not work correctly");
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
+                dialog.show();
+                //Toast.makeText(getApplicationContext(), "Bad connection", Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            //Toast.makeText(getApplicationContext(), "No connection", Toast.LENGTH_SHORT).show();
+            Dialog dialog = getConnectionDialog("No internet connection");
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
+            dialog.show();
+        }
+    }
+
+    private Dialog getConnectionDialog(String message){
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.setContentView(R.layout.connection_dialog);
+        dialog.setTitle("");
+        //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
+        final TextView textViewMessage = (TextView) dialog.findViewById(R.id.textViewMessage);
+        textViewMessage.setText(message);
+        Button buttonOk = (Button) dialog.findViewById(R.id.buttonOk);
+        buttonOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        return dialog;
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
+    public boolean isOnline() {
+        try {
+            Process p1 = java.lang.Runtime.getRuntime().exec("ping -c 1 www.google.com");
+            int returnVal = p1.waitFor();
+            boolean reachable = (returnVal==0);
+            return reachable;
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public void openHomeTab(){
