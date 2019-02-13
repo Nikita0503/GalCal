@@ -135,11 +135,12 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
         Timer mTimer = new Timer();
         MyTimerTask mMyTimerTask = new MyTimerTask();
+        //mPresenter.fetchBackgroundImageInfo(mToken, date);
 
-        mPresenter.fetchBackgroundImageInfo(mToken, date);
         if(isNetworkAvailable()) {
             if(isOnline()) {
                 mTimer.schedule(mMyTimerTask, 1000, 14400000);
+                //mImageViewBackground.setImageDrawable(getResources().getDrawable(R.drawable.sss));
                 fetchEventsForYear();
             }else{
                 Dialog dialog = getConnectionDialog("Bad connection. Application may not work correctly");
@@ -204,7 +205,6 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     public void setBackgroundImage(String image){
         Picasso.with(getApplicationContext()) //передаем контекст приложения
                 .load(image)
-                .fit()
                 .into(mImageViewBackground);
     }
 
@@ -253,7 +253,9 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mPresenter.fetchEventsForYear(mToken);
+                    String date = LocalDate.now().toString();
+                    //Toast.makeText(getApplicationContext(), "UPDATE", Toast.LENGTH_SHORT).show();
+                    mPresenter.fetchBackgroundImageInfo(mToken, date);
                 }
             });
         }
