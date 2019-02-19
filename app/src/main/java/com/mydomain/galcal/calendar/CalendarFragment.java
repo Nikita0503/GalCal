@@ -2,6 +2,7 @@ package com.mydomain.galcal.calendar;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +23,8 @@ import com.mydomain.galcal.editEvent.EditEventPresenter;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,14 +37,19 @@ import java.util.Locale;
 
 public class CalendarFragment extends Fragment implements BaseContract.BaseView {
 
+    private float ALPHA = 0.3f;
     //private String mToken;
     //private CalendarPresenter mPresenter;
     private ArrayList<DayEventData> mList;
     private CalendarAdapter mAdapter;
     private TextView mTextView;
+    private TextView mTextViewStep1;
+    private TextView mTextViewWelcome;
     private MaterialCalendarView mCalendarView;
     private RecyclerView mRecyclerView;
-
+    private ImageView mImageViewArrow;
+    private ImageView mImageViewGirl;
+    private ConstraintLayout mLayout;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,10 +57,40 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
         //mPresenter.onStart();
     }
 
+    private void showStep1(){
+        mLayout.setBackgroundColor(getResources().getColor(R.color.tutorialColor));
+        mTextView.setAlpha(ALPHA);
+        mCalendarView.setAlpha(ALPHA);
+        mRecyclerView.setAlpha(ALPHA);
+        mTextViewWelcome.setVisibility(View.VISIBLE);
+        mTextViewStep1.setVisibility(View.VISIBLE);
+        mImageViewGirl.setVisibility(View.VISIBLE);
+        mImageViewArrow.setVisibility(View.VISIBLE);
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.arrowtrans);
+        animation.setRepeatMode(Animation.REVERSE);
+        animation.setRepeatCount(100);
+        mImageViewArrow.startAnimation(animation);
+    }
+
+    public void hideStep1(){ //вернуть цвет
+        mTextView.setAlpha(1);
+        mCalendarView.setAlpha(1);
+        mRecyclerView.setAlpha(1);
+        mTextViewWelcome.setVisibility(View.GONE);
+        mTextViewStep1.setVisibility(View.GONE);
+        mImageViewGirl.setVisibility(View.GONE);
+        mImageViewArrow.setVisibility(View.GONE);
+        mImageViewArrow.clearAnimation();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.calendar_fragment, container, false);
+        mTextViewStep1 = (TextView) view.findViewById(R.id.textViewStep1);
+        mTextViewWelcome = (TextView) view.findViewById(R.id.textViewWelcomeStep1);
+        mImageViewArrow = (ImageView) view.findViewById(R.id.imageViewStep1);
+        mImageViewGirl = (ImageView) view.findViewById(R.id.imageViewGirlStep1);
+        mLayout = (ConstraintLayout) view.findViewById(R.id.layout);
         mTextView = (TextView) view.findViewById(R.id.textView3);
         mCalendarView = (MaterialCalendarView) view.findViewById(R.id.materialCalendarView);
         mCalendarView.setWeekDayLabels(new String[]{"M", "T", "W", "T", "F", "S", "S"});
@@ -121,6 +162,8 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
         //mPresenter.setToken(mToken);
         Log.d("TAG", "onCreateView");
         //mPresenter.fetchEvents();
+        mRecyclerView.bringToFront();
+        showStep1();
         return view;
     }
 

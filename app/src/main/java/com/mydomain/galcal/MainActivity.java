@@ -3,10 +3,12 @@ package com.mydomain.galcal;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.bottomnavigation.LabelVisibilityMode;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -41,8 +43,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements BaseContract.BaseView {
+
 
     public boolean firstCreating;
     private String mToken;
@@ -61,10 +66,15 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
     private ImageView mImageViewBackground;
     private ProgressBar mProgressBar;
+    //private View mTutorial;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         firstCreating = true;
         mImageViewBackground = (ImageView) findViewById(R.id.imageViewBackground);
         mProgressBar = (ProgressBar)findViewById(R.id.spin_kit);
@@ -79,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mBottomNavigation.setVisibility(View.INVISIBLE);
         mBottomNavigation.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_UNLABELED);
         mFragmentManager = getSupportFragmentManager();
-
 
         mCalendarFragment = new CalendarFragment();
         //mCalendarFragment.setToken(mToken);
@@ -96,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
         mSettingsFragment = new SettingsFragment();
         mSettingsFragment.setToken(mToken);
+
 
         //FragmentTransaction transaction = mFragmentManager.beginTransaction();
         //transaction.replace(R.id.main_container, mCalendarFragment).commit();
@@ -130,24 +140,27 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         });
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        String date = LocalDate.now().toString();
-        Log.d("TAG", "now " + date);
 
-        Timer mTimer = new Timer();
-        MyTimerTask mMyTimerTask = new MyTimerTask();
+        //Toast.makeText(getApplicationContext(), "HELLO", Toast.LENGTH_SHORT).show();
+        int s = 0;
         //mPresenter.fetchBackgroundImageInfo(mToken, date);
-
+        //mTimer.schedule(mMyTimerTask, 1000, 10000);
         if(isNetworkAvailable()) {
-            if(isOnline()) {
-                mTimer.schedule(mMyTimerTask, 1000, 14400000);
+
+            Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
+                @Override
+                public void run() {
+
+                    mPresenter.fetchBackgroundImageInfo(mToken);
+
+                }
+            }, 0, 3, TimeUnit.HOURS);
+
+
+                //mTimer.schedule(mMyTimerTask, 1000, 14400000);
                 //mImageViewBackground.setImageDrawable(getResources().getDrawable(R.drawable.sss));
                 fetchEventsForYear();
-            }else{
-                Dialog dialog = getConnectionDialog("Bad connection. Application may not work correctly");
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
-                dialog.show();
-                //Toast.makeText(getApplicationContext(), "Bad connection", Toast.LENGTH_SHORT).show();
-            }
+
         }else{
             //Toast.makeText(getApplicationContext(), "No connection", Toast.LENGTH_SHORT).show();
             Dialog dialog = getConnectionDialog("No internet connection");
@@ -180,18 +193,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 
-    public boolean isOnline() {
-        try {
-            Process p1 = java.lang.Runtime.getRuntime().exec("ping -c 1 www.google.com");
-            int returnVal = p1.waitFor();
-            boolean reachable = (returnVal==0);
-            return reachable;
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return false;
-    }
+
 
     public void openHomeTab(){
         mBottomNavigation.setSelectedItemId(R.id.homeTabFragment);
@@ -203,9 +205,11 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
 
     public void setBackgroundImage(String image){
-        Picasso.with(getApplicationContext()) //передаем контекст приложения
-                .load(image)
-                .into(mImageViewBackground);
+
+            Picasso.with(getApplicationContext()) //передаем контекст приложения
+                    .load(image)
+                    .into(mImageViewBackground);
+
     }
 
     public void fetchEventsForYear(){
@@ -222,8 +226,10 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
             mBottomNavigation.setSelectedItemId(R.id.mothCalendarView);
             firstCreating = false;
             mBottomNavigation.setClickable(true);
+          //  mTutorial.bringToFront();
         }
         mProgressBar.setVisibility(View.INVISIBLE);
+      //  mTutorial.bringToFront();
     }
 
     public void updateHomeTab(){
@@ -246,18 +252,6 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mPresenter.onStop();
     }
 
-    class MyTimerTask extends TimerTask {
 
-        @Override
-        public void run() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    String date = LocalDate.now().toString();
-                    //Toast.makeText(getApplicationContext(), "UPDATE", Toast.LENGTH_SHORT).show();
-                    mPresenter.fetchBackgroundImageInfo(mToken, date);
-                }
-            });
-        }
-    }
+
 }

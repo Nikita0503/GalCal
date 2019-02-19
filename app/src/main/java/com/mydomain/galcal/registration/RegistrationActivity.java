@@ -45,15 +45,19 @@ public class RegistrationActivity extends AppCompatActivity implements BaseContr
                 //Toast.makeText(getApplicationContext(), "Sing Up", Toast.LENGTH_SHORT).show();
                 if(login.equals("")) {
                     mEditTextEmail.setError(getResources().getString(R.string.required));
+                    return;
                 }
                 if(password.equals("")) {
                     mEditTextPassword.setError(getResources().getString(R.string.required));
+                    return;
                 }
                 if(repeatPassword.equals("")) {
                     mEditTextRepeatPassword.setError(getResources().getString(R.string.required));
+                    return;
                 }
                 if(!password.equals(repeatPassword)){
                     mEditTextRepeatPassword.setError(getResources().getString(R.string.passwords_error));
+                    return;
                 }
                 mPresenter.fetchUserRegistrationResponse(login, password);
             }

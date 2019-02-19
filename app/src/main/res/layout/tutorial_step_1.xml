@@ -1,64 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/home_tab_background">
-
-    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        android:id="@+id/materialCalendarView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerViewCalendar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent=".68"
-        app:layout_constraintHorizontal_bias="1.0"
-
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:mcv_leftArrowMask="@drawable/ic_back"
-        app:mcv_rightArrowMask="@drawable/ic_right_arrow" />
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewCalendar"
-        android:layout_width="368dp"
-        android:layout_height="155dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:overScrollMode="never"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:text="Click on green circle to view Day's events"
-        android:textSize="18sp"
-        android:textStyle="italic"
-        android:textColor="@color/colorWhite"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    android:background="@drawable/tutorial_background"
+    >
 
     <ImageView
         android:id="@+id/imageViewStep1"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="75dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,7 +29,6 @@
         android:gravity="center_horizontal"
         android:textColor="#b0e67a"
         android:textSize="12sp"
-        android:visibility="gone"
         android:fontFamily="@font/lato"
         android:text="click on the plus sign\nto add an event"
         app:layout_constraintBottom_toTopOf="@+id/imageViewStep1"
@@ -90,7 +45,6 @@
         android:layout_marginTop="8dp"
         android:fontFamily="@font/orbitron_medium"
         android:gravity="center_horizontal"
-        android:visibility="gone"
         android:text="Welcome To GalCal\n\nTo unlock today’s photo,\nlet’s add an event!\n\nDon’t worry it will only take\na minute, and we promise\nit’s worth it!"
         android:textColor="@color/colorWhite"
         android:textSize="16dp"
@@ -103,7 +57,6 @@
         android:id="@+id/imageViewGirlStep1"
         android:layout_width="100dp"
         android:layout_height="200dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/imageViewStep1"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/girl1" />

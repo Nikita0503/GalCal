@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/home_tab_background">
@@ -25,6 +26,7 @@
         android:id="@+id/imageViewDivider"
         android:layout_width="0dp"
         android:layout_height="20dp"
+
         android:layout_marginTop="39dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +58,6 @@
 
     <EditText
         android:id="@+id/event1"
-        android:imeOptions="actionDone"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
@@ -163,13 +164,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:timePickerMode="spinner"
                 android:theme="@style/MyTimePickerDialogStyle"
+                android:timePickerMode="spinner"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:layout_editor_absoluteY="214dp"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@+id/time_from"/>
+                app:layout_constraintTop_toBottomOf="@+id/time_from"
+                tools:layout_editor_absoluteY="214dp" />
 
             <TimePicker
                 android:id="@+id/timePickerTo"
@@ -177,14 +178,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:timePickerMode="spinner"
                 android:theme="@style/MyTimePickerDialogStyle"
+                android:timePickerMode="spinner"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/date_to"
                 tools:layout_editor_absoluteX="0dp"
-                tools:layout_editor_absoluteY="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/date_to"/>
+                tools:layout_editor_absoluteY="16dp" />
 
             <com.prolificinteractive.materialcalendarview.MaterialCalendarView
                 android:id="@+id/calendarViewFrom"
@@ -266,7 +267,6 @@
 
             <EditText
                 android:id="@+id/location"
-                android:imeOptions="actionDone"
                 android:layout_width="255dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -332,10 +332,10 @@
                 android:layout_marginBottom="80dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="35dp"
-                android:imeOptions="actionDone"
                 android:layout_marginTop="8dp"
                 android:background="@null"
                 android:hint="Enter notes here"
+                android:imeOptions="actionDone"
                 android:singleLine="true"
                 android:textColor="@color/colorWhite"
                 android:textColorHint="@color/colorWhite"
@@ -376,6 +376,47 @@
                 android:layout_height="wrap_content"
                 app:barrierDirection="left" />
 
+            <TextView
+                android:id="@+id/textViewEnterLocationText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/lato"
+                android:gravity="center_horizontal"
+                android:text="add a location if you have one\nor just press “enter” if you don’t"
+                android:textColor="@color/colorWhite"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/location" />
+
+            <TextView
+                android:id="@+id/textViewReminderChoose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/lato"
+                android:gravity="center_horizontal"
+                android:text="to add a reminder to your event\ntoggle on"
+                android:textColor="@color/colorWhite"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/barrier"
+                app:layout_constraintTop_toBottomOf="@+id/reminder_time_text" />
+
+            <TextView
+                android:id="@+id/textViewEnterNotes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:fontFamily="@font/lato"
+                android:gravity="center_horizontal"
+                android:text="Add notes if you have them\nor simply press save"
+                android:textColor="@color/colorWhite"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/notes_tv"
+                app:layout_constraintEnd_toEndOf="parent" />
+
 
 
 
@@ -383,5 +424,72 @@
 
     </ScrollView>
 
+    <TextView
+        android:id="@+id/textViewEnterTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="35dp"
+        android:fontFamily="@font/lato"
+        android:text="name your event\nthen press “enter”"
+        android:textColor="@color/colorWhite"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/scroll" />
 
+    <TextView
+        android:id="@+id/textViewChooseTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="27dp"
+        android:fontFamily="@font/lato"
+        android:gravity="center_horizontal"
+        android:text="now choose time and date\nfor your event. or toggle “All day”"
+        android:textColor="@color/colorWhite"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/imageViewDivider"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewCongrats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/orbitron_medium"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        android:text="Congrats!\n\nYour first event has been created"
+        android:textColor="@color/colorWhite"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageViewStep1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/arrow" />
+
+    <TextView
+        android:id="@+id/textViewLetsTo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/lato"
+        android:text="Let’s view it in month screen"
+        android:textColor="#b0e67a"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageViewStep1" />
 </android.support.constraint.ConstraintLayout>

@@ -1,15 +1,23 @@
 package com.mydomain.galcal.addEvent;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -37,8 +45,7 @@ import java.util.Locale;
 
 public class AddEventFragment extends Fragment implements BaseContract.BaseView{
 
-
-
+    private float ALPHA = 0.3f;
     private String mToken;
     private AddEventPresenter mPresenter;
     private TextView mTextViewLocation;
@@ -47,6 +54,18 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
     private TextView mTextViewEndTime;
     private TextView mTextViewStartDate;
     private TextView mTextViewEndDate;
+    private TextView mTextViewTimeText;
+    private TextView mTextViewLocationText;
+    private TextView mTextViewReminderText2;
+    private TextView mTextViewReminderText;
+    private TextView mTextViewNotesText;
+    private TextView mTextViewEnterTitleText;
+    private TextView mTextViewChooseTime;
+    private TextView mTextViewEnterLocationText;
+    private TextView mTextViewReminderChoose;
+    private TextView mTextViewEnterNotes;
+    private TextView mTextViewLetsTo;
+    private TextView mTextViewCongrats;
     private EditText mEditTextTitleEvent;
     private EditText mEditTextLocation;
     private EditText mEditTextNotes;
@@ -57,6 +76,9 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
     private MaterialCalendarView mCalendarViewTo;
     private TimePicker mTimePickerFrom;
     private TimePicker mTimePickerTo;
+    private ImageView mDivider;
+    private ImageView mImageViewArrow;
+    private ConstraintLayout mLayout;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,19 +89,67 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_event_fragment, container, false);
+        mLayout = (ConstraintLayout) view.findViewById(R.id.layout);
+        mTextViewCongrats = (TextView) view.findViewById(R.id.textViewCongrats);
+        mImageViewArrow = (ImageView) view.findViewById(R.id.imageViewStep1);
+        mTextViewLetsTo = (TextView) view.findViewById(R.id.textViewLetsTo);
+        mTextViewEnterNotes = (TextView) view.findViewById(R.id.textViewEnterNotes);
+        mTextViewReminderChoose = (TextView) view.findViewById(R.id.textViewReminderChoose);
+        mTextViewEnterLocationText = (TextView) view.findViewById(R.id.textViewEnterLocationText);
+        mTextViewChooseTime = (TextView) view.findViewById(R.id.textViewChooseTime);
+        mTextViewEnterTitleText = (TextView) view.findViewById(R.id.textViewEnterTitleText);
         mTextViewLocation = (TextView) view.findViewById(R.id.location_tv);
         mTextViewSave = (TextView) view.findViewById(R.id.save);
         mTextViewStartTime = (TextView) view.findViewById(R.id.time_from);
         mTextViewEndTime = (TextView) view.findViewById(R.id.time_to);
         mTextViewStartDate = (TextView) view.findViewById(R.id.date_from);
         mTextViewEndDate = (TextView) view.findViewById(R.id.date_to);
+        mTextViewReminderText = (TextView) view.findViewById(R.id.reminder_time_text);
+        mTextViewTimeText = (TextView) view.findViewById(R.id.time);
+        mTextViewLocationText = (TextView) view.findViewById(R.id.location_tv);
+        mTextViewReminderText2 = (TextView) view.findViewById(R.id.reminder_tv);
+        mTextViewNotesText = (TextView) view.findViewById(R.id. notes_tv);
         mEditTextTitleEvent = (EditText) view.findViewById(R.id.event1);
+        mEditTextTitleEvent.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    // Perform action on key press
+                    hideStep2();
+
+
+                    return true;
+                }
+                return false;
+            }
+        });
         mEditTextLocation = (EditText) view.findViewById(R.id.location);
+        mEditTextLocation.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    // Perform action on key press
+                    hideStep4();
+
+
+                    return true;
+                }
+                return false;
+            }
+        });
         mEditTextNotes = (EditText) view.findViewById(R.id.notes_ed);
         mSwitchAllDay = (Switch) view.findViewById(R.id.all_day_switch);
         mSwitchReminder = (Switch) view.findViewById(R.id.reminder_switch);
+        mSwitchReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                hideStep5();
+            }
+        });
         mProgressBar = (ProgressBar)view.findViewById(R.id.spin_kit);
-
+        mDivider = (ImageView) view.findViewById(R.id.imageViewDivider);
         mTimePickerFrom = (TimePicker) view.findViewById(R.id.timePickerFrom);
         mTimePickerFrom.setVisibility(View.GONE);
 
@@ -157,6 +227,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                     layoutParams1.topToBottom = R.id.timePickerTo;
                     mTextViewLocation.setLayoutParams(layoutParams1);
                 }
+                hideStep3();
             }
         });
 
@@ -179,6 +250,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                 }else{
                     mTextViewEndTime.setText(selectedHour + ":" + selectedMinute);
                 }
+                hideStep3();
             }
         });
 
@@ -255,6 +327,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         mTextViewStartDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mTextViewStartDate.bringToFront();
                 mTextViewStartDate.setError(null);
                 if(mCalendarViewFrom.getVisibility()==View.VISIBLE){
                     mCalendarViewFrom.setVisibility(View.GONE);
@@ -442,13 +515,345 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                 AddEventData data = new AddEventData(title, "personal", allDay, finalDateStart, finalDateEnd, location, notes, remindTime);
                 mPresenter.sendNewEventData(mToken, data, remindTime);
                 mProgressBar.setVisibility(View.VISIBLE);
+                hideStep6();
             }
         });
+        showStep2();
         return view;
     }
 
     public void setToken(String token){
         mToken = token;
+    }
+
+    private void showStep2(){
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.pulsating);
+        animation.setRepeatMode(Animation.REVERSE);
+        animation.setRepeatCount(100);
+        mTextViewEnterTitleText.setVisibility(View.VISIBLE);
+        mTextViewEnterTitleText.startAnimation(animation);
+        mLayout.setBackgroundColor(getResources().getColor(R.color.tutorialColor));
+        mTextViewLocation.setAlpha(ALPHA);
+        mTextViewSave.setAlpha(ALPHA);
+        mTextViewStartTime.setAlpha(ALPHA);
+        mTextViewEndTime.setAlpha(ALPHA);
+        mTextViewStartDate.setAlpha(ALPHA);
+        mTextViewEndDate.setAlpha(ALPHA);
+        mEditTextLocation.setAlpha(ALPHA);
+        mEditTextNotes.setAlpha(ALPHA);
+        mSwitchAllDay.setAlpha(ALPHA);
+        mSwitchReminder.setAlpha(ALPHA);
+        mProgressBar.setAlpha(ALPHA);
+        mTimePickerFrom.setAlpha(ALPHA);
+        mTimePickerTo.setAlpha(ALPHA);
+        mCalendarViewFrom.setAlpha(ALPHA);
+        mCalendarViewTo.setAlpha(ALPHA);
+        mTextViewReminderText.setAlpha(ALPHA);
+        mTextViewTimeText.setAlpha(ALPHA);
+        mTextViewLocationText.setAlpha(ALPHA);
+        mTextViewReminderText2.setAlpha(ALPHA);
+        mTextViewNotesText.setAlpha(ALPHA);
+    }
+
+    private void hideStep2(){
+        InputMethodManager inputManager =
+                (InputMethodManager) getContext().
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(
+                getActivity().getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+        mTextViewEnterTitleText.setVisibility(View.GONE);
+        mTextViewEnterTitleText.clearAnimation();
+        mLayout.setBackgroundColor(getResources().getColor(R.color.tutorialColor));
+        mTextViewLocation.setAlpha(1);
+        mTextViewSave.setAlpha(1);
+        mTextViewStartTime.setAlpha(1);
+        mTextViewEndTime.setAlpha(1);
+        mTextViewStartDate.setAlpha(1);
+        mTextViewEndDate.setAlpha(1);
+        mEditTextLocation.setAlpha(1);
+        mEditTextNotes.setAlpha(1);
+        mSwitchAllDay.setAlpha(1);
+        mSwitchReminder.setAlpha(1);
+        mProgressBar.setAlpha(1);
+        mTimePickerFrom.setAlpha(1);
+        mTimePickerTo.setAlpha(1);
+        mCalendarViewFrom.setAlpha(1);
+        mCalendarViewTo.setAlpha(1);
+        mTextViewReminderText.setAlpha(1);
+        mTextViewTimeText.setAlpha(1);
+        mTextViewLocationText.setAlpha(1);
+        mTextViewReminderText2.setAlpha(1);
+        mTextViewNotesText.setAlpha(1);
+        showStep3();
+    }
+
+    private void showStep3(){
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.pulsating);
+        animation.setRepeatMode(Animation.REVERSE);
+        animation.setRepeatCount(100);
+        mTextViewChooseTime.setVisibility(View.VISIBLE);
+        mTextViewChooseTime.startAnimation(animation);
+        mTextViewLocation.setAlpha(ALPHA);
+        mTextViewSave.setAlpha(ALPHA);
+        mDivider.setAlpha(ALPHA);
+        mEditTextTitleEvent.setAlpha(ALPHA);
+        mTextViewStartTime.setAlpha(1);
+        mTextViewEndTime.setAlpha(1);
+        mTextViewStartDate.setAlpha(1);
+        mTextViewEndDate.setAlpha(1);
+        mEditTextLocation.setAlpha(ALPHA);
+        mEditTextNotes.setAlpha(ALPHA);
+        mSwitchAllDay.setAlpha(1);
+        mSwitchReminder.setAlpha(ALPHA);
+        mProgressBar.setAlpha(ALPHA);
+        mTimePickerFrom.setAlpha(1);
+        mTimePickerTo.setAlpha(1);
+        mCalendarViewFrom.setAlpha(1);
+        mCalendarViewTo.setAlpha(1);
+        mTextViewReminderText.setAlpha(ALPHA);
+        mTextViewTimeText.setAlpha(1);
+        mTextViewLocationText.setAlpha(ALPHA);
+        mTextViewReminderText2.setAlpha(ALPHA);
+        mTextViewNotesText.setAlpha(ALPHA);
+    }
+
+    private void hideStep3(){
+        mTextViewChooseTime.setVisibility(View.GONE);
+        mTextViewChooseTime.clearAnimation();
+        mTextViewLocation.setAlpha(ALPHA);
+        mTextViewSave.setAlpha(ALPHA);
+        mDivider.setAlpha(ALPHA);
+        mEditTextTitleEvent.setAlpha(ALPHA);
+        mTextViewStartTime.setAlpha(ALPHA);
+        mTextViewEndTime.setAlpha(ALPHA);
+        mTextViewStartDate.setAlpha(ALPHA);
+        mTextViewEndDate.setAlpha(ALPHA);
+        mEditTextLocation.setAlpha(ALPHA);
+        mEditTextNotes.setAlpha(ALPHA);
+        mSwitchAllDay.setAlpha(ALPHA);
+        mSwitchReminder.setAlpha(ALPHA);
+        mProgressBar.setAlpha(ALPHA);
+        mTimePickerFrom.setAlpha(ALPHA);
+        mTimePickerTo.setAlpha(ALPHA);
+        mCalendarViewFrom.setAlpha(ALPHA);
+        mCalendarViewTo.setAlpha(ALPHA);
+        mTextViewReminderText.setAlpha(ALPHA);
+        mTextViewTimeText.setAlpha(ALPHA);
+        mTextViewLocationText.setAlpha(ALPHA);
+        mTextViewReminderText2.setAlpha(ALPHA);
+        mTextViewNotesText.setAlpha(ALPHA);
+        showStep4();
+    }
+
+    private void showStep4(){
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.pulsating);
+        animation.setRepeatMode(Animation.REVERSE);
+        animation.setRepeatCount(100);
+        mTextViewEnterLocationText.startAnimation(animation);
+        mTextViewEnterLocationText.setVisibility(View.VISIBLE);
+        mTextViewEnterLocationText.setAlpha(1);
+        mTextViewSave.setAlpha(ALPHA);
+        mDivider.setAlpha(ALPHA);
+        mEditTextTitleEvent.setAlpha(ALPHA);
+        mTextViewStartTime.setAlpha(ALPHA);
+        mTextViewEndTime.setAlpha(ALPHA);
+        mTextViewStartDate.setAlpha(ALPHA);
+        mTextViewEndDate.setAlpha(ALPHA);
+        mEditTextLocation.setAlpha(1);
+        mEditTextNotes.setAlpha(ALPHA);
+        mSwitchAllDay.setAlpha(ALPHA);
+        mSwitchReminder.setAlpha(ALPHA);
+        mProgressBar.setAlpha(ALPHA);
+        mTimePickerFrom.setAlpha(ALPHA);
+        mTimePickerTo.setAlpha(ALPHA);
+        mCalendarViewFrom.setAlpha(ALPHA);
+        mCalendarViewTo.setAlpha(ALPHA);
+        mTextViewReminderText.setAlpha(ALPHA);
+        mTextViewTimeText.setAlpha(ALPHA);
+        mTextViewLocationText.setAlpha(1);
+        mTextViewReminderText2.setAlpha(ALPHA);
+        mTextViewNotesText.setAlpha(ALPHA);
+    }
+
+    private void hideStep4(){
+        InputMethodManager inputManager =
+                (InputMethodManager) getContext().
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(
+                getActivity().getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+        mTextViewEnterLocationText.clearAnimation();
+        mTextViewEnterLocationText.setVisibility(View.GONE);
+        mTextViewEnterLocationText.setAlpha(ALPHA);
+        mTextViewSave.setAlpha(ALPHA);
+        mDivider.setAlpha(ALPHA);
+        mEditTextTitleEvent.setAlpha(ALPHA);
+        mTextViewStartTime.setAlpha(ALPHA);
+        mTextViewEndTime.setAlpha(ALPHA);
+        mTextViewStartDate.setAlpha(ALPHA);
+        mTextViewEndDate.setAlpha(ALPHA);
+        mEditTextLocation.setAlpha(ALPHA);
+        mEditTextNotes.setAlpha(ALPHA);
+        mSwitchAllDay.setAlpha(ALPHA);
+        mSwitchReminder.setAlpha(ALPHA);
+        mProgressBar.setAlpha(ALPHA);
+        mTimePickerFrom.setAlpha(ALPHA);
+        mTimePickerTo.setAlpha(ALPHA);
+        mCalendarViewFrom.setAlpha(ALPHA);
+        mCalendarViewTo.setAlpha(ALPHA);
+        mTextViewReminderText.setAlpha(ALPHA);
+        mTextViewTimeText.setAlpha(ALPHA);
+        mTextViewLocationText.setAlpha(ALPHA);
+        mTextViewReminderText2.setAlpha(ALPHA);
+        mTextViewNotesText.setAlpha(ALPHA);
+        showStep5();
+    }
+
+    private void showStep5(){
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.pulsating);
+        animation.setRepeatMode(Animation.REVERSE);
+        animation.setRepeatCount(100);
+        mTextViewReminderChoose.startAnimation(animation);
+        mTextViewReminderChoose.setVisibility(View.VISIBLE);
+        mTextViewReminderChoose.setAlpha(1);
+        mTextViewSave.setAlpha(ALPHA);
+        mDivider.setAlpha(ALPHA);
+        mEditTextTitleEvent.setAlpha(ALPHA);
+        mTextViewStartTime.setAlpha(ALPHA);
+        mTextViewEndTime.setAlpha(ALPHA);
+        mTextViewStartDate.setAlpha(ALPHA);
+        mTextViewEndDate.setAlpha(ALPHA);
+        mEditTextLocation.setAlpha(ALPHA);
+        mEditTextNotes.setAlpha(ALPHA);
+        mSwitchAllDay.setAlpha(ALPHA);
+        mSwitchReminder.setAlpha(1);
+        mProgressBar.setAlpha(ALPHA);
+        mTimePickerFrom.setAlpha(ALPHA);
+        mTimePickerTo.setAlpha(ALPHA);
+        mCalendarViewFrom.setAlpha(ALPHA);
+        mCalendarViewTo.setAlpha(ALPHA);
+        mTextViewReminderText.setAlpha(1);
+        mTextViewTimeText.setAlpha(ALPHA);
+        mTextViewLocationText.setAlpha(ALPHA);
+        mTextViewReminderText2.setAlpha(1);
+        mTextViewNotesText.setAlpha(ALPHA);
+    }
+
+    private void hideStep5(){
+        mTextViewReminderChoose.clearAnimation();
+        mTextViewReminderChoose.setVisibility(View.GONE);
+        mTextViewReminderChoose.setAlpha(ALPHA);
+        mTextViewSave.setAlpha(ALPHA);
+        mDivider.setAlpha(ALPHA);
+        mEditTextTitleEvent.setAlpha(ALPHA);
+        mTextViewStartTime.setAlpha(ALPHA);
+        mTextViewEndTime.setAlpha(ALPHA);
+        mTextViewStartDate.setAlpha(ALPHA);
+        mTextViewEndDate.setAlpha(ALPHA);
+        mEditTextLocation.setAlpha(ALPHA);
+        mEditTextNotes.setAlpha(ALPHA);
+        mSwitchAllDay.setAlpha(ALPHA);
+        mSwitchReminder.setAlpha(ALPHA);
+        mProgressBar.setAlpha(ALPHA);
+        mTimePickerFrom.setAlpha(ALPHA);
+        mTimePickerTo.setAlpha(ALPHA);
+        mCalendarViewFrom.setAlpha(ALPHA);
+        mCalendarViewTo.setAlpha(ALPHA);
+        mTextViewReminderText.setAlpha(ALPHA);
+        mTextViewTimeText.setAlpha(ALPHA);
+        mTextViewLocationText.setAlpha(ALPHA);
+        mTextViewReminderText2.setAlpha(ALPHA);
+        mTextViewNotesText.setAlpha(ALPHA);
+        showStep6();
+    }
+
+    private void showStep6(){
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.pulsating);
+        animation.setRepeatMode(Animation.REVERSE);
+        animation.setRepeatCount(100);
+        mTextViewEnterNotes.startAnimation(animation);
+        mTextViewEnterNotes.setVisibility(View.VISIBLE);
+        mTextViewEnterNotes.setAlpha(1);
+        mTextViewSave.setAlpha(1);
+        mDivider.setAlpha(ALPHA);
+        mEditTextTitleEvent.setAlpha(ALPHA);
+        mTextViewStartTime.setAlpha(ALPHA);
+        mTextViewEndTime.setAlpha(ALPHA);
+        mTextViewStartDate.setAlpha(ALPHA);
+        mTextViewEndDate.setAlpha(ALPHA);
+        mEditTextLocation.setAlpha(ALPHA);
+        mEditTextNotes.setAlpha(1);
+        mSwitchAllDay.setAlpha(ALPHA);
+        mSwitchReminder.setAlpha(ALPHA);
+        mProgressBar.setAlpha(ALPHA);
+        mTimePickerFrom.setAlpha(ALPHA);
+        mTimePickerTo.setAlpha(ALPHA);
+        mCalendarViewFrom.setAlpha(ALPHA);
+        mCalendarViewTo.setAlpha(ALPHA);
+        mTextViewReminderText.setAlpha(ALPHA);
+        mTextViewTimeText.setAlpha(ALPHA);
+        mTextViewLocationText.setAlpha(ALPHA);
+        mTextViewReminderText2.setAlpha(ALPHA);
+        mTextViewNotesText.setAlpha(1);
+    }
+
+    private void hideStep6(){
+        mTextViewEnterNotes.setVisibility(View.GONE);
+        mTextViewEnterNotes.clearAnimation();
+        mTextViewSave.setAlpha(ALPHA);
+        mDivider.setAlpha(ALPHA);
+        mEditTextTitleEvent.setAlpha(ALPHA);
+        mTextViewStartTime.setAlpha(ALPHA);
+        mTextViewEndTime.setAlpha(ALPHA);
+        mTextViewStartDate.setAlpha(ALPHA);
+        mTextViewEndDate.setAlpha(ALPHA);
+        mEditTextLocation.setAlpha(ALPHA);
+        mEditTextNotes.setAlpha(ALPHA);
+        mSwitchAllDay.setAlpha(ALPHA);
+        mSwitchReminder.setAlpha(ALPHA);
+        mProgressBar.setAlpha(ALPHA);
+        mTimePickerFrom.setAlpha(ALPHA);
+        mTimePickerTo.setAlpha(ALPHA);
+        mCalendarViewFrom.setAlpha(ALPHA);
+        mCalendarViewTo.setAlpha(ALPHA);
+        mTextViewReminderText.setAlpha(ALPHA);
+        mTextViewTimeText.setAlpha(ALPHA);
+        mTextViewLocationText.setAlpha(ALPHA);
+        mTextViewReminderText2.setAlpha(ALPHA);
+        mTextViewNotesText.setAlpha(ALPHA);
+        showStep7();
+    }
+
+    private void showStep7(){
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.arrowtrans);
+        animation.setRepeatMode(Animation.REVERSE);
+        animation.setRepeatCount(100);
+        mImageViewArrow.setVisibility(View.VISIBLE);
+        mImageViewArrow.startAnimation(animation);
+        mTextViewLetsTo.setVisibility(View.VISIBLE);
+        mTextViewCongrats.setVisibility(View.VISIBLE);
+        mTextViewSave.setAlpha(ALPHA);
+        mDivider.setAlpha(ALPHA);
+        mEditTextTitleEvent.setAlpha(ALPHA);
+        mTextViewStartTime.setAlpha(ALPHA);
+        mTextViewEndTime.setAlpha(ALPHA);
+        mTextViewStartDate.setAlpha(ALPHA);
+        mTextViewEndDate.setAlpha(ALPHA);
+        mEditTextLocation.setAlpha(ALPHA);
+        mEditTextNotes.setAlpha(ALPHA);
+        mSwitchAllDay.setAlpha(ALPHA);
+        mSwitchReminder.setAlpha(ALPHA);
+        mProgressBar.setAlpha(ALPHA);
+        mTimePickerFrom.setAlpha(ALPHA);
+        mTimePickerTo.setAlpha(ALPHA);
+        mCalendarViewFrom.setAlpha(ALPHA);
+        mCalendarViewTo.setAlpha(ALPHA);
+        mTextViewReminderText.setAlpha(ALPHA);
+        mTextViewTimeText.setAlpha(ALPHA);
+        mTextViewLocationText.setAlpha(ALPHA);
+        mTextViewReminderText2.setAlpha(ALPHA);
+        mTextViewNotesText.setAlpha(ALPHA);
     }
 
     @Override
