@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.Circle;
 import com.mydomain.galcal.BaseContract;
+import com.mydomain.galcal.MainActivity;
 import com.mydomain.galcal.R;
 import com.mydomain.galcal.data.AddEventData;
 import com.mydomain.galcal.data.DayEventData;
@@ -62,6 +64,7 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
     private TimePicker mTimePickerFrom;
     private TimePicker mTimePickerTo;
     private ProgressBar mProgressBar;
+    private ConstraintLayout mLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +76,14 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.edit_event_fragment, container, false);
+        mLayout = (ConstraintLayout) view.findViewById(R.id.layout);
         mProgressBar = (ProgressBar)view.findViewById(R.id.spin_kit);
+        MainActivity activity = (MainActivity) getActivity();
+        if(activity.isTutirial){
+            mLayout.setBackgroundColor(getResources().getColor(R.color.tutorialColor));
+            activity.setEditFragment(this);
+        }
+
         Sprite doubleBounce = new Circle();
         mProgressBar.setIndeterminateDrawable(doubleBounce);
         mTextViewLocation = (TextView) view.findViewById(R.id.location_tv);
@@ -538,6 +548,10 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
 
     public void setToken(String token){
         mToken = token;
+    }
+
+    public void setBackground(){
+        mLayout.setBackground(getResources().getDrawable(R.drawable.home_tab_background));
     }
 
     @Override

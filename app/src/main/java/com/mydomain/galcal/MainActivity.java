@@ -3,6 +3,7 @@ package com.mydomain.galcal;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -32,6 +33,7 @@ import com.mydomain.galcal.addEvent.AddEventFragment;
 import com.mydomain.galcal.calendar.CalendarFragment;
 import com.mydomain.galcal.data.BackgroundImageInfo;
 import com.mydomain.galcal.data.DayEventData;
+import com.mydomain.galcal.editEvent.EditEventFragment;
 import com.mydomain.galcal.home.HomeFragment;
 import com.mydomain.galcal.settings.SettingsFragment;
 import com.mydomain.galcal.week.WeekFragment;
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
 
     public boolean firstCreating;
+    public boolean showSteps;
+    public boolean isTutirial;
     private String mToken;
     private String mUserName;
     private ArrayList<DayEventData> mEvents;
@@ -68,14 +72,42 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     private ProgressBar mProgressBar;
     //private View mTutorial;
 
+    private ImageView mUnlockedPhoto;
+    private TextView mTextViewThatsIt;
+    private TextView mTextViewExit;
 
+    private SharedPreferences mPref;
+    private EditEventFragment mEditFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mPref = getSharedPreferences("GalCal", MODE_PRIVATE);
+        String tutorial = mPref.getString("tutorial", "");
+        if(!tutorial.equals("")){
+            isTutirial = false;
+        }else{
+            isTutirial = true;
+        }
+
+        mUnlockedPhoto = (ImageView) findViewById(R.id.imageViewGirl);
+        mUnlockedPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                    mTextViewExit.setVisibility(View.GONE);
+                    mUnlockedPhoto.setVisibility(View.GONE);
+                    mTextViewThatsIt.setVisibility(View.GONE);
+                    mEditFragment.setBackground();
+            }
+        });
+        mTextViewThatsIt = (TextView) findViewById(R.id.textViewT);
+        mTextViewExit = (TextView) findViewById(R.id.textViewExit);
+        showSteps = false;
         firstCreating = true;
+
         mImageViewBackground = (ImageView) findViewById(R.id.imageViewBackground);
         mProgressBar = (ProgressBar)findViewById(R.id.spin_kit);
         Sprite doubleBounce = new Circle();
@@ -92,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
         mCalendarFragment = new CalendarFragment();
         //mCalendarFragment.setToken(mToken);
-
+        mCalendarFragment.setToken(mToken);
         mWeekFragment = new WeekFragment();
         mWeekFragment.setToken(mToken);
 
@@ -115,7 +147,11 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                 int id = item.getItemId();
                 switch (id){    // попробовать не пересоздавать фрагмент (new SomeFragment() -> SomeFragment())
                     case R.id.mothCalendarView:
-
+                        if(showSteps){
+                            if(isTutirial) {
+                                mAddEventFragment.hideStep7();
+                            }
+                        }
                         //mCalendarFragment.setEvents(mEvents);
                         mFragment = mCalendarFragment;
                         break;
@@ -145,18 +181,19 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         int s = 0;
         //mPresenter.fetchBackgroundImageInfo(mToken, date);
         //mTimer.schedule(mMyTimerTask, 1000, 10000);
+
         if(isNetworkAvailable()) {
+            if(!isTutirial) {
+                Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
+                    @Override
+                    public void run() {
 
-            Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
-                @Override
-                public void run() {
+                        mPresenter.fetchBackgroundImageInfo(mToken);
 
-                    mPresenter.fetchBackgroundImageInfo(mToken);
+                    }
+                }, 0, 3, TimeUnit.HOURS);
 
-                }
-            }, 0, 3, TimeUnit.HOURS);
-
-
+            }
                 //mTimer.schedule(mMyTimerTask, 1000, 14400000);
                 //mImageViewBackground.setImageDrawable(getResources().getDrawable(R.drawable.sss));
                 fetchEventsForYear();
@@ -193,7 +230,21 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 
+    public void showStep10(){
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
 
+                mPresenter.fetchBackgroundImageInfo(mToken);
+
+            }
+        }, 0, 3, TimeUnit.HOURS);
+
+    }
+
+    public void showAddEventElements(){
+        mAddEventFragment.showAll();
+    }
 
     public void openHomeTab(){
         mBottomNavigation.setSelectedItemId(R.id.homeTabFragment);
@@ -203,9 +254,24 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mBottomNavigation.setSelectedItemId(R.id.weekFragment);
     }
 
+    private void finishTutorial(){
+        isTutirial = false;
+        SharedPreferences.Editor editor = mPref.edit();
+        editor.putString("tutorial", "+");
+        editor.commit();
+    }
 
     public void setBackgroundImage(String image){
+            if(isTutirial){
+                mUnlockedPhoto.setVisibility(View.VISIBLE);
+                Picasso.with(getApplicationContext()) //передаем контекст приложения
+                        .load(image)
+                        .into(mUnlockedPhoto);
+                mTextViewThatsIt.setVisibility(View.VISIBLE);
+                mTextViewExit.setVisibility(View.VISIBLE);
+                finishTutorial();
 
+            }
             Picasso.with(getApplicationContext()) //передаем контекст приложения
                     .load(image)
                     .into(mImageViewBackground);
@@ -240,6 +306,12 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     public void setBackgroundInfo(BackgroundImageInfo info){
         mHomeFragment.setBackgroundImageInfo(info);
     }
+
+    public void setEditFragment(EditEventFragment editFragment){
+        mEditFragment = editFragment;
+    }
+
+
 
     @Override
     public void showMessage(String message) {

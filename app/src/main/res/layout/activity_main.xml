@@ -59,7 +59,51 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 
+    <TextView
+        android:id="@+id/textViewT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="96dp"
+        android:fontFamily="@font/orbitron_medium"
+        android:gravity="center_horizontal"
+        android:text="That’s it!\n\nYou’ve unclocked today’s photo"
+        android:textColor="@color/colorWhite"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/imageViewGirl"
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/textViewT"
+        app:layout_constraintStart_toStartOf="@+id/textViewT"
+        app:layout_constraintTop_toBottomOf="@+id/textViewT"
+        app:srcCompat="@drawable/girl1" />
+
+    <TextView
+        android:id="@+id/textViewExit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/orbitron_medium"
+        android:gravity="center_horizontal"
+        android:text="Tap photo to exit tutorial"
+android:visibility="gone"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewGirl"
+        app:layout_constraintStart_toStartOf="@+id/imageViewGirl"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewGirl" />
 
 
 </android.support.constraint.ConstraintLayout>

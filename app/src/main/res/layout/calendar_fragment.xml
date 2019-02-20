@@ -58,7 +58,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -114,9 +114,37 @@
         android:layout_height="13dp"
         android:layout_marginBottom="4dp"
         android:layout_marginRight="1dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/imageViewStep1"
         app:layout_constraintEnd_toEndOf="@+id/imageViewStep1"
         app:layout_constraintStart_toStartOf="@+id/imageViewStep1"
         app:srcCompat="@drawable/pulsating_circle" />
+
+    <TextView
+        android:id="@+id/textViewStep8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/lato"
+        android:gravity="center_horizontal"
+        android:text="whenever an event has been created, \na green circle will appear around the date. \nClick it to view the events. "
+        android:textColor="@color/colorWhite"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewCalendar"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewStep9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/lato"
+        android:visibility="gone"
+        android:gravity="center_horizontal"
+        android:textColor="@color/colorWhite"
+        android:text="click the event to edit  or delete it"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewCalendar"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -4,14 +4,18 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.mydomain.galcal.MainActivity;
 import com.mydomain.galcal.R;
 import com.mydomain.galcal.data.DayEventData;
+import com.mydomain.galcal.editEvent.EditEventFragment;
 import com.mydomain.galcal.week.WeekAdapter;
 
 import java.text.SimpleDateFormat;
@@ -25,11 +29,13 @@ import java.util.Date;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
 
+    private String mToken;
     private ArrayList<DayEventData> mEvents;
     private CalendarFragment mFragment;
 
-    public CalendarAdapter(CalendarFragment fragment){
+    public CalendarAdapter(CalendarFragment fragment, String token){
         mFragment = fragment;
+        mToken = token;
         mEvents = new ArrayList<DayEventData>();
         //mFragment.fetchNewEvents();
         // mFragment.fetchNewEvents(mLastDate);
@@ -64,6 +70,23 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
                 Date date = oldFormat.parse(mEvents.get(position).startTime);
                 holder.textViewTime.setText(new SimpleDateFormat("HH:mm").format(date));
             }
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    EditEventFragment fragment = new EditEventFragment();
+                    fragment.setToken(mToken);
+                    fragment.setEventData(mEvents.get(position));
+                    FragmentManager manager = mFragment.getActivity().getSupportFragmentManager();
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.replace(R.id.main_container, fragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                    MainActivity activity = (MainActivity) mFragment.getActivity();
+                    if(activity.isTutirial){
+                        mFragment.hideStep9();
+                    }
+                }
+            });
         }catch (Exception c){
             c.printStackTrace();
         }

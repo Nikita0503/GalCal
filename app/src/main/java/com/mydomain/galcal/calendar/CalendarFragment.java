@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mydomain.galcal.BaseContract;
+import com.mydomain.galcal.MainActivity;
 import com.mydomain.galcal.R;
 import com.mydomain.galcal.data.DayEventData;
 import com.mydomain.galcal.editEvent.EditEventPresenter;
@@ -38,10 +39,12 @@ import java.util.Locale;
 public class CalendarFragment extends Fragment implements BaseContract.BaseView {
 
     private float ALPHA = 0.3f;
-    //private String mToken;
+    private String mToken;
     //private CalendarPresenter mPresenter;
     private ArrayList<DayEventData> mList;
     private CalendarAdapter mAdapter;
+    private TextView mTextViewStep9;
+    private TextView mTextViewStep8;
     private TextView mTextView;
     private TextView mTextViewStep1;
     private TextView mTextViewWelcome;
@@ -101,9 +104,47 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
         mImageViewPulsating.clearAnimation();
     }
 
+    public void showStep8(){
+        hideStep1();
+        mTextViewStep8.setVisibility(View.VISIBLE);
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.pulsating);
+        animation.setRepeatMode(Animation.REVERSE);
+        animation.setRepeatCount(100);
+        mTextViewStep8.startAnimation(animation);
+        //Toast.makeText(getContext(), "Step 8", Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void hideStep8(){
+        mTextViewStep8.setVisibility(View.GONE);
+        mTextViewStep8.clearAnimation();
+        showStep9();
+    }
+
+    public void showStep9(){
+        mTextViewStep9.setVisibility(View.VISIBLE);
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.pulsating);
+        animation.setRepeatMode(Animation.REVERSE);
+        animation.setRepeatCount(100);
+        mTextViewStep9.startAnimation(animation);
+    }
+
+    public void hideStep9(){
+        mTextViewStep9.setVisibility(View.GONE);
+        mTextViewStep9.clearAnimation();
+        mImageViewPulsating.setVisibility(View.GONE);
+        mImageViewPulsating.clearAnimation();
+        MainActivity activity = (MainActivity) getActivity();
+        activity.showStep10();
+        activity.showAddEventElements();
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.calendar_fragment, container, false);
+        mTextViewStep9 = (TextView) view.findViewById(R.id.textViewStep9);
+        mTextViewStep8 = (TextView) view.findViewById(R.id.textViewStep8);
         mImageViewPulsating = (ImageView) view.findViewById(R.id.imageViewPulsating);
         mTextViewStep1 = (TextView) view.findViewById(R.id.textViewStep1);
         mTextViewWelcome = (TextView) view.findViewById(R.id.textViewWelcomeStep1);
@@ -120,6 +161,10 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
                 try {
+                    MainActivity activity = (MainActivity) getActivity();
+                    if(activity.isTutirial){
+                        hideStep8();
+                    }
                     ArrayList<DayEventData> list = new ArrayList<DayEventData>();
                     String currentDate = calendarDay.getYear() + "-" + calendarDay.getMonth() + "-" + calendarDay.getDay();
                     SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
@@ -176,13 +221,19 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
         mCalendarView.addDecorator(holidayDecorator);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewCalendar);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new CalendarAdapter(this);
+        mAdapter = new CalendarAdapter(this, mToken);
         mRecyclerView.setAdapter(mAdapter);
         //mPresenter.setToken(mToken);
         Log.d("TAG", "onCreateView");
         //mPresenter.fetchEvents();
         mRecyclerView.bringToFront();
-        showStep1();
+        MainActivity activity = (MainActivity) getActivity();
+        if(activity.isTutirial) {
+            showStep1();
+        }
+        if(activity.showSteps && activity.isTutirial){
+            showStep8();
+        }
         return view;
     }
 
@@ -192,11 +243,11 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
 
     }
 
-    /*public void setToken(String token){
+    public void setToken(String token){
         mToken = token;
         Log.d("TAG", "setToken()");
         //Log.d("TAG3", mToken);
-    }*/
+    }
 
     @Override
     public void showMessage(String message) {
