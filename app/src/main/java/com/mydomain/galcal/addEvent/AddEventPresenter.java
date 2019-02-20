@@ -70,7 +70,7 @@ public class AddEventPresenter implements BaseContract.BasePresenter {
                             Date date1 = oldFormat.parse(data.startTime);
                             if(newFormat.format(date).equals(newFormat.format(date1))) {
                                 activity.updateHomeTab();
-                                activity.firstCreating = true;
+                                //activity.firstCreating = true;
                                 activity.fetchEventsForYear();
                                 if(reminder != null) {
                                     SharedPreferences pref = mFragment.getActivity().getSharedPreferences("GalCal", mFragment.getActivity().MODE_PRIVATE);

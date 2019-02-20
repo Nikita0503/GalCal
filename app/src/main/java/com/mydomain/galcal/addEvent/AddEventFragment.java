@@ -78,6 +78,9 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
     private TimePicker mTimePickerTo;
     private ImageView mDivider;
     private ImageView mImageViewArrow;
+    private ImageView mImageViewGirl2;
+    private ImageView mImageVIewGirl3;
+    private ImageView mImageViewPulsating;
     private ConstraintLayout mLayout;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,6 +93,9 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_event_fragment, container, false);
         mLayout = (ConstraintLayout) view.findViewById(R.id.layout);
+        mImageViewPulsating = (ImageView) view.findViewById(R.id.imageViewPulsating);
+        mImageVIewGirl3 = (ImageView) view.findViewById(R.id.imageViewGirl3);
+        mImageViewGirl2 = (ImageView) view.findViewById(R.id.imageViewGirl2);
         mTextViewCongrats = (TextView) view.findViewById(R.id.textViewCongrats);
         mImageViewArrow = (ImageView) view.findViewById(R.id.imageViewStep1);
         mTextViewLetsTo = (TextView) view.findViewById(R.id.textViewLetsTo);
@@ -553,6 +559,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         mTextViewLocationText.setAlpha(ALPHA);
         mTextViewReminderText2.setAlpha(ALPHA);
         mTextViewNotesText.setAlpha(ALPHA);
+        mImageViewGirl2.setVisibility(View.VISIBLE);
     }
 
     private void hideStep2(){
@@ -585,6 +592,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         mTextViewLocationText.setAlpha(1);
         mTextViewReminderText2.setAlpha(1);
         mTextViewNotesText.setAlpha(1);
+        mImageViewGirl2.setVisibility(View.GONE);
         showStep3();
     }
 
@@ -826,11 +834,26 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
     }
 
     private void showStep7(){
-        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.arrowtrans);
-        animation.setRepeatMode(Animation.REVERSE);
-        animation.setRepeatCount(100);
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.pulsating_circle);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mImageViewPulsating.startAnimation(animation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        mImageViewPulsating.setVisibility(View.VISIBLE);
+        mImageViewPulsating.startAnimation(animation);
         mImageViewArrow.setVisibility(View.VISIBLE);
-        mImageViewArrow.startAnimation(animation);
         mTextViewLetsTo.setVisibility(View.VISIBLE);
         mTextViewCongrats.setVisibility(View.VISIBLE);
         mTextViewSave.setAlpha(ALPHA);
@@ -854,6 +877,36 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         mTextViewLocationText.setAlpha(ALPHA);
         mTextViewReminderText2.setAlpha(ALPHA);
         mTextViewNotesText.setAlpha(ALPHA);
+        mImageVIewGirl3.setVisibility(View.VISIBLE);
+    }
+
+    private void hideStep7(){
+        mImageViewArrow.setVisibility(View.GONE);
+        mImageViewArrow.clearAnimation();
+        mTextViewLetsTo.setVisibility(View.VISIBLE);
+        mTextViewCongrats.setVisibility(View.VISIBLE);
+        mTextViewSave.setAlpha(ALPHA);
+        mDivider.setAlpha(ALPHA);
+        mEditTextTitleEvent.setAlpha(ALPHA);
+        mTextViewStartTime.setAlpha(ALPHA);
+        mTextViewEndTime.setAlpha(ALPHA);
+        mTextViewStartDate.setAlpha(ALPHA);
+        mTextViewEndDate.setAlpha(ALPHA);
+        mEditTextLocation.setAlpha(ALPHA);
+        mEditTextNotes.setAlpha(ALPHA);
+        mSwitchAllDay.setAlpha(ALPHA);
+        mSwitchReminder.setAlpha(ALPHA);
+        mProgressBar.setAlpha(ALPHA);
+        mTimePickerFrom.setAlpha(ALPHA);
+        mTimePickerTo.setAlpha(ALPHA);
+        mCalendarViewFrom.setAlpha(ALPHA);
+        mCalendarViewTo.setAlpha(ALPHA);
+        mTextViewReminderText.setAlpha(ALPHA);
+        mTextViewTimeText.setAlpha(ALPHA);
+        mTextViewLocationText.setAlpha(ALPHA);
+        mTextViewReminderText2.setAlpha(ALPHA);
+        mTextViewNotesText.setAlpha(ALPHA);
+        mImageVIewGirl3.setVisibility(View.INVISIBLE);
     }
 
     @Override

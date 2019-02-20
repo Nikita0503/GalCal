@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/home_tab_background">
@@ -30,8 +30,8 @@
         android:layout_height="155dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:overScrollMode="never"
         android:layout_marginStart="8dp"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -44,9 +44,9 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:text="Click on green circle to view Day's events"
+        android:textColor="@color/colorWhite"
         android:textSize="18sp"
         android:textStyle="italic"
-        android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -58,7 +58,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,12 +70,12 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
+        android:fontFamily="@font/lato"
         android:gravity="center_horizontal"
+        android:text="click on the plus sign\nto add an event"
         android:textColor="#b0e67a"
         android:textSize="12sp"
         android:visibility="gone"
-        android:fontFamily="@font/lato"
-        android:text="click on the plus sign\nto add an event"
         app:layout_constraintBottom_toTopOf="@+id/imageViewStep1"
         app:layout_constraintEnd_toEndOf="@+id/imageViewStep1"
         app:layout_constraintStart_toStartOf="@+id/imageViewStep1" />
@@ -90,10 +90,10 @@
         android:layout_marginTop="8dp"
         android:fontFamily="@font/orbitron_medium"
         android:gravity="center_horizontal"
-        android:visibility="gone"
         android:text="Welcome To GalCal\n\nTo unlock today’s photo,\nlet’s add an event!\n\nDon’t worry it will only take\na minute, and we promise\nit’s worth it!"
         android:textColor="@color/colorWhite"
         android:textSize="16dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/textViewStep1"
         app:layout_constraintStart_toStartOf="@+id/textViewStep1"
@@ -107,5 +107,16 @@
         app:layout_constraintBottom_toBottomOf="@+id/imageViewStep1"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/girl1" />
+
+    <ImageView
+        android:id="@+id/imageViewPulsating"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginRight="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewStep1"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewStep1"
+        app:layout_constraintStart_toStartOf="@+id/imageViewStep1"
+        app:srcCompat="@drawable/pulsating_circle" />
 
 </android.support.constraint.ConstraintLayout>

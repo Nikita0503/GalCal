@@ -49,6 +49,7 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
     private RecyclerView mRecyclerView;
     private ImageView mImageViewArrow;
     private ImageView mImageViewGirl;
+    private ImageView mImageViewPulsating;
     private ConstraintLayout mLayout;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,10 +67,26 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
         mTextViewStep1.setVisibility(View.VISIBLE);
         mImageViewGirl.setVisibility(View.VISIBLE);
         mImageViewArrow.setVisibility(View.VISIBLE);
-        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.arrowtrans);
-        animation.setRepeatMode(Animation.REVERSE);
-        animation.setRepeatCount(100);
-        mImageViewArrow.startAnimation(animation);
+        mImageViewPulsating.setVisibility(View.VISIBLE);
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.pulsating_circle);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mImageViewPulsating.startAnimation(animation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        mImageViewPulsating.startAnimation(animation);
     }
 
     public void hideStep1(){ //вернуть цвет
@@ -80,12 +97,14 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
         mTextViewStep1.setVisibility(View.GONE);
         mImageViewGirl.setVisibility(View.GONE);
         mImageViewArrow.setVisibility(View.GONE);
-        mImageViewArrow.clearAnimation();
+        mImageViewPulsating.setVisibility(View.GONE);
+        mImageViewPulsating.clearAnimation();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.calendar_fragment, container, false);
+        mImageViewPulsating = (ImageView) view.findViewById(R.id.imageViewPulsating);
         mTextViewStep1 = (TextView) view.findViewById(R.id.textViewStep1);
         mTextViewWelcome = (TextView) view.findViewById(R.id.textViewWelcomeStep1);
         mImageViewArrow = (ImageView) view.findViewById(R.id.imageViewStep1);
