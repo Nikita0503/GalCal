@@ -38,7 +38,7 @@ import java.util.Locale;
 
 public class CalendarFragment extends Fragment implements BaseContract.BaseView {
 
-    private float ALPHA = 0.3f;
+    private float ALPHA = 0.1f;
     private String mToken;
     //private CalendarPresenter mPresenter;
     private ArrayList<DayEventData> mList;
@@ -94,7 +94,7 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
 
     public void hideStep1(){ //вернуть цвет
         mTextView.setAlpha(1);
-        mCalendarView.setAlpha(1);
+        //mCalendarView.setAlpha(1);
         mRecyclerView.setAlpha(1);
         mTextViewWelcome.setVisibility(View.GONE);
         mTextViewStep1.setVisibility(View.GONE);
@@ -106,12 +106,14 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
 
     public void showStep8(){
         hideStep1();
+        mCalendarView.setAlpha(ALPHA);
         mTextViewStep8.setVisibility(View.VISIBLE);
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.pulsating);
         animation.setRepeatMode(Animation.REVERSE);
         animation.setRepeatCount(100);
         mTextViewStep8.startAnimation(animation);
         //Toast.makeText(getContext(), "Step 8", Toast.LENGTH_SHORT).show();
+
 
     }
 
@@ -122,6 +124,7 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
     }
 
     public void showStep9(){
+        mCalendarView.setAlpha(ALPHA);
         mTextViewStep9.setVisibility(View.VISIBLE);
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.pulsating);
         animation.setRepeatMode(Animation.REVERSE);
@@ -130,6 +133,7 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
     }
 
     public void hideStep9(){
+        mCalendarView.setAlpha(1);
         mTextViewStep9.setVisibility(View.GONE);
         mTextViewStep9.clearAnimation();
         mImageViewPulsating.setVisibility(View.GONE);

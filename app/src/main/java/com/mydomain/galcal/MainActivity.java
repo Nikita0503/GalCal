@@ -4,12 +4,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.bottomnavigation.LabelVisibilityMode;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -17,11 +15,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -39,12 +36,8 @@ import com.mydomain.galcal.settings.SettingsFragment;
 import com.mydomain.galcal.week.WeekFragment;
 import com.squareup.picasso.Picasso;
 
-import org.threeten.bp.LocalDate;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -262,11 +255,23 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     }
 
     public void setBackgroundImage(String image){
+        mProgressBar.setVisibility(View.VISIBLE);
             if(isTutirial){
                 mUnlockedPhoto.setVisibility(View.VISIBLE);
                 Picasso.with(getApplicationContext()) //передаем контекст приложения
                         .load(image)
-                        .into(mUnlockedPhoto);
+                        .transform(new UnlockedTransformation())
+                        .into(mUnlockedPhoto, new com.squareup.picasso.Callback() {
+                            @Override
+                            public void onSuccess() {
+                                mProgressBar.setVisibility(View.INVISIBLE);
+                            }
+
+                            @Override
+                            public void onError() {
+
+                            }
+                        });
                 mTextViewThatsIt.setVisibility(View.VISIBLE);
                 mTextViewExit.setVisibility(View.VISIBLE);
                 finishTutorial();

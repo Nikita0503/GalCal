@@ -46,7 +46,8 @@ import java.util.Locale;
 
 public class AddEventFragment extends Fragment implements BaseContract.BaseView{
 
-    private float ALPHA = 0.3f;
+    private boolean mNotes;
+    private float ALPHA = 0.1f;
     private String mToken;
     private AddEventPresenter mPresenter;
     private TextView mTextViewLocation;
@@ -67,6 +68,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
     private TextView mTextViewEnterNotes;
     private TextView mTextViewLetsTo;
     private TextView mTextViewCongrats;
+    private TextView mTextViewNext;
     private EditText mEditTextTitleEvent;
     private EditText mEditTextLocation;
     private EditText mEditTextNotes;
@@ -95,7 +97,19 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_event_fragment, container, false);
+        mNotes = false;
         mLayout = (ConstraintLayout) view.findViewById(R.id.layout);
+        mTextViewNext = (TextView) view.findViewById(R.id.textViewNext);
+        mTextViewNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideStep3();
+                mCalendarViewFrom.setVisibility(View.GONE);
+                mCalendarViewTo.setVisibility(View.GONE);
+                mTimePickerFrom.setVisibility(View.GONE);
+                mTimePickerTo.setVisibility(View.GONE);
+            }
+        });
         mImageViewPulsating = (ImageView) view.findViewById(R.id.imageViewPulsating);
         mImageVIewGirl3 = (ImageView) view.findViewById(R.id.imageViewGirl3);
         mImageViewGirl2 = (ImageView) view.findViewById(R.id.imageViewGirl2);
@@ -220,6 +234,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
 
                     //
                 }
+                showNext();
             }
         });
         mCalendarViewTo.setOnDateChangedListener(new OnDateSelectedListener() {
@@ -246,11 +261,9 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
 
                 }else{
                     MainActivity activity = (MainActivity) getActivity();
-                    if(activity.isTutirial) {
-                        hideStep3();
-                    }
-                }
 
+                }
+                showNext();
 
             }
         });
@@ -303,6 +316,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                     layoutParams1.topToBottom = R.id.timePickerFrom;
                     mTextViewEndDate.setLayoutParams(layoutParams1);
                 }
+                showNext();
                 /*Calendar currentTime = Calendar.getInstance();
                 int hour = currentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = currentTime.get(Calendar.MINUTE);
@@ -344,9 +358,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                 }
                 if(!mTextViewStartTime.getText().toString().equals("Time")&&!mTextViewStartDate.getText().toString().equals("From")&&!mTextViewEndDate.getText().toString().equals("To")) {
                     MainActivity activity = (MainActivity) getActivity();
-                    if(activity.isTutirial) {
-                        hideStep3();
-                    }
+
                 }
                 /*Calendar currentTime = Calendar.getInstance();
                 int hour = currentTime.get(Calendar.HOUR_OF_DAY);
@@ -361,6 +373,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                 }, hour, minute, true);//Yes 24 hour time
                 timePicker.setTitle("Select Time");
                 timePicker.show();*/
+                showNext();
             }
         });
         mTextViewStartDate.setOnClickListener(new View.OnClickListener() {
@@ -639,6 +652,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.pulsating);
         animation.setRepeatMode(Animation.REVERSE);
         animation.setRepeatCount(100);
+        //mTextViewNext.setVisibility(View.VISIBLE);
         mTextViewChooseTime.setVisibility(View.VISIBLE);
         mTextViewChooseTime.startAnimation(animation);
         mTextViewLocation.setAlpha(ALPHA);
@@ -668,6 +682,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
     private void hideStep3(){
         mTextViewChooseTime.setVisibility(View.GONE);
         mTextViewChooseTime.clearAnimation();
+        mTextViewNext.setVisibility(View.GONE);
         mTextViewLocation.setAlpha(ALPHA);
         mTextViewSave.setAlpha(ALPHA);
         mDivider.setAlpha(ALPHA);
@@ -816,11 +831,8 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
     }
 
     private void showStep6(){
-        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.pulsating);
-        animation.setRepeatMode(Animation.REVERSE);
-        animation.setRepeatCount(100);
-        mTextViewEnterNotes.startAnimation(animation);
-        mTextViewEnterNotes.setVisibility(View.VISIBLE);
+
+
         mTextViewSave.setAlpha(1);
         mDivider.setAlpha(ALPHA);
         mEditTextTitleEvent.setAlpha(ALPHA);
@@ -829,7 +841,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         mTextViewStartDate.setAlpha(ALPHA);
         mTextViewEndDate.setAlpha(ALPHA);
         mEditTextLocation.setAlpha(ALPHA);
-        mEditTextNotes.setAlpha(1);
+
         mSwitchAllDay.setAlpha(ALPHA);
         mSwitchReminder.setAlpha(ALPHA);
         mProgressBar.setAlpha(ALPHA);
@@ -841,7 +853,16 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         mTextViewTimeText.setAlpha(ALPHA);
         mTextViewLocationText.setAlpha(ALPHA);
         mTextViewReminderText2.setAlpha(ALPHA);
-        mTextViewNotesText.setAlpha(1);
+        if(!mNotes) {
+            mTextViewNotesText.setAlpha(1);
+            mEditTextNotes.setAlpha(1);
+            Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.pulsating);
+            animation.setRepeatMode(Animation.REVERSE);
+            animation.setRepeatCount(100);
+            mTextViewEnterNotes.startAnimation(animation);
+            mTextViewEnterNotes.setVisibility(View.VISIBLE);
+        }
+        mNotes = true;
     }
 
     private void hideStep6(){
@@ -973,19 +994,44 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         mTextViewNotesText.setAlpha(1);
     }
 
+    private void showNext(){
+        if(mTextViewStartDate.getText().toString().equals("From")){
+            return;
+        }
+        if(mTextViewEndDate.getText().toString().equals("To")){
+            return;
+        }
+        if(mSwitchAllDay.isChecked()){
+            if(mTextViewStartTime.getText().toString().equals("From")){
+                return;
+            }
+            if(mTextViewEndTime.getText().toString().equals("To")){
+                return;
+            }
+        }
+        MainActivity activity = (MainActivity) getActivity();
+        if(activity.isTutirial) {
+            mTextViewNext.setVisibility(View.VISIBLE);
+        }
+
+    }
+
     @Override
     public void showMessage(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-        mProgressBar.setVisibility(View.INVISIBLE);
-       //mEditTextTitleEvent.setHint("Title of event");
-       //mTextViewStartDate.setHint("From");
-       //mTextViewStartTime.setHint("Time");
-       //mTextViewEndDate.setHint("To");
-       //mTextViewEndTime.setHint("Time");
-       //mEditTextLocation.setHint("Enter location here");
-       //mEditTextNotes.setHint("Enter notes here");
-       //mSwitchReminder.setChecked(false);
-       //mSwitchAllDay.setChecked(false);
+       Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+       mProgressBar.setVisibility(View.INVISIBLE);
+       mEditTextTitleEvent.setText("");
+       mEditTextTitleEvent.setHint("Title of event");
+       mTextViewStartDate.setText("From");
+       mTextViewStartTime.setText("Time");
+       mTextViewEndDate.setText("To");
+       mTextViewEndTime.setText("Time");
+       mEditTextLocation.setText("");
+       mEditTextNotes.setText("");
+       mEditTextLocation.setHint("Enter location here");
+       mEditTextNotes.setHint("Enter notes here");
+       mSwitchAllDay.setChecked(false);
+       mSwitchReminder.setChecked(false);
     }
 
     @Override

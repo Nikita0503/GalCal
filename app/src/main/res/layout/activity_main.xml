@@ -99,7 +99,7 @@
         android:fontFamily="@font/orbitron_medium"
         android:gravity="center_horizontal"
         android:text="Tap photo to exit tutorial"
-android:visibility="gone"
+        android:visibility="gone"
         android:textColor="@color/colorWhite"
         app:layout_constraintEnd_toEndOf="@+id/imageViewGirl"
         app:layout_constraintStart_toStartOf="@+id/imageViewGirl"

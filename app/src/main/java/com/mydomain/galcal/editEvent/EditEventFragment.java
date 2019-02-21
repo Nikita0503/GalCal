@@ -44,9 +44,15 @@ import java.util.Locale;
 
 public class EditEventFragment extends Fragment implements BaseContract.BaseView {
 
+    private float ALPHA = 0.1f;
     private String mToken;
     private DayEventData mData;
     private EditEventPresenter mPresenter;
+    private TextView mTextViewTimeText;
+    private TextView mTextViewLocationText;
+    private TextView mTextViewReminderText;
+    private TextView mTextViewNotesText;
+    private TextView mTextViewReminderTimeText;
     private TextView mTextViewDelete;
     private TextView mTextViewEdit;
     private TextView mTextViewStartTime;
@@ -65,6 +71,7 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
     private TimePicker mTimePickerTo;
     private ProgressBar mProgressBar;
     private ConstraintLayout mLayout;
+    private ImageView mDivider;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,13 +84,13 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.edit_event_fragment, container, false);
         mLayout = (ConstraintLayout) view.findViewById(R.id.layout);
+        mDivider = (ImageView) view.findViewById(R.id.imageViewDivider);
         mProgressBar = (ProgressBar)view.findViewById(R.id.spin_kit);
-        MainActivity activity = (MainActivity) getActivity();
-        if(activity.isTutirial){
-            mLayout.setBackgroundColor(getResources().getColor(R.color.tutorialColor));
-            activity.setEditFragment(this);
-        }
-
+        mTextViewTimeText = (TextView) view.findViewById(R.id.time);
+        mTextViewLocationText = (TextView) view.findViewById(R.id.location_tv);
+        mTextViewReminderText = (TextView) view.findViewById(R.id.reminder_tv);
+        mTextViewNotesText = (TextView) view.findViewById(R.id.notes_tv);
+        mTextViewReminderTimeText = (TextView) view.findViewById(R.id.reminder_time_text);
         Sprite doubleBounce = new Circle();
         mProgressBar.setIndeterminateDrawable(doubleBounce);
         mTextViewLocation = (TextView) view.findViewById(R.id.location_tv);
@@ -538,7 +545,34 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                 //Toast.makeText(getContext(), "Go", Toast.LENGTH_SHORT).show();
             }
         });
-
+        MainActivity activity = (MainActivity) getActivity();
+        if(activity.isTutirial){
+            mLayout.setBackgroundColor(getResources().getColor(R.color.tutorialColor));
+            mDivider.setAlpha(ALPHA);
+            mTextViewDelete.setAlpha(ALPHA);
+            mTextViewEdit.setAlpha(ALPHA);
+            mTextViewStartTime.setAlpha(ALPHA);
+            mTextViewEndTime.setAlpha(ALPHA);
+            mTextViewStartDate.setAlpha(ALPHA);
+            mTextViewEndDate.setAlpha(ALPHA);
+            mTextViewLocation.setAlpha(ALPHA);
+            mEditTextTitleEvent.setAlpha(ALPHA);
+            mEditTextLocation.setAlpha(ALPHA);
+            mEditTextNotes.setAlpha(ALPHA);
+            mSwitchAllDay.setAlpha(ALPHA);
+            mSwitchReminder.setAlpha(ALPHA);
+            mCalendarViewFrom.setAlpha(ALPHA);
+            mCalendarViewTo.setAlpha(ALPHA);
+            mTimePickerFrom.setAlpha(ALPHA);
+            mTimePickerTo.setAlpha(ALPHA);
+            mProgressBar.setAlpha(ALPHA);
+            mTextViewTimeText.setAlpha(ALPHA);
+            mTextViewLocationText.setAlpha(ALPHA);
+            mTextViewReminderText.setAlpha(ALPHA);
+            mTextViewNotesText.setAlpha(ALPHA);
+            mTextViewReminderTimeText.setAlpha(ALPHA);
+            activity.setEditFragment(this);
+        }
         return view;
     }
 
@@ -552,6 +586,29 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
 
     public void setBackground(){
         mLayout.setBackground(getResources().getDrawable(R.drawable.home_tab_background));
+        mDivider.setAlpha(1);
+        mTextViewDelete.setAlpha(1);
+        mTextViewEdit.setAlpha(1);
+        mTextViewStartTime.setAlpha(1);
+        mTextViewEndTime.setAlpha(1);
+        mTextViewStartDate.setAlpha(1);
+        mTextViewEndDate.setAlpha(1);
+        mTextViewLocation.setAlpha(1);
+        mEditTextTitleEvent.setAlpha(1);
+        mEditTextLocation.setAlpha(1);
+        mEditTextNotes.setAlpha(1);
+        mSwitchAllDay.setAlpha(1);
+        mSwitchReminder.setAlpha(1);
+        mCalendarViewFrom.setAlpha(1);
+        mCalendarViewTo.setAlpha(1);
+        mTimePickerFrom.setAlpha(1);
+        mTimePickerTo.setAlpha(1);
+        mProgressBar.setAlpha(1);
+        mTextViewTimeText.setAlpha(1);
+        mTextViewLocationText.setAlpha(1);
+        mTextViewReminderText.setAlpha(1);
+        mTextViewNotesText.setAlpha(1);
+        mTextViewReminderTimeText.setAlpha(1);
     }
 
     @Override
