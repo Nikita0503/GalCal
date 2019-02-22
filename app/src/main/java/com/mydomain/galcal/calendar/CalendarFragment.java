@@ -233,6 +233,9 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
         mRecyclerView.bringToFront();
         MainActivity activity = (MainActivity) getActivity();
         if(activity.isTutirial) {
+            if(!activity.tutorialGoTo2) {
+                activity.tutorialGoTo1 = true;
+            }
             showStep1();
         }
         if(activity.showSteps && activity.isTutirial){

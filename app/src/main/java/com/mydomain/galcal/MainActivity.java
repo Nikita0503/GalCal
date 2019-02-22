@@ -43,7 +43,9 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements BaseContract.BaseView {
 
-
+    public boolean tutorialGoTo1;
+    public boolean tutorialGoTo2;
+    private boolean downloaded;
     public boolean firstCreating;
     public boolean showSteps;
     public boolean isTutirial;
@@ -76,7 +78,9 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        tutorialGoTo1 = false;
+        tutorialGoTo2 = false;
+        downloaded = false;
         mPref = getSharedPreferences("GalCal", MODE_PRIVATE);
         String tutorial = mPref.getString("tutorial", "");
         if(!tutorial.equals("")){
@@ -89,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mUnlockedPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                    tutorialGoTo2 = false;
                     mTextViewExit.setVisibility(View.GONE);
                     mUnlockedPhoto.setVisibility(View.GONE);
                     mTextViewThatsIt.setVisibility(View.GONE);
@@ -137,12 +141,16 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mBottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+
                 int id = item.getItemId();
                 switch (id){    // попробовать не пересоздавать фрагмент (new SomeFragment() -> SomeFragment())
                     case R.id.mothCalendarView:
                         if(showSteps){
                             if(isTutirial) {
                                 mAddEventFragment.hideStep7();
+                                FragmentTransaction transaction = mFragmentManager.beginTransaction();
+                                transaction.replace(R.id.main_container, mFragment).commit();
                             }
                         }
                         //mCalendarFragment.setEvents(mEvents);
@@ -162,9 +170,22 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                         mFragment = mSettingsFragment;
                         break;
                 }
-                FragmentTransaction transaction = mFragmentManager.beginTransaction();
-                transaction.replace(R.id.main_container, mFragment).commit();
+                if(!tutorialGoTo1 && !tutorialGoTo2) {
+                    FragmentTransaction transaction = mFragmentManager.beginTransaction();
+                    transaction.replace(R.id.main_container, mFragment).commit();
+                }
+                if(tutorialGoTo1){
+                    mFragment = mAddEventFragment;
+                    FragmentTransaction transaction = mFragmentManager.beginTransaction();
+                    transaction.replace(R.id.main_container, mFragment).commit();
+                }
+                if(tutorialGoTo2){
+                    mFragment = mCalendarFragment;
+                    FragmentTransaction transaction = mFragmentManager.beginTransaction();
+                    transaction.replace(R.id.main_container, mFragment).commit();
+                }
                 return true;
+
             }
         });
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -265,6 +286,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                             @Override
                             public void onSuccess() {
                                 mProgressBar.setVisibility(View.INVISIBLE);
+                                downloaded = true;
                             }
 
                             @Override

@@ -226,7 +226,12 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                 }else {
                     mTimePickerFrom.setVisibility(View.VISIBLE);
                     Calendar calendar = Calendar.getInstance();
-                    mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
+                    if(calendar.get(Calendar.MINUTE)<10) {
+                        mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE));
+                    }else{
+                        mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
+                    }
+                    //mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
                     ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewEndDate.getLayoutParams();
                     layoutParams1.topToBottom = R.id.timePickerFrom;
                     mTextViewEndDate.setLayoutParams(layoutParams1);
@@ -252,7 +257,12 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                 }
                 if(!mSwitchAllDay.isChecked()){
                     Calendar calendar = Calendar.getInstance();
-                    mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
+                    if(calendar.get(Calendar.MINUTE)<10) {
+                        mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE));
+                    }else{
+                        mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
+                    }
+                    //mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
                     mTimePickerTo.setVisibility(View.VISIBLE);
                     ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewLocation.getLayoutParams();
                     layoutParams1.topToBottom = R.id.timePickerTo;
@@ -294,7 +304,12 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                     mTextViewEndDate.setLayoutParams(layoutParams1);
                 }else{
                     Calendar calendar = Calendar.getInstance();
-                    mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
+                    if(calendar.get(Calendar.MINUTE)<10) {
+                        mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE));
+                    }else{
+                        mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
+                    }
+
                     mTimePickerFrom.setVisibility(View.VISIBLE);
                     mTimePickerTo.setVisibility(View.GONE);
                     mCalendarViewFrom.setVisibility(View.GONE);
@@ -329,7 +344,12 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                     mTextViewLocation.setLayoutParams(layoutParams1);
                 }else{
                     Calendar calendar = Calendar.getInstance();
-                    mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
+                    if(calendar.get(Calendar.MINUTE)<10) {
+                        mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE));
+                    }else{
+                        mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
+                    }
+                    //mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
                     mTimePickerTo.setVisibility(View.VISIBLE);
                     mTimePickerFrom.setVisibility(View.GONE);
                     mCalendarViewFrom.setVisibility(View.GONE);
