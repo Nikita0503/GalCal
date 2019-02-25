@@ -32,6 +32,7 @@
             <EditText
                 android:id="@+id/event1"
                 android:imeOptions="actionDone"
+                android:cursorVisible="false"
                 android:singleLine="true"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -268,6 +269,7 @@
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
+                android:cursorVisible="false"
                 android:layout_marginStart="35dp"
                 android:layout_marginTop="12dp"
                 android:background="@null"
@@ -329,6 +331,7 @@
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="80dp"
+                android:cursorVisible="false"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="35dp"
                 android:layout_marginTop="8dp"

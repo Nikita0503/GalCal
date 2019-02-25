@@ -93,8 +93,8 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
     }
 
     public void hideStep1(){ //вернуть цвет
-        mTextView.setAlpha(1);
-        //mCalendarView.setAlpha(1);
+
+
         mRecyclerView.setAlpha(1);
         mTextViewWelcome.setVisibility(View.GONE);
         mTextViewStep1.setVisibility(View.GONE);
@@ -104,14 +104,19 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
         mImageViewPulsating.clearAnimation();
     }
 
+
     public void showStep8(){
+
         hideStep1();
-        mCalendarView.setAlpha(ALPHA);
+        mCalendarView.setAlpha(0.5f);
+        mTextView.setAlpha(ALPHA);
+        MainActivity activity = (MainActivity) getActivity();
         mTextViewStep8.setVisibility(View.VISIBLE);
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.pulsating);
         animation.setRepeatMode(Animation.REVERSE);
         animation.setRepeatCount(100);
         mTextViewStep8.startAnimation(animation);
+
         //Toast.makeText(getContext(), "Step 8", Toast.LENGTH_SHORT).show();
 
 
@@ -124,8 +129,9 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
     }
 
     public void showStep9(){
-        mCalendarView.setAlpha(ALPHA);
+
         mTextViewStep9.setVisibility(View.VISIBLE);
+
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.pulsating);
         animation.setRepeatMode(Animation.REVERSE);
         animation.setRepeatCount(100);
@@ -133,7 +139,7 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
     }
 
     public void hideStep9(){
-        mCalendarView.setAlpha(1);
+        mTextView.setAlpha(1);
         mTextViewStep9.setVisibility(View.GONE);
         mTextViewStep9.clearAnimation();
         mImageViewPulsating.setVisibility(View.GONE);
@@ -144,9 +150,14 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
 
     }
 
+    public void showCalendar(){
+        mCalendarView.setAlpha(1);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.calendar_fragment, container, false);
+        Log.d("CREATED", 123+"");
         mTextViewStep9 = (TextView) view.findViewById(R.id.textViewStep9);
         mTextViewStep8 = (TextView) view.findViewById(R.id.textViewStep8);
         mImageViewPulsating = (ImageView) view.findViewById(R.id.imageViewPulsating);
@@ -157,6 +168,7 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
         mLayout = (ConstraintLayout) view.findViewById(R.id.layout);
         mTextView = (TextView) view.findViewById(R.id.textView3);
         mCalendarView = (MaterialCalendarView) view.findViewById(R.id.materialCalendarView);
+        MainActivity activity2 = (MainActivity) getActivity();
         mCalendarView.setWeekDayLabels(new String[]{"M", "T", "W", "T", "F", "S", "S"});
         mCalendarView.setHeaderTextAppearance(R.style.TitleTextAppearance);
         mCalendarView.setWeekDayTextAppearance(R.style.WeekAppearance);
@@ -223,6 +235,7 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
         HolidayDecorator holidayDecorator = new HolidayDecorator(getContext(), mList);
         mCalendarView.addDecorator(dayDecorator);
         mCalendarView.addDecorator(holidayDecorator);
+
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewCalendar);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new CalendarAdapter(this, mToken);
@@ -235,14 +248,19 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
         if(activity.isTutirial) {
             if(!activity.tutorialGoTo2) {
                 activity.tutorialGoTo1 = true;
+
             }
             showStep1();
         }
         if(activity.showSteps && activity.isTutirial){
+
             showStep8();
         }
+
+
         return view;
     }
+
 
 
     public void setEvents(ArrayList<DayEventData> list){

@@ -55,7 +55,7 @@ public class SettingsFragment extends Fragment implements BaseContract.BaseView{
             public void onClick(View view) {
                 //Toast.makeText(getActivity().getApplicationContext(), "Password", Toast.LENGTH_SHORT).show();
                 Dialog dialog = createChangePasswordDialog();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
+                //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
                 dialog.show();
             }
         });
@@ -64,7 +64,7 @@ public class SettingsFragment extends Fragment implements BaseContract.BaseView{
             public void onClick(View view) {
                 //Toast.makeText(getActivity().getApplicationContext(), "Email", Toast.LENGTH_SHORT).show();
                 Dialog dialog = createChangeEmailDialog();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
+                //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
                 dialog.show();
             }
         });
@@ -115,7 +115,7 @@ public class SettingsFragment extends Fragment implements BaseContract.BaseView{
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.change_email_dialog);
         dialog.setTitle(getResources().getString(R.string.change_email_dialog));
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
+        //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
         final EditText editTextEmail = (EditText) dialog.findViewById(R.id.newEmail);
         Button buttonOk = (Button) dialog.findViewById(R.id.buttonCancel);
         Button buttonCancel = (Button) dialog.findViewById(R.id.buttonOk);
@@ -146,7 +146,7 @@ public class SettingsFragment extends Fragment implements BaseContract.BaseView{
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.change_password_dialog);
         dialog.setTitle(getResources().getString(R.string.change_password_dialog));
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
+        //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
         final EditText editTextOldPassword = (EditText) dialog.findViewById(R.id.oldPassword);
         final EditText editTextNewPassword = (EditText) dialog.findViewById(R.id.newPassword);
         final EditText editTextNewPasswordRepeat = (EditText) dialog.findViewById(R.id.newPasswordRepeat);

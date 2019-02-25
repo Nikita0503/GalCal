@@ -58,6 +58,7 @@
 
     <EditText
         android:id="@+id/event1"
+        android:cursorVisible="false"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
@@ -199,6 +200,7 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/date_from"
+                app:mcv_showOtherDates="all"
                 app:mcv_leftArrowMask="@drawable/ic_back"
                 app:mcv_rightArrowMask="@drawable/ic_right_arrow" />
 
@@ -210,6 +212,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:visibility="gone"
+                app:mcv_showOtherDates="all"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -267,6 +270,7 @@
 
             <EditText
                 android:id="@+id/location"
+                android:cursorVisible="false"
                 android:layout_width="255dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -327,6 +331,7 @@
 
             <EditText
                 android:id="@+id/notes_ed"
+                android:cursorVisible="false"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="80dp"

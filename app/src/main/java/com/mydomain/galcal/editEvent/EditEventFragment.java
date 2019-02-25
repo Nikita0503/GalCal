@@ -44,6 +44,7 @@ import java.util.Locale;
 
 public class EditEventFragment extends Fragment implements BaseContract.BaseView {
 
+    private boolean mIsEdit;
     private float ALPHA = 0.1f;
     private String mToken;
     private DayEventData mData;
@@ -78,6 +79,7 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
         super.onCreate(savedInstanceState);
         mPresenter = new EditEventPresenter(this);
         mPresenter.onStart();
+        mIsEdit = false;
     }
 
     @Override
@@ -98,9 +100,9 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
         mTextViewDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Dialog dialog = new Dialog(getContext());
+                final Dialog dialog = new Dialog(getContext(), R.style.DialogTheme);
                 dialog.setContentView(R.layout.delete_dialog);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
+
                 Button buttonOk = (Button) dialog.findViewById(R.id.buttonDelete);
                 Button buttonCancel = (Button) dialog.findViewById(R.id.buttonOk);
                 buttonCancel.setOnClickListener(new View.OnClickListener() {
@@ -141,6 +143,19 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
 
         mCalendarViewFrom = (MaterialCalendarView) view.findViewById(R.id.calendarViewFrom);
         mCalendarViewTo = (MaterialCalendarView) view.findViewById(R.id.calendarViewTo);
+
+
+        mEditTextTitleEvent.setEnabled(false);
+        mTextViewStartTime.setEnabled(false);
+        mTextViewStartDate.setEnabled(false);
+        mTextViewEndTime.setEnabled(false);
+        mTextViewEndDate.setEnabled(false);
+        mEditTextLocation.setEnabled(false);
+        mSwitchReminder.setEnabled(false);
+        mEditTextNotes.setEnabled(false);
+        mSwitchAllDay.setEnabled(false);
+        mTextViewDelete.setVisibility(View.GONE);
+
         mCalendarViewFrom.setDateSelected(CalendarDay.today(), true);
         mCalendarViewFrom.setWeekDayLabels(new String[]{"M", "T", "W", "T", "F", "S", "S"});
         mCalendarViewFrom.setHeaderTextAppearance(R.style.TitleTextAppearance);
@@ -474,95 +489,112 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
         mTextViewEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String title = "";
-                String dateStart = "";
-                String dateEnd = "";
-                String timeStart = "00:00:00Z";
-                String timeEnd = "23:59:59Z";
-                boolean allDay = false;
-                String location = "";
-                boolean reminder = false;
-                String remindTime = null;
+                if(mIsEdit) {
+                    String title = "";
+                    String dateStart = "";
+                    String dateEnd = "";
+                    String timeStart = "00:00:00Z";
+                    String timeEnd = "23:59:59Z";
+                    boolean allDay = false;
+                    String location = "";
+                    boolean reminder = false;
+                    String remindTime = null;
 
-                String notes = "";
-                if(!mEditTextTitleEvent.getText().toString().equals("")){
-                    title = mEditTextTitleEvent.getText().toString();
+                    String notes = "";
+                    if (!mEditTextTitleEvent.getText().toString().equals("")) {
+                        title = mEditTextTitleEvent.getText().toString();
+                    } else {
+                        mEditTextTitleEvent.setError(getResources().getString(R.string.required));
+                        return;
+                    }
+                    if (!mTextViewStartDate.getText().toString().equals("From")) {
+                        dateStart = mTextViewStartDate.getText().toString();
+                    } else {
+                        mTextViewStartDate.setError(getResources().getString(R.string.required));
+                        return;
+                    }
+                    if (!mTextViewEndDate.getText().toString().equals("To")) {
+                        dateEnd = mTextViewEndDate.getText().toString();
+                    } else {
+                        mTextViewEndDate.setError(getResources().getString(R.string.required));
+                        return;
+                    }
+                    if (!mSwitchAllDay.isChecked()) {
+                        allDay = false;
+                        if (!mTextViewStartTime.getText().toString().equals("Time")) {
+                            timeStart = mTextViewStartTime.getText().toString();
+                        } else {
+                            mTextViewStartTime.setError(getResources().getString(R.string.required));
+                            return;
+                        }
+                        if (!mTextViewEndTime.getText().toString().equals("Time")) {
+                            timeEnd = mTextViewEndTime.getText().toString();
+                        } else {
+                            mTextViewEndTime.setError(getResources().getString(R.string.required));
+                            return;
+                        }
+                    } else {
+                        allDay = true;
+                    }
+                    String finalDateStart = "";
+                    String finalDateEnd = "";
+                    try {
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy H:mm", Locale.ENGLISH);
+
+
+                        String allStart = dateStart + " " + timeStart;
+                        String allEnd = dateEnd + " " + timeEnd;
+
+                        Date startD = dateFormat.parse(allStart);
+                        Date endD = dateFormat.parse(allEnd);
+                        if (!startD.before(endD)) {
+                            Toast.makeText(getContext(), "Incorrect date", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        SimpleDateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+                        finalDateStart = newDateFormat.format(startD);
+                        finalDateEnd = newDateFormat.format(endD);
+
+                        if (mSwitchReminder.isChecked()) {
+                            Log.d("TAG", "TRUE");
+                            Date reminderDate = new Date(startD.getTime() - 1800000);
+                            remindTime = newDateFormat.format(reminderDate);
+                        } else {
+                            Log.d("TAG", "FALSE");
+                            remindTime = null;
+                        }
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.d("TAG", finalDateStart + " S");
+                    Log.d("TAG", finalDateEnd + " F");
+                    if (mSwitchReminder.isChecked()) {
+                        Log.d("TAG", remindTime + " R");
+                    }
+                    notes = mEditTextNotes.getText().toString();
+                    location = mEditTextLocation.getText().toString();
+
+                    AddEventData data = new AddEventData(title, "personal", allDay, finalDateStart, finalDateEnd, location, notes, remindTime);
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mPresenter.editEvent(mToken, String.valueOf(mData.id), data);
+                    //Toast.makeText(getContext(), "Go", Toast.LENGTH_SHORT).show();
                 }else{
-                    mEditTextTitleEvent.setError(getResources().getString(R.string.required));
-                    return;
+                    mEditTextTitleEvent.setEnabled(true);
+                    mTextViewStartTime.setEnabled(true);
+                    mTextViewStartDate.setEnabled(true);
+                    mTextViewEndTime.setEnabled(true);
+                    mTextViewEndDate.setEnabled(true);
+                    mEditTextLocation.setEnabled(true);
+                    mSwitchReminder.setEnabled(true);
+                    mEditTextNotes.setEnabled(true);
+                    mSwitchAllDay.setEnabled(true);
+                    mTextViewDelete.setVisibility(View.VISIBLE);
+                    mTextViewEdit.setText("SAVE");
+                    mIsEdit = true;
                 }
-                if(!mTextViewStartDate.getText().toString().equals("From")){
-                    dateStart = mTextViewStartDate.getText().toString();
-                }else {
-                    mTextViewStartDate.setError(getResources().getString(R.string.required));
-                    return;}
-                if(!mTextViewEndDate.getText().toString().equals("To")){
-                    dateEnd = mTextViewEndDate.getText().toString();
-                }else {
-                    mTextViewEndDate.setError(getResources().getString(R.string.required));
-                    return;}
-                if(!mSwitchAllDay.isChecked()){
-                    allDay = false;
-                    if(!mTextViewStartTime.getText().toString().equals("Time")){
-                        timeStart = mTextViewStartTime.getText().toString();
-                    }else{
-                        mTextViewStartTime.setError(getResources().getString(R.string.required));
-                        return;
-                    }
-                    if(!mTextViewEndTime.getText().toString().equals("Time")){
-                        timeEnd = mTextViewEndTime.getText().toString();
-                    }else{
-                        mTextViewEndTime.setError(getResources().getString(R.string.required));
-                        return;
-                    }
-                }else{
-                    allDay = true;
-                }
-                String finalDateStart = "";
-                String finalDateEnd = "";
-                try {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy H:mm", Locale.ENGLISH);
-
-
-                    String allStart = dateStart + " " + timeStart;
-                    String allEnd = dateEnd + " " + timeEnd;
-
-                    Date startD = dateFormat.parse(allStart);
-                    Date endD = dateFormat.parse(allEnd);
-                    if(!startD.before(endD)){
-                        Toast.makeText(getContext(), "Incorrect date", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    SimpleDateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
-                    finalDateStart = newDateFormat.format(startD);
-                    finalDateEnd = newDateFormat.format(endD);
-
-                    if(mSwitchReminder.isChecked()){
-                        Log.d("TAG", "TRUE");
-                        Date reminderDate = new Date(startD.getTime()- 1800000);
-                        remindTime = newDateFormat.format(reminderDate);
-                    }else{
-                        Log.d("TAG", "FALSE");
-                        remindTime = null;
-                    }
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("TAG", finalDateStart+" S");
-                Log.d("TAG", finalDateEnd+" F");
-                if(mSwitchReminder.isChecked()) {
-                    Log.d("TAG", remindTime+" R");
-                }
-                notes = mEditTextNotes.getText().toString();
-                location = mEditTextLocation.getText().toString();
-
-                AddEventData data = new AddEventData(title, "personal", allDay, finalDateStart, finalDateEnd, location, notes, remindTime);
-                mProgressBar.setVisibility(View.VISIBLE);
-                mPresenter.editEvent(mToken, String.valueOf(mData.id), data);
-                //Toast.makeText(getContext(), "Go", Toast.LENGTH_SHORT).show();
             }
         });
         MainActivity activity = (MainActivity) getActivity();

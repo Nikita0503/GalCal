@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -34,6 +35,7 @@ import com.mydomain.galcal.editEvent.EditEventFragment;
 import com.mydomain.galcal.home.HomeFragment;
 import com.mydomain.galcal.settings.SettingsFragment;
 import com.mydomain.galcal.week.WeekFragment;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -85,10 +87,12 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         String tutorial = mPref.getString("tutorial", "");
         if(!tutorial.equals("")){
             isTutirial = false;
+
         }else{
             isTutirial = true;
-        }
 
+        }
+        isTutirial = false;
         mUnlockedPhoto = (ImageView) findViewById(R.id.imageViewGirl);
         mUnlockedPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                     mUnlockedPhoto.setVisibility(View.GONE);
                     mTextViewThatsIt.setVisibility(View.GONE);
                     mEditFragment.setBackground();
+                    mCalendarFragment.showCalendar();
             }
         });
         mTextViewThatsIt = (TextView) findViewById(R.id.textViewT);
@@ -117,6 +122,16 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mBottomNavigation = (BottomNavigationView)findViewById(R.id.bottom_navigation);
         mBottomNavigation.setVisibility(View.INVISIBLE);
         mBottomNavigation.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_UNLABELED);
+        if (isTutirial) {
+            mBottomNavigation.getMenu().getItem(0).setIcon(null);
+            mBottomNavigation.getMenu().getItem(1).setIcon(null);
+            mBottomNavigation.getMenu().getItem(3).setIcon(null);
+            mBottomNavigation.getMenu().getItem(4).setIcon(null);
+           // mBottomNavigation.getMenu().getItem(0).setVisible(false);
+           // mBottomNavigation.getMenu().getItem(1).setVisible(false);
+           // mBottomNavigation.getMenu().getItem(3).setVisible(false);
+           // mBottomNavigation.getMenu().getItem(4).setVisible(false);
+        }
         mFragmentManager = getSupportFragmentManager();
 
         mCalendarFragment = new CalendarFragment();
@@ -141,8 +156,6 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mBottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-
                 int id = item.getItemId();
                 switch (id){    // попробовать не пересоздавать фрагмент (new SomeFragment() -> SomeFragment())
                     case R.id.mothCalendarView:
@@ -151,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                                 mAddEventFragment.hideStep7();
                                 FragmentTransaction transaction = mFragmentManager.beginTransaction();
                                 transaction.replace(R.id.main_container, mFragment).commit();
+
                             }
                         }
                         //mCalendarFragment.setEvents(mEvents);
@@ -173,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                 if(!tutorialGoTo1 && !tutorialGoTo2) {
                     FragmentTransaction transaction = mFragmentManager.beginTransaction();
                     transaction.replace(R.id.main_container, mFragment).commit();
+                    transaction.addToBackStack("1");
                 }
                 if(tutorialGoTo1){
                     mFragment = mAddEventFragment;
@@ -215,14 +230,15 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         }else{
             //Toast.makeText(getApplicationContext(), "No connection", Toast.LENGTH_SHORT).show();
             Dialog dialog = getConnectionDialog("No internet connection");
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
+
             dialog.show();
         }
     }
 
     private Dialog getConnectionDialog(String message){
-        final Dialog dialog = new Dialog(MainActivity.this);
+        final Dialog dialog = new Dialog(MainActivity.this, R.style.DialogTheme);
         dialog.setContentView(R.layout.connection_dialog);
+
         dialog.setTitle("");
         //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
         final TextView textViewMessage = (TextView) dialog.findViewById(R.id.textViewMessage);
@@ -270,9 +286,22 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
     private void finishTutorial(){
         isTutirial = false;
+        showItem2();
         SharedPreferences.Editor editor = mPref.edit();
         editor.putString("tutorial", "+");
         editor.commit();
+    }
+
+    public void showItem1(){
+        mBottomNavigation.getMenu().getItem(0).setIcon(getResources().getDrawable(R.drawable.ic_month_tab));
+        mBottomNavigation.getMenu().getItem(2).setIcon(null);
+    }
+
+    public void showItem2(){
+        mBottomNavigation.getMenu().getItem(2).setIcon(getResources().getDrawable(R.drawable.ic_add_event_tab));
+        mBottomNavigation.getMenu().getItem(1).setIcon(getResources().getDrawable(R.drawable.ic_week_tab));
+        mBottomNavigation.getMenu().getItem(3).setIcon(getResources().getDrawable(R.drawable.ic_home_tab));
+        mBottomNavigation.getMenu().getItem(4).setIcon(getResources().getDrawable(R.drawable.ic_settings_tab));
     }
 
     public void setBackgroundImage(String image){

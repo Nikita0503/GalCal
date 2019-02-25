@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -34,6 +35,8 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -46,6 +49,10 @@ import java.util.Locale;
 
 public class AddEventFragment extends Fragment implements BaseContract.BaseView{
 
+    private String startDate;
+    private String endDate;
+    private String startTime;
+    private String endTime;
     private boolean mNotes;
     private float ALPHA = 0.1f;
     private String mToken;
@@ -88,9 +95,15 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         mPresenter = new AddEventPresenter(this);
         mPresenter.onStart();
+        startDate = "From";
+        endDate = "To";
+        startTime = "Time";
+        endTime = "Time";
     }
+
 
 
 
@@ -98,6 +111,11 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_event_fragment, container, false);
         mNotes = false;
+
+        Log.d("TIME1", startDate);
+        Log.d("TIME1", startTime);
+        Log.d("TIME1", endDate);
+        Log.d("TIME1", endTime);
         mLayout = (ConstraintLayout) view.findViewById(R.id.layout);
         mTextViewNext = (TextView) view.findViewById(R.id.textViewNext);
         mTextViewNext.setOnClickListener(new View.OnClickListener() {
@@ -168,9 +186,13 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         mTextViewLocation = (TextView) view.findViewById(R.id.location_tv);
         mTextViewSave = (TextView) view.findViewById(R.id.save);
         mTextViewStartTime = (TextView) view.findViewById(R.id.time_from);
+        mTextViewStartTime.setText(startTime);
         mTextViewEndTime = (TextView) view.findViewById(R.id.time_to);
+        mTextViewEndTime.setText(endTime);
         mTextViewStartDate = (TextView) view.findViewById(R.id.date_from);
+        mTextViewStartDate.setText(startDate);
         mTextViewEndDate = (TextView) view.findViewById(R.id.date_to);
+        mTextViewEndDate.setText(endDate);
         mTextViewReminderText = (TextView) view.findViewById(R.id.reminder_time_text);
         mTextViewTimeText = (TextView) view.findViewById(R.id.time);
         mTextViewLocationText = (TextView) view.findViewById(R.id.location_tv);
@@ -186,7 +208,10 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                     MainActivity activity = (MainActivity) getActivity();
                     if(activity.isTutirial) {
                         hideStep2();
+                        //return true;
                     }
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mEditTextTitleEvent.getWindowToken(), 0);
 
                     return true;
                 }
@@ -204,7 +229,8 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                     if(activity.isTutirial) {
                         hideStep4();
                     }
-
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mEditTextTitleEvent.getWindowToken(), 0);
 
                     return true;
                 }
@@ -247,18 +273,20 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         mCalendarViewTo.setWeekDayTextAppearance(R.style.WeekAppearance);
         mCalendarViewTo.setDateTextAppearance(R.style.DayAppearance);
         mCalendarViewTo.setVisibility(View.GONE);
-        mCalendarViewTo.state().edit().setMinimumDate(CalendarDay.today()).commit();
+        //mCalendarViewTo.state().edit().setMinimumDate(CalendarDay.today()).commit();
         Sprite doubleBounce = new Circle();
         mProgressBar.setIndeterminateDrawable(doubleBounce);
         mCalendarViewFrom.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
-                mCalendarViewFrom.setVisibility(View.GONE);
+
+
                 try {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("d M yyyy", Locale.ENGLISH);
                     Date date = dateFormat.parse(calendarDay.getDay() + " " + calendarDay.getMonth() + " " + calendarDay.getYear());
                     SimpleDateFormat newFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
                     //Toast.makeText(getContext(), date, Toast.LENGTH_SHORT).show();
+                    startDate = newFormat.format(date);
                     mTextViewStartDate.setText(newFormat.format(date));
                 }catch (Exception c){
                     c.printStackTrace();
@@ -274,8 +302,10 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                     Calendar calendar = Calendar.getInstance();
                     if(calendar.get(Calendar.MINUTE)<10) {
                         mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE));
+                        startTime = calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE);
                     }else{
                         mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
+                        startTime = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
                     }
                     //mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
                     mTimePickerFrom.setVisibility(View.VISIBLE);
@@ -286,18 +316,19 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
 
                     //
                 }
-
+                mCalendarViewFrom.setVisibility(View.GONE);
                 showNext();
             }
         });
         mCalendarViewTo.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
-                mCalendarViewTo.setVisibility(View.GONE);
+
                 try {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("d M yyyy", Locale.ENGLISH);
                     Date date = dateFormat.parse(calendarDay.getDay() + " " + calendarDay.getMonth() + " " + calendarDay.getYear());
                     SimpleDateFormat newFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+                    endDate = newFormat.format(date);
                     //Toast.makeText(getContext(), date, Toast.LENGTH_SHORT).show();
                     mTextViewEndDate.setText(newFormat.format(date));
                 }catch (Exception c){
@@ -307,8 +338,10 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                     Calendar calendar = Calendar.getInstance();
                     if(calendar.get(Calendar.MINUTE)<10) {
                         mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE));
+                        endTime = calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE);
                     }else{
                         mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
+                        endTime = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
                     }
                     //mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
                     mTimePickerTo.setVisibility(View.VISIBLE);
@@ -320,8 +353,8 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                     MainActivity activity = (MainActivity) getActivity();
 
                 }
+                mCalendarViewTo.setVisibility(View.GONE);
                 showNext();
-
             }
         });
 
@@ -330,8 +363,10 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
             public void onTimeChanged(TimePicker timePicker, int selectedHour, int selectedMinute) {
                 if(selectedMinute<10) {
                     mTextViewStartTime.setText(selectedHour + ":0" + selectedMinute);
+                    startTime = selectedHour + ":0" + selectedMinute;
                 }else{
                     mTextViewStartTime.setText(selectedHour + ":" + selectedMinute);
+                    startTime = selectedHour + ":" + selectedMinute;
                 }
             }
         });
@@ -341,8 +376,10 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
             public void onTimeChanged(TimePicker timePicker, int selectedHour, int selectedMinute) {
                 if(selectedMinute<10) {
                     mTextViewEndTime.setText(selectedHour + ":0" + selectedMinute);
+                    endTime = selectedHour + ":0" + selectedMinute;
                 }else{
                     mTextViewEndTime.setText(selectedHour + ":" + selectedMinute);
+                    endTime = selectedHour + ":" + selectedMinute;
                 }
 
             }
@@ -357,12 +394,15 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                     ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewEndDate.getLayoutParams();
                     layoutParams1.topToBottom = R.id.date_from;
                     mTextViewEndDate.setLayoutParams(layoutParams1);
+
                 }else{
                     Calendar calendar = Calendar.getInstance();
                     if(calendar.get(Calendar.MINUTE)<10){
                         mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE));
+                        startTime = calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE);
                     }else{
                         mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
+                        startTime = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
                     }
 
                     mTimePickerFrom.setVisibility(View.VISIBLE);
@@ -402,8 +442,10 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                     Calendar calendar = Calendar.getInstance();
                     if(calendar.get(Calendar.MINUTE)<10){
                         mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE));
+                        endTime = calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE);
                     }else{
                         mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
+                        endTime = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
                     }
                     mTimePickerTo.setVisibility(View.VISIBLE);
                     mTimePickerFrom.setVisibility(View.GONE);
@@ -628,6 +670,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                 if(activity.isTutirial) {
                     activity.tutorialGoTo1 = false;
                     activity.tutorialGoTo2 = true;
+                    activity.showItem1();
                     hideStep6();
                 }
             }
@@ -636,6 +679,10 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         if(activity.isTutirial) {
             showStep2();
         }
+        mCalendarViewFrom.setVisibility(View.GONE);
+        mCalendarViewTo.setVisibility(View.GONE);
+        mTimePickerFrom.setVisibility(View.GONE);
+        mTimePickerTo.setVisibility(View.GONE);
         return view;
     }
 
@@ -1361,6 +1408,10 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         mTextViewLocationText.setClickable(true);
         mTextViewReminderText2.setClickable(true);
         mTextViewNotesText.setClickable(true);
+        mCalendarViewFrom.setVisibility(View.GONE);
+        mCalendarViewTo.setVisibility(View.GONE);
+        mTimePickerTo.setVisibility(View.GONE);
+        mTimePickerFrom.setVisibility(View.GONE);
     }
 
     private void showNext(){
