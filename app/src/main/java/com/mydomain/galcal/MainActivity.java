@@ -45,6 +45,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements BaseContract.BaseView {
 
+    public CalendarDay tutorialDay;
     public boolean tutorialGoTo1;
     public boolean tutorialGoTo2;
     private boolean downloaded;
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        tutorialDay = null;
         tutorialGoTo1 = false;
         tutorialGoTo2 = false;
         downloaded = false;
@@ -102,7 +104,9 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                     mUnlockedPhoto.setVisibility(View.GONE);
                     mTextViewThatsIt.setVisibility(View.GONE);
                     mEditFragment.setBackground();
-                    mCalendarFragment.showCalendar();
+                    //mCalendarFragment.showCalendar();
+                    updateCalendarTab();
+                    finishTutorial();
             }
         });
         mTextViewThatsIt = (TextView) findViewById(R.id.textViewT);
@@ -164,7 +168,9 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                                 mAddEventFragment.hideStep7();
                                 FragmentTransaction transaction = mFragmentManager.beginTransaction();
                                 transaction.replace(R.id.main_container, mFragment).commit();
-
+                                mCalendarFragment = new CalendarFragment();
+                                mCalendarFragment.setToken(mToken);
+                                mCalendarFragment.setEvents(mEvents);
                             }
                         }
                         //mCalendarFragment.setEvents(mEvents);
@@ -187,17 +193,19 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                 if(!tutorialGoTo1 && !tutorialGoTo2) {
                     FragmentTransaction transaction = mFragmentManager.beginTransaction();
                     transaction.replace(R.id.main_container, mFragment).commit();
-                    transaction.addToBackStack("1");
+                    transaction.addToBackStack(null);
                 }
                 if(tutorialGoTo1){
                     mFragment = mAddEventFragment;
                     FragmentTransaction transaction = mFragmentManager.beginTransaction();
                     transaction.replace(R.id.main_container, mFragment).commit();
+                    transaction.addToBackStack(null);
                 }
                 if(tutorialGoTo2){
                     mFragment = mCalendarFragment;
                     FragmentTransaction transaction = mFragmentManager.beginTransaction();
                     transaction.replace(R.id.main_container, mFragment).commit();
+                    transaction.addToBackStack(null);
                 }
                 return true;
 
@@ -284,6 +292,17 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mBottomNavigation.setSelectedItemId(R.id.weekFragment);
     }
 
+    public void updateCalendarTab(){
+
+        tutorialDay = null;
+        mCalendarFragment = new CalendarFragment();
+        mCalendarFragment.setToken(mToken);
+        mCalendarFragment.setEvents(mEvents);
+        mFragment = mCalendarFragment;
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.main_container, mFragment).commit();
+    }
+
     private void finishTutorial(){
         isTutirial = false;
         showItem2();
@@ -325,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                         });
                 mTextViewThatsIt.setVisibility(View.VISIBLE);
                 mTextViewExit.setVisibility(View.VISIBLE);
-                finishTutorial();
+
 
             }
             Picasso.with(getApplicationContext()) //передаем контекст приложения

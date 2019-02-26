@@ -85,6 +85,8 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.edit_event_fragment, container, false);
+        MainActivity activity2 = (MainActivity) getActivity();
+
         mLayout = (ConstraintLayout) view.findViewById(R.id.layout);
         mDivider = (ImageView) view.findViewById(R.id.imageViewDivider);
         mProgressBar = (ProgressBar)view.findViewById(R.id.spin_kit);
@@ -162,6 +164,7 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
         mCalendarViewFrom.setWeekDayTextAppearance(R.style.WeekAppearance);
         mCalendarViewFrom.setDateTextAppearance(R.style.DayAppearance);
         mCalendarViewFrom.setVisibility(View.GONE);
+        mCalendarViewFrom.state().edit().setMinimumDate(CalendarDay.today()).commit();
         mCalendarViewTo.setDateSelected(CalendarDay.today(), true);
         mCalendarViewTo.setWeekDayLabels(new String[]{"M", "T", "W", "T", "F", "S", "S"});
         mCalendarViewTo.setHeaderTextAppearance(R.style.TitleTextAppearance);
@@ -225,6 +228,8 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
 
                 mCalendarViewFrom.setVisibility(View.GONE);
                 try {
+
+                    mCalendarViewTo.state().edit().setMinimumDate(mCalendarViewFrom.getSelectedDate()).commit();
                     SimpleDateFormat dateFormat = new SimpleDateFormat("d M yyyy", Locale.ENGLISH);
                     Date date = dateFormat.parse(calendarDay.getDay() + " " + calendarDay.getMonth() + " " + calendarDay.getYear());
                     SimpleDateFormat newFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
@@ -233,8 +238,11 @@ public class EditEventFragment extends Fragment implements BaseContract.BaseView
                 }catch (Exception c){
                     c.printStackTrace();
                 }
+                mCalendarViewTo.setVisibility(View.GONE);
+                mTimePickerTo.setVisibility(View.GONE);
                 if(mSwitchAllDay.isChecked()){
                     mCalendarViewTo.setVisibility(View.VISIBLE);
+
                     ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewLocation.getLayoutParams();
                     layoutParams1.topToBottom = R.id.calendarViewTo;
                     mTextViewLocation.setLayoutParams(layoutParams1);

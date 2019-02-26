@@ -108,7 +108,7 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
     public void showStep8(){
 
         hideStep1();
-        mCalendarView.setAlpha(0.5f);
+        mCalendarView.setAlpha(1);
         mTextView.setAlpha(ALPHA);
         MainActivity activity = (MainActivity) getActivity();
         mTextViewStep8.setVisibility(View.VISIBLE);
@@ -152,6 +152,7 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
 
     public void showCalendar(){
         mCalendarView.setAlpha(1);
+        mCalendarView.state().edit().setMinimumDate(CalendarDay.from(2019, 2, 2)).commit();
     }
 
     @Override
@@ -168,11 +169,22 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
         mLayout = (ConstraintLayout) view.findViewById(R.id.layout);
         mTextView = (TextView) view.findViewById(R.id.textView3);
         mCalendarView = (MaterialCalendarView) view.findViewById(R.id.materialCalendarView);
+
         MainActivity activity2 = (MainActivity) getActivity();
+        //if(activity2.isTutirial) {
+        //    mCalendarView.state().edit().setMinimumDate(CalendarDay.today()).setMaximumDate(CalendarDay.today()).commit();
+        //}
+        if(activity2.tutorialDay!=null){
+            mCalendarView.state().edit().setMinimumDate(activity2.tutorialDay).setMaximumDate(activity2.tutorialDay).commit();
+        }
         mCalendarView.setWeekDayLabels(new String[]{"M", "T", "W", "T", "F", "S", "S"});
         mCalendarView.setHeaderTextAppearance(R.style.TitleTextAppearance);
         mCalendarView.setWeekDayTextAppearance(R.style.WeekAppearance);
         mCalendarView.setDateTextAppearance(R.style.DayAppearance);
+        EventDayDecorator dayDecorator = new EventDayDecorator(getContext(), mList);
+        HolidayDecorator holidayDecorator = new HolidayDecorator(getContext(), mList);
+        mCalendarView.addDecorator(dayDecorator);
+        mCalendarView.addDecorator(holidayDecorator);
         mCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
@@ -231,10 +243,7 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
                 }
             }
         });
-        EventDayDecorator dayDecorator = new EventDayDecorator(getContext(), mList);
-        HolidayDecorator holidayDecorator = new HolidayDecorator(getContext(), mList);
-        mCalendarView.addDecorator(dayDecorator);
-        mCalendarView.addDecorator(holidayDecorator);
+
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewCalendar);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -265,7 +274,13 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
 
     public void setEvents(ArrayList<DayEventData> list){
         mList = list;
-
+        if(mCalendarView!=null){
+            mCalendarView.removeDecorators();
+            EventDayDecorator dayDecorator = new EventDayDecorator(getContext(), mList);
+            HolidayDecorator holidayDecorator = new HolidayDecorator(getContext(), mList);
+            mCalendarView.addDecorator(dayDecorator);
+            mCalendarView.addDecorator(holidayDecorator);
+        }
     }
 
     public void setToken(String token){

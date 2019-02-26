@@ -279,9 +279,12 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         mCalendarViewFrom.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
-
-
+                MainActivity activity = (MainActivity) getActivity();
+                activity.tutorialDay = calendarDay;
                 try {
+                    mCalendarViewTo.state().edit().setMinimumDate(mCalendarViewFrom.getSelectedDate()).commit();
+                    mCalendarViewTo.setVisibility(View.GONE);
+                    mTimePickerTo.setVisibility(View.GONE);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("d M yyyy", Locale.ENGLISH);
                     Date date = dateFormat.parse(calendarDay.getDay() + " " + calendarDay.getMonth() + " " + calendarDay.getYear());
                     SimpleDateFormat newFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
@@ -291,10 +294,12 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                 }catch (Exception c){
                     c.printStackTrace();
                 }
+                mCalendarViewTo.setVisibility(View.GONE);
+                mTimePickerTo.setVisibility(View.GONE);
                 if(mSwitchAllDay.isChecked()){
 
                     mCalendarViewTo.setVisibility(View.VISIBLE);
-                    mCalendarViewTo.state().edit().setMinimumDate(mCalendarViewFrom.getSelectedDate()).commit();
+
                     ConstraintLayout.LayoutParams layoutParams1 = (ConstraintLayout.LayoutParams) mTextViewLocation.getLayoutParams();
                     layoutParams1.topToBottom = R.id.calendarViewTo;
                     mTextViewLocation.setLayoutParams(layoutParams1);
@@ -323,7 +328,6 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         mCalendarViewTo.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
-
                 try {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("d M yyyy", Locale.ENGLISH);
                     Date date = dateFormat.parse(calendarDay.getDay() + " " + calendarDay.getMonth() + " " + calendarDay.getYear());
