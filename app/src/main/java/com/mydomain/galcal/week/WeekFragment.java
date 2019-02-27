@@ -20,6 +20,7 @@ import com.mydomain.galcal.data.DayEventData;
 import com.mydomain.galcal.data.DayOfWeekEventData;
 import com.mydomain.galcal.editEvent.EditEventPresenter;
 import com.mydomain.galcal.home.HomeFragment;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,7 +71,64 @@ public class WeekFragment extends Fragment implements BaseContract.BaseView{
     }
 
     public void fetchNewEvents(){
+        /*try {
+            ArrayList<DayEventData> list = new ArrayList<DayEventData>();
+            CalendarDay calendarDay = CalendarDay.today();
+            SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-M-d", Locale.ENGLISH);
+            String currentDate = calendarDay.getYear() + "-" + calendarDay.getMonth() + "-" + calendarDay.getDay();
+            Date dateStart;
+            Date dateEnd;
+            String dateStrStart;
+            String dateStrEnd;
+            for (int i = 0; i < mEvents.size(); i++) {
+                if (mEvents.get(i).type.equals("holidays")) {
+                    dateStart = oldFormat.parse(mEvents.get(i).startTime);
+                    dateStrStart = dateFormat.format(dateStart);
+                    if (dateStrStart.equals(currentDate)) {
+                        DayEventData dayEventData = mEvents.get(i);
+                        //dayEventData.todayData = dayEventData.startTime;
+                        list.add(dayEventData);
+                    }
+                } else {
+                    dateStart = oldFormat.parse(mEvents.get(i).startTime);
+                    dateStrStart = dateFormat.format(dateStart);
+                    dateEnd = oldFormat.parse(mEvents.get(i).endTime);
+                    dateStrEnd = dateFormat.format(dateEnd);
+                    while (!dateStrStart.equals(dateStrEnd)) {
+                        if (dateStrStart.equals(currentDate)) {
+                            DayEventData dayEventData = mEvents.get(i);
+                            //dayEventData.todayData = dayEventData.startTime;
+                            list.add(dayEventData);
+                        }
+                        dateStart.setTime(dateStart.getTime() + 86400000);
+                        dateStrStart = dateFormat.format(dateStart);
+                    }
+                    if (dateStrStart.equals(currentDate)) {
+                        DayEventData dayEventData = mEvents.get(i);
+                        dayEventData.todayData = dayEventData.startTime;
+                        list.add(dayEventData);
+                    }
+                }
+            }
+            Toast.makeText(getContext(), "size = "+list.size(), Toast.LENGTH_SHORT).show();
+            mPresenter.fetchEventsByDates(list);
+        }catch (Exception c){
+            c.printStackTrace();
+        }*/
+        /*if(list.size()==0){
+            mTextView.setVisibility(View.VISIBLE);
+            mTextView.setText("No events this day");
+        }else{
+            mTextView.setVisibility(View.INVISIBLE);
+        }
+        mAdapter.setEvents(list);*/
+        //mPresenter.fetchEventsByDates(mEvents);
+        //Toast.makeText(getContext(), "size = "+mEvents.size(), Toast.LENGTH_SHORT).show();
+
+
         mPresenter.fetchEventsByDates(mEvents);
+
     }
 
     public void addNewEvents(ArrayList<DayOfWeekEventData> events){
@@ -78,28 +136,30 @@ public class WeekFragment extends Fragment implements BaseContract.BaseView{
 
     }
 
-    public void openHomeTab(String dateStr){
+    public void openHomeTab(DayOfWeekEventData dateStr){
         try {
 
             MainActivity mainActivity = (MainActivity) getActivity();
             mainActivity.openHomeTab();
             HomeFragment homeFragment = new HomeFragment();
             homeFragment.setToken(mToken);
-            SimpleDateFormat oldFormat = new SimpleDateFormat("E d MMM", Locale.ENGLISH);
+            homeFragment.setEvents(dateStr);
+            /*SimpleDateFormat oldFormat = new SimpleDateFormat("E d MMM", Locale.ENGLISH);
             SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
             Date date = oldFormat.parse(dateStr.replaceAll("\n", " "));
             Calendar calendar2 = Calendar.getInstance();
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
             calendar.set(calendar2.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-            Log.d("TAG123", newFormat.format(calendar.getTime()));
-            homeFragment.setDate(newFormat.format(calendar.getTime()));
+            Log.d("TAG123", newFormat.format(calendar.getTime()));*/
+
             //homeFragment.setEventData(mList.get(position));
             FragmentManager manager = getActivity().getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.main_container, homeFragment);
-            //0transaction.addToBackStack(null);
+            transaction.addToBackStack(null);
             transaction.commit();
+
         }catch (Exception c){
             c.printStackTrace();
         }

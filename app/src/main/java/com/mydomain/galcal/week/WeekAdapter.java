@@ -111,7 +111,8 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(mFragment.getContext(), mList.get(position).date, Toast.LENGTH_SHORT).show();
-                mFragment.openHomeTab(mList.get(position).date);
+                mFragment.openHomeTab(mList.get(position));
+                Log.d("qwerty", mList.get(position).date);
 
             }
         });

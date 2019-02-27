@@ -81,6 +81,9 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
         tutorialDay = null;
         tutorialGoTo1 = false;
         tutorialGoTo2 = false;

@@ -111,7 +111,7 @@ public class WeekAdapterListView extends BaseAdapter{
             @Override
             public void onClick(View view) {
                 //Toast.makeText(mFragment.getContext(), mList.get(position).date, Toast.LENGTH_SHORT).show();
-                mFragment.openHomeTab(mList.get(i).date);
+                mFragment.openHomeTab(mList.get(i));
 
             }
         });

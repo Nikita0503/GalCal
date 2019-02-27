@@ -28,6 +28,7 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -193,6 +194,7 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
                     if(activity.isTutirial){
                         hideStep8();
                     }
+
                     ArrayList<DayEventData> list = new ArrayList<DayEventData>();
                     String currentDate = calendarDay.getYear() + "-" + calendarDay.getMonth() + "-" + calendarDay.getDay();
                     SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);

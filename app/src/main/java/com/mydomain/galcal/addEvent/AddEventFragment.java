@@ -677,7 +677,12 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                     activity.showItem1();
                     hideStep6();
                 }
+                mCalendarViewFrom.setVisibility(View.GONE);
+                mCalendarViewTo.setVisibility(View.GONE);
+                mTimePickerFrom.setVisibility(View.GONE);
+                mTimePickerTo.setVisibility(View.GONE);
             }
+
         });
         MainActivity activity = (MainActivity) getActivity();
         if(activity.isTutirial) {

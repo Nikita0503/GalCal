@@ -55,8 +55,8 @@ public class WeekPresenter implements BaseContract.BasePresenter {
         mToken = token;
     }
 
-    public void fetchEventsByDates(ArrayList<DayEventData> data){
-        final ArrayList<String> dates = new ArrayList<String>();
+    public void fetchEventsByDates(ArrayList<DayEventData> events){
+        /*final ArrayList<String> dates = new ArrayList<String>();
         final SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd");
         final SimpleDateFormat newFormant = new SimpleDateFormat("E'\n'd'\n'MMM", Locale.ENGLISH);
         int month = mLastDate.getActualMaximum(Calendar.DAY_OF_YEAR);
@@ -85,22 +85,65 @@ public class WeekPresenter implements BaseContract.BasePresenter {
 
             }
             mFragment.addNewEvents(list);
-                            /*SimpleDateFormat apiFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-                            ArrayList<DayOfWeekEventData> list = new ArrayList<DayOfWeekEventData>();
-                            for (int i = 0; i < data.size(); i++) {
-                                Date date = apiFormat.parse(data.get(i).startTime);
-                                list.add(new DayOfWeekEventData(newFormant.format(date), data));
-                            }*/
 
+        }catch (Exception c){
+            c.printStackTrace();
+        }*/
+        try {
+            ArrayList<DayOfWeekEventData> weekList = new ArrayList<DayOfWeekEventData>();
+            final SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd");
+            final SimpleDateFormat newFormant = new SimpleDateFormat("E'\n'd'\n'MMM", Locale.ENGLISH);
+            ArrayList<String> dates = new ArrayList<String>();
+            Calendar currentDay = Calendar.getInstance();
+            for (int i = 0; i < 365; i++) {
+                dates.add(oldFormat.format(currentDay.getTime()));
+                currentDay.add(Calendar.DATE, 1);
+                //Log.d("EEEE", oldFormat.format(currentDay.getTime()));
+            }
+            for (int i = 0; i < dates.size(); i++) {
+                //boolean check = false;
 
+                //while (!check) {
+                //    if (dates.get(i).equals(startDate)) {
+                //        list.add(events.get(j));
+                //    }
+                //    Date dateTime = oldFormat.parse(startDate);
+                //    dateTime.setTime(dateTime.getTime() + 86400000);
+                //    startDate = oldFormat.format(dateTime);
+                //    if(!startDate.equals(endDate)){
+                //        check = true;
+                //    }
+                //}
+                //check = false;
 
-            //mFragment.addNewEvents(list);
-            /*for (int i = 0; i < data.size(); i++) {
-                Log.d("TAG", data.get(i).title);
-            }*/
+                ArrayList<DayEventData> list = new ArrayList<DayEventData>();
+                for (int j = 0; j < events.size(); j++) {
+                    if(!events.get(j).type.equals("holidays")) {
+                        String startDate = events.get(j).startTime.split("T")[0];
+                        String endDate = events.get(j).endTime.split("T")[0];
+                        Log.d("12345", startDate+" "+endDate+" "+events.get(j).title);
+                        while (oldFormat.parse(startDate).getTime()<=oldFormat.parse(endDate).getTime()) {
+                            Log.d("12345", "siskastii");
+                            Log.d("12345", oldFormat.format(currentDay.getTime()));
+                            if (dates.get(i).equals(startDate)) {
+                                list.add(events.get(j));
+
+                            }
+                            Date dateTime = oldFormat.parse(startDate);
+                            dateTime.setTime(dateTime.getTime() + 86400000);
+                            startDate = oldFormat.format(dateTime);
+                        }
+                    }
+                    //if(dates.get(i).equals(events.get(j).))
+                }
+                Date date1 = oldFormat.parse(dates.get(i));
+                weekList.add(new DayOfWeekEventData(newFormant.format(date1), list));
+            }
+            mFragment.addNewEvents(weekList);
         }catch (Exception c){
             c.printStackTrace();
         }
+
 
 
     }

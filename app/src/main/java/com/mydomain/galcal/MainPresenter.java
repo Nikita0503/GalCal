@@ -56,7 +56,7 @@ public class MainPresenter implements BaseContract.BasePresenter {
 
     public void fetchBackgroundImageInfo(String token){
         String date = LocalDate.now().toString();
-        Log.d("TAG", "now " + date);
+        Log.d("LOCALDATE", "now " + date);
         Log.d("TAG", date);
         Disposable backgroundImageInfo = mApiUtils.getBackgroundImageInfo(token, date)
                 .subscribeOn(Schedulers.io())

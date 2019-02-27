@@ -10,6 +10,7 @@ import com.mydomain.galcal.APIUtils.APIUtils;
 import com.mydomain.galcal.BaseContract;
 import com.mydomain.galcal.R;
 import com.mydomain.galcal.data.DayEventData;
+import com.mydomain.galcal.data.DayOfWeekEventData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,6 +55,13 @@ public class HomePresenter implements BaseContract.BasePresenter {
 
     public void setDate(String date){
         mDate = date;
+    }
+
+    public void setTodayEventList(DayOfWeekEventData data){
+        //Log.d("asdfg", data.date);
+        setEventsCount(data.events.size());
+        setDate(data.date);
+        createAdapter(data.events);
     }
 
     public void fetchTodayEventList(String token){

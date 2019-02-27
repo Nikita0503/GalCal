@@ -23,6 +23,7 @@ import com.mydomain.galcal.BaseContract;
 import com.mydomain.galcal.MainActivity;
 import com.mydomain.galcal.R;
 import com.mydomain.galcal.data.BackgroundImageInfo;
+import com.mydomain.galcal.data.DayOfWeekEventData;
 import com.mydomain.galcal.data.HomeTabData;
 import com.mydomain.galcal.settings.SettingsPresenter;
 
@@ -37,6 +38,7 @@ import java.util.Date;
 public class HomeFragment extends Fragment implements BaseContract.BaseView{
 
     public boolean can;
+    private DayOfWeekEventData mEvents;
     public HomeTabData homeTabData;
     private String mToken;
     private String mUserName;
@@ -54,6 +56,12 @@ public class HomeFragment extends Fragment implements BaseContract.BaseView{
         super.onCreate(savedInstanceState);
         mPresenter = new HomePresenter(this, mToken);
         mPresenter.onStart();
+    }
+
+    public void setEvents(DayOfWeekEventData dayOfWeekEventData){
+        mEvents = dayOfWeekEventData;
+        mEvents.date = mEvents.date.replaceAll("\n", " ");
+       // mPresenter.setTodayEventList(mEvents);
     }
 
     @Override
@@ -108,17 +116,29 @@ public class HomeFragment extends Fragment implements BaseContract.BaseView{
             }
         }
 
-        if(!can) {
-            mPresenter.fetchTodayEventList(mToken);
-            homeTabData = new HomeTabData();
-            mProgressBar.setVisibility(View.VISIBLE);
-        }else{
-            mTextViewEventsCount.setVisibility(View.VISIBLE);
-            mTextViewEventsCount.setText(homeTabData.answer);
-            mTextViewDate.setText(homeTabData.date);
-            mRecyclerView.setAdapter(homeTabData.adapter);
-            Log.d("TAG2", homeTabData.answer.toString());
+        if(!can){
+            if(mEvents!=null) {
+                homeTabData = new HomeTabData();
+                homeTabData.date = mEvents.date;
+                mPresenter.setTodayEventList(mEvents);
+            }
         }
+
+
+            if (!can) {
+                mPresenter.fetchTodayEventList(mToken);
+                homeTabData = new HomeTabData();
+                mProgressBar.setVisibility(View.VISIBLE);
+
+            } else {
+                mTextViewEventsCount.setVisibility(View.VISIBLE);
+                mTextViewEventsCount.setText(homeTabData.answer);
+                mTextViewDate.setText(homeTabData.date);
+                mRecyclerView.setAdapter(homeTabData.adapter);
+                Log.d("TAG2", homeTabData.answer.toString());
+            }
+
+
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(Calendar.getInstance().getTime());
         Log.d("TAG", timeStamp.toString()); //работает
         return view;
@@ -170,6 +190,31 @@ public class HomeFragment extends Fragment implements BaseContract.BaseView{
     @Override
     public void onResume() {
         super.onResume();
+
+        if(mEvents!=null){
+            mEvents=null;
+            if (getView() == null) {
+                return;
+            }
+            getView().setFocusableInTouchMode(true);
+            getView().requestFocus();
+            getView().setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                        try {
+                            getFragmentManager().popBackStack();
+                            MainActivity mainActivity = (MainActivity) getActivity();
+                            mainActivity.openWeekTab();
+                        }catch (Exception c){
+                            c.printStackTrace();
+                        }
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        }
 
         if(mDate!=null) {
             if (getView() == null) {
