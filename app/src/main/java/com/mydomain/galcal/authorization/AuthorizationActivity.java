@@ -30,6 +30,7 @@ public class AuthorizationActivity extends AppCompatActivity implements BaseCont
         super.onCreate(savedInstanceState);
         mPref = getSharedPreferences("GalCal", MODE_PRIVATE);
         String token = mPref.getString("token", "");
+        Log.d("TOKEN", token);
         String userName = mPref.getString("userName", "");
         if(!token.equals("")){
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);

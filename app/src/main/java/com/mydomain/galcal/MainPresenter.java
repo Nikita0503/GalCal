@@ -73,9 +73,8 @@ public class MainPresenter implements BaseContract.BasePresenter {
         TimeZone timeZone = TimeZone.getDefault();
 
         final SimpleDateFormat sdf =
-                //new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a z");
                 new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-// Give it to me in GMT time.
+
         sdf.setTimeZone(TimeZone.getDefault());
         String timeZoneStr = "";
         if(timeZone.getRawOffset()/3600000<10) {
@@ -83,8 +82,8 @@ public class MainPresenter implements BaseContract.BasePresenter {
         }else{
             timeZoneStr = String.valueOf(timeZone.getRawOffset() / 3600000);
         }
-        //date = sdf.format(currentTime)+"%2B"+timeZoneStr+":00";
-        String date = LocalDate.now().toString();
+        date = sdf.format(currentTime)+"+"+timeZoneStr+":00";
+        //String date = LocalDate.now().toString();
         Log.d("BEARER", date);
        // Log.d("LOCALDATE", "now " + date);
        // Log.d("TAG", date);
