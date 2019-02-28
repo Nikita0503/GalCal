@@ -58,6 +58,7 @@ public class EditEventPresenter implements BaseContract.BasePresenter {
                         mFragment.getFragmentManager().popBackStack();
                         MainActivity activity = (MainActivity) mFragment.getActivity();
                         activity.fetchEventsForYear();
+                        activity.openWeekTab();
                         try {
                             SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
                             SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-M-d", Locale.ENGLISH);
@@ -103,6 +104,7 @@ public class EditEventPresenter implements BaseContract.BasePresenter {
                         mFragment.getFragmentManager().popBackStack();
                         MainActivity mainActivity = (MainActivity) mFragment.getActivity();
                         mainActivity.fetchEventsForYear();
+                        mainActivity.openWeekTab();
                         try {
                             SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
                             SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-M-d", Locale.ENGLISH);

@@ -305,12 +305,22 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                     mTextViewLocation.setLayoutParams(layoutParams1);
                 }else {
                     Calendar calendar = Calendar.getInstance();
+                    int hour;
+                    String AM_PM = "";
+                    if(calendar.get(Calendar.HOUR_OF_DAY) < 12) {
+                        AM_PM = "AM";
+                        hour = calendar.get(Calendar.HOUR_OF_DAY);
+                    } else {
+                        AM_PM = "PM";
+                        hour = calendar.get(Calendar.HOUR_OF_DAY)-12;
+                    }
+
                     if(calendar.get(Calendar.MINUTE)<10) {
-                        mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE));
-                        startTime = calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE);
+                        mTextViewStartTime.setText(hour+":0"+calendar.get(Calendar.MINUTE)+" "+AM_PM);
+                        startTime = hour+":0"+calendar.get(Calendar.MINUTE)+" "+AM_PM;
                     }else{
-                        mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
-                        startTime = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
+                        mTextViewStartTime.setText(hour+":"+calendar.get(Calendar.MINUTE)+" "+AM_PM);
+                        startTime = hour+":"+calendar.get(Calendar.MINUTE)+" "+AM_PM;
                     }
                     //mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
                     mTimePickerFrom.setVisibility(View.VISIBLE);
@@ -340,12 +350,23 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                 }
                 if(!mSwitchAllDay.isChecked()){
                     Calendar calendar = Calendar.getInstance();
+
+                    int hour;
+                    String AM_PM = "";
+                    if(calendar.get(Calendar.HOUR_OF_DAY) < 12) {
+                        AM_PM = "AM";
+                        hour = calendar.get(Calendar.HOUR_OF_DAY);
+                    } else {
+                        AM_PM = "PM";
+                        hour = calendar.get(Calendar.HOUR_OF_DAY)-12;
+                    }
+
                     if(calendar.get(Calendar.MINUTE)<10) {
-                        mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE));
-                        endTime = calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE);
+                        mTextViewEndTime.setText(hour+":0"+calendar.get(Calendar.MINUTE)+" "+AM_PM);
+                        endTime = hour+":0"+calendar.get(Calendar.MINUTE)+" "+AM_PM;
                     }else{
-                        mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
-                        endTime = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
+                        mTextViewEndTime.setText(hour+":"+calendar.get(Calendar.MINUTE)+" "+AM_PM);
+                        endTime = hour+":"+calendar.get(Calendar.MINUTE)+" "+AM_PM;
                     }
                     //mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
                     mTimePickerTo.setVisibility(View.VISIBLE);
@@ -365,12 +386,22 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         mTimePickerFrom.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker timePicker, int selectedHour, int selectedMinute) {
+
+                String AM_PM = "";
+                if(selectedHour < 12) {
+                    AM_PM = "AM";
+                } else {
+                    AM_PM = "PM";
+                    selectedHour = selectedHour-12;
+                }
+
+
                 if(selectedMinute<10) {
-                    mTextViewStartTime.setText(selectedHour + ":0" + selectedMinute);
-                    startTime = selectedHour + ":0" + selectedMinute;
+                    mTextViewStartTime.setText(selectedHour + ":0" + selectedMinute+" "+AM_PM);
+                    startTime = selectedHour + ":0" + selectedMinute+" "+AM_PM;
                 }else{
-                    mTextViewStartTime.setText(selectedHour + ":" + selectedMinute);
-                    startTime = selectedHour + ":" + selectedMinute;
+                    mTextViewStartTime.setText(selectedHour + ":" + selectedMinute+" "+AM_PM);
+                    startTime = selectedHour + ":" + selectedMinute+" "+AM_PM;
                 }
             }
         });
@@ -378,12 +409,21 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         mTimePickerTo.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                String AM_PM = "";
+                if(selectedHour < 12) {
+                    AM_PM = "AM";
+                } else {
+                    AM_PM = "PM";
+                    selectedHour = selectedHour-12;
+                }
+
+
                 if(selectedMinute<10) {
-                    mTextViewEndTime.setText(selectedHour + ":0" + selectedMinute);
-                    endTime = selectedHour + ":0" + selectedMinute;
+                    mTextViewEndTime.setText(selectedHour + ":0" + selectedMinute+" "+AM_PM);
+                    endTime = selectedHour + ":0" + selectedMinute+" "+AM_PM;
                 }else{
-                    mTextViewEndTime.setText(selectedHour + ":" + selectedMinute);
-                    endTime = selectedHour + ":" + selectedMinute;
+                    mTextViewEndTime.setText(selectedHour + ":" + selectedMinute+" "+AM_PM);
+                    endTime = selectedHour + ":" + selectedMinute+" "+AM_PM;
                 }
 
             }
@@ -401,12 +441,21 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
 
                 }else{
                     Calendar calendar = Calendar.getInstance();
+                    int hours = calendar.get(Calendar.HOUR_OF_DAY);
+                    String AM_PM = "";
+                    if(hours < 12) {
+                        AM_PM = "AM";
+                    } else {
+                        AM_PM = "PM";
+                        hours = hours - 12;
+                    }
+
                     if(calendar.get(Calendar.MINUTE)<10){
-                        mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE));
-                        startTime = calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE);
+                        mTextViewStartTime.setText(hours+":0"+calendar.get(Calendar.MINUTE)+" "+AM_PM);
+                        startTime = hours+":0"+calendar.get(Calendar.MINUTE)+" "+AM_PM;
                     }else{
-                        mTextViewStartTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
-                        startTime = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
+                        mTextViewStartTime.setText(hours+":"+calendar.get(Calendar.MINUTE)+" "+AM_PM);
+                        startTime = hours+":"+calendar.get(Calendar.MINUTE)+" "+AM_PM;
                     }
 
                     mTimePickerFrom.setVisibility(View.VISIBLE);
@@ -444,12 +493,20 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                     mTextViewLocation.setLayoutParams(layoutParams1);
                 }else{
                     Calendar calendar = Calendar.getInstance();
+                    int hours = calendar.get(Calendar.HOUR_OF_DAY);
+                    String AM_PM = "";
+                    if(hours < 12) {
+                        AM_PM = "AM";
+                    } else {
+                        AM_PM = "PM";
+                        hours = hours - 12;
+                    }
                     if(calendar.get(Calendar.MINUTE)<10){
-                        mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE));
-                        endTime = calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE);
+                        mTextViewEndTime.setText(hours+":0"+calendar.get(Calendar.MINUTE)+" "+AM_PM);
+                        endTime = calendar.get(Calendar.HOUR_OF_DAY)+":0"+calendar.get(Calendar.MINUTE)+" "+AM_PM;
                     }else{
-                        mTextViewEndTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
-                        endTime = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE);
+                        mTextViewEndTime.setText(hours+":"+calendar.get(Calendar.MINUTE)+" "+AM_PM);
+                        endTime = calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE)+" "+AM_PM;
                     }
                     mTimePickerTo.setVisibility(View.VISIBLE);
                     mTimePickerFrom.setVisibility(View.GONE);
@@ -613,12 +670,26 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
                     allDay = false;
                     if(!mTextViewStartTime.getText().toString().equals("Time")){
                         timeStart = mTextViewStartTime.getText().toString();
+                        String[] mass = timeStart.split(" ");
+                        int hours = Integer.parseInt(mass[0].split(":")[0]);
+                        String AM_PM = mass[1];
+                        if(AM_PM.equals("PM")){
+                            hours+=12;
+                        }
+                        timeStart=hours+":"+mass[0].split(":")[1];
                     }else{
                         mTextViewStartTime.setError(getResources().getString(R.string.required));
                         return;
                     }
                     if(!mTextViewEndTime.getText().toString().equals("Time")){
                         timeEnd = mTextViewEndTime.getText().toString();
+                        String[] mass = timeEnd.split(" ");
+                        int hours = Integer.parseInt(mass[0].split(":")[0]);
+                        String AM_PM = mass[1];
+                        if(AM_PM.equals("PM")){
+                            hours+=12;
+                        }
+                        timeEnd=hours+":"+mass[0].split(":")[1];
                     }else{
                         mTextViewEndTime.setError(getResources().getString(R.string.required));
                         return;

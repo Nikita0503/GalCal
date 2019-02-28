@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,8 +39,12 @@ import com.mydomain.galcal.week.WeekFragment;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -81,9 +86,12 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
+        //DateFormat df = DateFormat.getTimeInstance();
+        //df.setTimeZone(TimeZone.getTimeZone("gmt"));
+        //String gmtTime = df.format(new Date());
+        //Log.d("TIME", gmtTime);
+        //TimeZone timeZone = TimeZone.getDefault();
+        //Log.d("TIME", (timeZone.getRawOffset()/3600000)+"");
         tutorialDay = null;
         tutorialGoTo1 = false;
         tutorialGoTo2 = false;
@@ -97,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
             isTutirial = true;
 
         }
-        isTutirial = false;
+
         mUnlockedPhoto = (ImageView) findViewById(R.id.imageViewGirl);
         mUnlockedPhoto.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -26,6 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class APIUtils {
     public static final String BASE_URL = "https://galcal.sooprit.com/api/v1/";
+    public static final String EXP_URL = "http://192.168.1.182:8080/api/v1/";
 
     public Single<AuthorizationResponse> getAuthorizationToken(String login, String password){
         Retrofit retrofit = getClient(BASE_URL);
@@ -90,6 +91,7 @@ public class APIUtils {
 
     public Single<ArrayList<BackgroundImageInfo>> getBackgroundImageInfo(String token, String startTime){
         Retrofit retrofit = getClient(BASE_URL);
+        Log.d("BEARER", startTime);
         APIService apiService = retrofit.create(APIService.class);
         return apiService.getBackgroundImageInfo("Bearer " + token, startTime);
     }

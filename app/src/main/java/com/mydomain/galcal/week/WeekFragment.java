@@ -68,6 +68,7 @@ public class WeekFragment extends Fragment implements BaseContract.BaseView{
 
     public void setEvents(ArrayList<DayEventData> events){
         mEvents = events;
+
     }
 
     public void fetchNewEvents(){

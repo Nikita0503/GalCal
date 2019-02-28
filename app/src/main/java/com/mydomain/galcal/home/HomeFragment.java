@@ -192,7 +192,6 @@ public class HomeFragment extends Fragment implements BaseContract.BaseView{
         super.onResume();
 
         if(mEvents!=null){
-            mEvents=null;
             if (getView() == null) {
                 return;
             }
@@ -206,6 +205,8 @@ public class HomeFragment extends Fragment implements BaseContract.BaseView{
                             getFragmentManager().popBackStack();
                             MainActivity mainActivity = (MainActivity) getActivity();
                             mainActivity.openWeekTab();
+                            onDestroy();
+                            mEvents = null;
                         }catch (Exception c){
                             c.printStackTrace();
                         }

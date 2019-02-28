@@ -11,6 +11,7 @@ import com.mydomain.galcal.APIUtils.APIUtils;
 import com.mydomain.galcal.data.BackgroundImageInfo;
 import com.mydomain.galcal.data.DayEventData;
 import com.mydomain.galcal.settings.SettingsFragment;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -20,10 +21,13 @@ import org.json.JSONObject;
 import org.threeten.bp.LocalDate;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -55,9 +59,35 @@ public class MainPresenter implements BaseContract.BasePresenter {
     }
 
     public void fetchBackgroundImageInfo(String token){
+        //String date = LocalDate.now().toString();
+       // DateFormat df = DateFormat.getTimeInstance();
+       // df.setTimeZone(TimeZone.getTimeZone("gmt"));
+       // String gmtTime = df.format(new Date());
+       // Log.d("TIME", gmtTime);
+       // TimeZone timeZone = TimeZone.getDefault();
+       // String difference = String.valueOf(timeZone.getRawOffset()/3600000);
+       // String s = CalendarDay.today().toString();
+       // Log.d("TIME", s+gmtTime+difference);
+
+        final Date currentTime = new Date();
+        TimeZone timeZone = TimeZone.getDefault();
+
+        final SimpleDateFormat sdf =
+                //new SimpleDateFormat("EEE, MMM d, yyyy hh:mm:ss a z");
+                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+// Give it to me in GMT time.
+        sdf.setTimeZone(TimeZone.getDefault());
+        String timeZoneStr = "";
+        if(timeZone.getRawOffset()/3600000<10) {
+            timeZoneStr = "0"+String.valueOf(timeZone.getRawOffset() / 3600000);
+        }else{
+            timeZoneStr = String.valueOf(timeZone.getRawOffset() / 3600000);
+        }
+        //date = sdf.format(currentTime)+"%2B"+timeZoneStr+":00";
         String date = LocalDate.now().toString();
-        Log.d("LOCALDATE", "now " + date);
-        Log.d("TAG", date);
+        Log.d("BEARER", date);
+       // Log.d("LOCALDATE", "now " + date);
+       // Log.d("TAG", date);
         Disposable backgroundImageInfo = mApiUtils.getBackgroundImageInfo(token, date)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -66,12 +96,13 @@ public class MainPresenter implements BaseContract.BasePresenter {
                     public void onSuccess(ArrayList<BackgroundImageInfo> info) {
                         mActivity.setBackgroundInfo(info.get(0));
                         mActivity.setBackgroundImage(info.get(0).image);
-                        Log.d("TAG_DELAY", info.get(0).image);
+                        Log.d("BEARER", info.get(0).image);
                         //Toast.makeText(mActivity.getApplicationContext(), date, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        Log.d("BEARER", "ERROR");
                         e.printStackTrace();
                     }
                 });
