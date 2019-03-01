@@ -90,7 +90,7 @@ public class APIUtils {
     }
 
     public Single<ArrayList<BackgroundImageInfo>> getBackgroundImageInfo(String token, String startTime){
-        Retrofit retrofit = getClient(EXP_URL);
+        Retrofit retrofit = getClient(BASE_URL);
         Log.d("BEARER", startTime);
         APIService apiService = retrofit.create(APIService.class);
         return apiService.getBackgroundImageInfo("Bearer " + token, startTime);

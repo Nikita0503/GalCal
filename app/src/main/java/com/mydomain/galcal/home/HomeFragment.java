@@ -1,7 +1,9 @@
 package com.mydomain.galcal.home;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -99,6 +101,20 @@ public class HomeFragment extends Fragment implements BaseContract.BaseView{
                     @Override
                     public void onClick(View view) {
                         dialog.cancel();
+                    }
+                });
+                textViewPhotographer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(textViewPhotographer.getText().toString()));
+                        startActivity(browserIntent);
+                    }
+                });
+                textViewModel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(textViewModel.getText().toString()));
+                        startActivity(browserIntent);
                     }
                 });
                 dialog.show();

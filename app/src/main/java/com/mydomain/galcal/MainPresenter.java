@@ -102,6 +102,7 @@ public class MainPresenter implements BaseContract.BasePresenter {
                     @Override
                     public void onError(Throwable e) {
                         Log.d("BEARER", "ERROR");
+                        Toast.makeText(mActivity.getApplicationContext(), "The device has an incorrect date", Toast.LENGTH_LONG).show();
                         e.printStackTrace();
                     }
                 });
