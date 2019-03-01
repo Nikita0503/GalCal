@@ -4,6 +4,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 import com.mydomain.galcal.APIUtils.APIUtils;
@@ -11,6 +12,7 @@ import com.mydomain.galcal.BaseContract;
 import com.mydomain.galcal.R;
 import com.mydomain.galcal.data.DayEventData;
 import com.mydomain.galcal.data.DayOfWeekEventData;
+import com.mydomain.galcal.data.new_data.Day;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +23,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -74,20 +78,45 @@ public class HomePresenter implements BaseContract.BasePresenter {
         }
         String startTime = time + "T00:00";
         String endTime = time + "T23:59";
-        //Log.d("TAG", startTime);
-        //Log.d("TAG", endTime);
-        Disposable fetchTodayEventList = mApiUtils.getTodayEventList(token, startTime, endTime)
+        Log.d("TAGq", startTime);
+        Log.d("TAGq", endTime);
+        Disposable fetchTodayEventList = mApiUtils.getAllEvents(token, startTime, endTime)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<ArrayList<DayEventData>>() {
+                .subscribeWith(new DisposableSingleObserver<Map<String, ArrayList<DayEventData>>>() {
                     @Override
-                    public void onSuccess(ArrayList<DayEventData> data) {
-                        setEventsCount(data.size());
-                        setDate();
-                        createAdapter(data);
-                        for(int i = 0; i < data.size(); i++){
-                            Log.d("TAG", data.get(i).title);
+                    public void onSuccess(Map<String, ArrayList<DayEventData>> response) {
+                        ArrayList<DayEventData> days = new ArrayList<DayEventData>();
+
+                        Set<String> keys = response.keySet();
+                        ArrayList<String> dates = new ArrayList<String>();
+                        dates.addAll(keys);
+                        //Toast.makeText(mFragment.getContext(), dates.size()+"", Toast.LENGTH_SHORT).show();
+                        for(int i = 0; i < dates.size(); i++){
+                            //Log.v("NEW_DATE", events.get(i).date);
+                            //Toast.makeText(mActivity.getApplicationContext(), "date = " + dates.get(i), Toast.LENGTH_SHORT).show();
+                            if(dates.get(i).split("T")[0].equals(time)) {
+                                days.addAll(response.get(dates.get(i)));
+                            }
                         }
+                        //mActivity.setDays(days);
+
+
+
+
+                        //Set<String> keys = data.keySet();
+                        //ArrayList<String> dates = new ArrayList<String>();
+                        //Log.d("TAGq", endTime);
+                        //ArrayList<DayEventData> days = new ArrayList<DayEventData>();
+                        //if(dates.size()!=0) {
+                        //    days = data.get(dates.get(0));
+                        //}
+                        setEventsCount(days.size());
+                        setDate();
+                        createAdapter(days);
+                        //for(int i = 0; i < data.size(); i++){
+                        //    Log.d("TAG", data.get(i).title);
+                        //}
 
                     }
 

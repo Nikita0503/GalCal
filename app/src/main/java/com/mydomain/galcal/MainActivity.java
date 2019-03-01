@@ -32,6 +32,7 @@ import com.mydomain.galcal.addEvent.AddEventFragment;
 import com.mydomain.galcal.calendar.CalendarFragment;
 import com.mydomain.galcal.data.BackgroundImageInfo;
 import com.mydomain.galcal.data.DayEventData;
+import com.mydomain.galcal.data.new_data.Day;
 import com.mydomain.galcal.editEvent.EditEventFragment;
 import com.mydomain.galcal.home.HomeFragment;
 import com.mydomain.galcal.settings.SettingsFragment;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     private String mToken;
     private String mUserName;
     private ArrayList<DayEventData> mEvents;
+    private ArrayList<Day> mDays;
     private MainPresenter mPresenter;
     private BottomNavigationView mBottomNavigation;
     private Fragment mFragment;
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     private SettingsFragment mSettingsFragment;
 
     private ImageView mImageViewBackground;
-    private ProgressBar mProgressBar;
+    //private ProgressBar mProgressBar;
     //private View mTutorial;
 
     private ImageView mUnlockedPhoto;
@@ -126,9 +128,9 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         firstCreating = true;
 
         mImageViewBackground = (ImageView) findViewById(R.id.imageViewBackground);
-        mProgressBar = (ProgressBar)findViewById(R.id.spin_kit);
+        //mProgressBar = (ProgressBar)findViewById(R.id.spin_kit);
         Sprite doubleBounce = new Circle();
-        mProgressBar.setIndeterminateDrawable(doubleBounce);
+        //mProgressBar.setIndeterminateDrawable(doubleBounce);
         mPresenter = new MainPresenter(this);
         mPresenter.onStart();
         Intent intent = getIntent();
@@ -245,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                 //mTimer.schedule(mMyTimerTask, 1000, 14400000);
                 //mImageViewBackground.setImageDrawable(getResources().getDrawable(R.drawable.sss));
                 fetchEventsForYear();
-
+                //mPresenter.fetchEventsForYearNew(mToken);
         }else{
             //Toast.makeText(getApplicationContext(), "No connection", Toast.LENGTH_SHORT).show();
             Dialog dialog = getConnectionDialog("No internet connection");
@@ -300,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     }
 
     public void openWeekTab(){
-        mBottomNavigation.setSelectedItemId(R.id.weekFragment);
+        mBottomNavigation.setSelectedItemId(R.id.mothCalendarView);
     }
 
     public void updateCalendarTab(){
@@ -335,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     }
 
     public void setBackgroundImage(String image){
-        mProgressBar.setVisibility(View.VISIBLE);
+        //mProgressBar.setVisibility(View.VISIBLE);
             if(isTutirial){
                 mUnlockedPhoto.setVisibility(View.VISIBLE);
                 Picasso.with(getApplicationContext()) //передаем контекст приложения
@@ -344,7 +346,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                         .into(mUnlockedPhoto, new com.squareup.picasso.Callback() {
                             @Override
                             public void onSuccess() {
-                                mProgressBar.setVisibility(View.INVISIBLE);
+                                //mProgressBar.setVisibility(View.INVISIBLE);
                                 downloaded = true;
                             }
 
@@ -364,9 +366,14 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
     }
 
+    //public void setDays(ArrayList<Day> days){
+    //    mDays = days;
+    //    mCalendarFragment.setDays(days);
+    //}
+
     public void fetchEventsForYear(){
         mPresenter.fetchEventsForYear(mToken);
-        mProgressBar.setVisibility(View.VISIBLE);
+        //mProgressBar.setVisibility(View.VISIBLE);
     }
 
     public void setEventsForYear(ArrayList<DayEventData> events){
@@ -380,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
             mBottomNavigation.setClickable(true);
           //  mTutorial.bringToFront();
         }
-        mProgressBar.setVisibility(View.INVISIBLE);
+        //mProgressBar.setVisibility(View.INVISIBLE);
       //  mTutorial.bringToFront();
     }
 

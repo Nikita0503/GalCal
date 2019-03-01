@@ -9,8 +9,13 @@ import com.mydomain.galcal.data.SendRestoreLinkData;
 import com.mydomain.galcal.data.SetNewPasswordData;
 import com.mydomain.galcal.data.UserData;
 import com.mydomain.galcal.data.AuthorizationResponse;
+import com.mydomain.galcal.data.new_data.Day;
+import com.mydomain.galcal.data.new_data.Event;
+import com.mydomain.galcal.data.new_data.Response;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
@@ -66,4 +71,7 @@ public interface APIService {
 
     @GET("user/confirm-email/{key}")
     Completable sendConfirm(@Path("key") String key);
+
+    @GET("event/today/")
+    Single<Map<String, ArrayList<DayEventData>>> getAllEvents(@Header("Authorization") String header, @Query("start_time") String startTime, @Query("end_time") String endTime);
 }

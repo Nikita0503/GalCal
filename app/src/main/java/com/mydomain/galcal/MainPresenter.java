@@ -10,6 +10,9 @@ import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 import com.mydomain.galcal.APIUtils.APIUtils;
 import com.mydomain.galcal.data.BackgroundImageInfo;
 import com.mydomain.galcal.data.DayEventData;
+import com.mydomain.galcal.data.new_data.Day;
+import com.mydomain.galcal.data.new_data.Event;
+import com.mydomain.galcal.data.new_data.Response;
 import com.mydomain.galcal.settings.SettingsFragment;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.squareup.picasso.Picasso;
@@ -26,7 +29,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -110,6 +116,42 @@ public class MainPresenter implements BaseContract.BasePresenter {
 
         mDisposables.add(backgroundImageInfo);
     }
+
+
+    //public void fetchEventsForYearNew(String token){
+    //    Calendar calendar1 = Calendar.getInstance();
+    //    calendar1.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), 0);
+    //    Calendar calendar2 = Calendar.getInstance();
+    //    calendar2.set(calendar1.get(Calendar.YEAR)+1, calendar1.get(Calendar.MONTH), calendar1.get(Calendar.DAY_OF_MONTH));
+    //    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+    //    String startTime = dateFormat.format(calendar1.getTime());
+    //    String endTime = dateFormat.format(calendar2.getTime());
+    //    Disposable eventsForYear = mApiUtils.getAllEvents(token, startTime, endTime)
+    //            .subscribeOn(Schedulers.io())
+    //            .observeOn(AndroidSchedulers.mainThread())
+    //            .subscribeWith(new DisposableSingleObserver<Map<String, ArrayList<Event>>>() {
+    //                @Override
+    //                public void onSuccess(Map<String, ArrayList<Event>> response) {
+    //                    Set<String> keys = response.keySet();
+    //                    ArrayList<String> dates = new ArrayList<String>();
+    //                    dates.addAll(keys);
+    //                    ArrayList<Day> days = new ArrayList<Day>();
+    //                    for(int i = 0; i < dates.size(); i++){
+    //                        //Log.v("NEW_DATE", events.get(i).date);
+    //                        //Toast.makeText(mActivity.getApplicationContext(), "date = " + dates.get(i), Toast.LENGTH_SHORT).show();
+    //                        days.add(new Day(dates.get(i), response.get(dates.get(i))));
+    //                    }
+    //                    mActivity.setDays(days);
+    //                }
+//
+    //                @Override
+    //                public void onError(Throwable e) {
+    //                    e.printStackTrace();
+    //                }
+    //            });
+    //    mDisposables.add(eventsForYear);
+    //}
+
 
     public void fetchEventsForYear(String token){
         Calendar calendar1 = Calendar.getInstance();

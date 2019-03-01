@@ -5,6 +5,8 @@ import android.support.v4.content.ContextCompat;
 
 import com.mydomain.galcal.R;
 import com.mydomain.galcal.data.DayEventData;
+import com.mydomain.galcal.data.new_data.Day;
+import com.mydomain.galcal.data.new_data.Event;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
@@ -22,11 +24,17 @@ public class EventDayDecorator implements DayViewDecorator {
 
     private Context mContext;
     private ArrayList<DayEventData> mEvents;
+    private ArrayList<Day> mDays;
 
     public EventDayDecorator(Context context, ArrayList<DayEventData> events) {
         mContext = context;
         mEvents = events;
     }
+
+    //public EventDayDecorator(Context context, ArrayList<Day> days){
+    //    mContext = context;
+    //    mDays = days;
+    //}
 
 
 
@@ -67,6 +75,28 @@ public class EventDayDecorator implements DayViewDecorator {
         }catch (Exception c){
             c.printStackTrace();
         }
+
+        /*String day;
+        if(calendarDay.getDay()<10){
+            day = "0"+String.valueOf(calendarDay.getDay());
+        }else{
+            day = String.valueOf(calendarDay.getDay());
+        }
+        String month;
+        if(calendarDay.getMonth()<10){
+            month = "0"+String.valueOf(calendarDay.getMonth());
+        }else{
+            month = String.valueOf(calendarDay.getMonth());
+        }
+        String year = String.valueOf(calendarDay.getYear());
+        String currentDate = year+"-"+month+"-"+day;
+
+        for(int i = 0; i < mDays.size(); i++){
+            String date = mDays.get(i).date.split("T")[0];
+            if(date.equals(currentDate)){
+                return true;
+            }
+        }*/
         return false;
     }
 

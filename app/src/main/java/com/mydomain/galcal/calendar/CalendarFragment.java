@@ -20,6 +20,7 @@ import com.mydomain.galcal.BaseContract;
 import com.mydomain.galcal.MainActivity;
 import com.mydomain.galcal.R;
 import com.mydomain.galcal.data.DayEventData;
+import com.mydomain.galcal.data.new_data.Day;
 import com.mydomain.galcal.editEvent.EditEventPresenter;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -39,6 +40,7 @@ import java.util.Locale;
 
 public class CalendarFragment extends Fragment implements BaseContract.BaseView {
 
+    private ArrayList<Day> mDays;
     private float ALPHA = 0.1f;
     private String mToken;
     //private CalendarPresenter mPresenter;
@@ -60,6 +62,11 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
         super.onCreate(savedInstanceState);
         //mPresenter = new CalendarPresenter(this);
         //mPresenter.onStart();
+    }
+
+    public void setDays(ArrayList<Day> days){
+        mDays = days;
+
     }
 
     private void showStep1(){
@@ -183,6 +190,7 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
         mCalendarView.setWeekDayTextAppearance(R.style.WeekAppearance);
         mCalendarView.setDateTextAppearance(R.style.DayAppearance);
         EventDayDecorator dayDecorator = new EventDayDecorator(getContext(), mList);
+        //EventDayDecorator dayDecorator = new EventDayDecorator(getContext(), mDays);
         HolidayDecorator holidayDecorator = new HolidayDecorator(getContext(), mList);
         mCalendarView.addDecorator(dayDecorator);
         mCalendarView.addDecorator(holidayDecorator);
@@ -279,6 +287,7 @@ public class CalendarFragment extends Fragment implements BaseContract.BaseView 
         if(mCalendarView!=null){
             mCalendarView.removeDecorators();
             EventDayDecorator dayDecorator = new EventDayDecorator(getContext(), mList);
+            //EventDayDecorator dayDecorator = new EventDayDecorator(getContext(), mDays);
             HolidayDecorator holidayDecorator = new HolidayDecorator(getContext(), mList);
             mCalendarView.addDecorator(dayDecorator);
             mCalendarView.addDecorator(holidayDecorator);

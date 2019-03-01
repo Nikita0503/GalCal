@@ -12,8 +12,14 @@ import com.mydomain.galcal.data.SendRestoreLinkData;
 import com.mydomain.galcal.data.SetNewPasswordData;
 import com.mydomain.galcal.data.UserData;
 import com.mydomain.galcal.data.AuthorizationResponse;
+import com.mydomain.galcal.data.new_data.Day;
+import com.mydomain.galcal.data.new_data.Event;
+import com.mydomain.galcal.data.new_data.Response;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
@@ -26,7 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class APIUtils {
     public static final String BASE_URL = "https://galcal.sooprit.com/api/v1/";
-    public static final String EXP_URL = "http://192.168.1.182:8080/api/v1/";
+    //public static final String EXP_URL = "http://192.168.1.182:8080/api/v1/";
 
     public Single<AuthorizationResponse> getAuthorizationToken(String login, String password){
         Retrofit retrofit = getClient(BASE_URL);
@@ -70,6 +76,14 @@ public class APIUtils {
         APIService apiService = retrofit.create(APIService.class);
         return apiService.getTodayEventList("Bearer " + token, startTime, endTime);
     }
+
+
+    public Single<Map<String, ArrayList<DayEventData>>> getAllEvents(String token, String startTime, String endTime){
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        return apiService.getAllEvents("Bearer " + token, startTime, endTime);
+    }
+
 
     public Completable createNewEvent(String token, AddEventData data){
         Retrofit retrofit = getClient(BASE_URL);
