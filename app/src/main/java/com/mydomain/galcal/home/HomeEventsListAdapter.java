@@ -63,7 +63,18 @@ public class HomeEventsListAdapter extends RecyclerView.Adapter<HomeEventsListAd
         if(!mList.get(position).type.equals("holidays")) {
             if(!mList.get(position).isAllDay) {
                 if (startTime.equals(endTime) || endTime.equals("")) {
-                    holder.textViewEventTime.setText(mList.get(position).startTime.substring(11, 16));
+                    String time = mList.get(position).startTime.substring(11, 16);
+                    String[] bufferTimeStart = time.split(":");
+                    String AM_PM = "";
+                    int hoursStart = Integer.parseInt(bufferTimeStart[0]);
+                    if(hoursStart < 12) {
+                        AM_PM = "AM";
+                    } else {
+                        AM_PM = "PM";
+                        hoursStart = hoursStart-12;
+                    }
+                    time = hoursStart + ":" + bufferTimeStart[1] +" "+AM_PM;
+                    holder.textViewEventTime.setText(time);
                 } else {
                     String start = mList.get(position).startTime;
                     String end = mList.get(position).endTime;

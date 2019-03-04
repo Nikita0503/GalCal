@@ -1,9 +1,13 @@
 package com.mydomain.galcal;
 
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
@@ -25,6 +29,7 @@ import org.threeten.bp.LocalDate;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -82,15 +87,26 @@ public class MainPresenter implements BaseContract.BasePresenter {
                 new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 
         sdf.setTimeZone(TimeZone.getDefault());
+        int timeZoneInt = timeZone.getRawOffset()/3600000;
         String timeZoneStr = "";
-        if(timeZone.getRawOffset()/3600000<10) {
-            timeZoneStr = "0"+String.valueOf(timeZone.getRawOffset() / 3600000);
+        if(timeZoneInt > 0) {
+            if (timeZoneInt < 10) {
+                timeZoneStr = "+0" + String.valueOf(timeZoneInt);
+            } else {
+                timeZoneStr = "+" + String.valueOf(timeZoneInt);
+            }
         }else{
-            timeZoneStr = String.valueOf(timeZone.getRawOffset() / 3600000);
+            if(timeZoneInt>-10){
+                timeZoneStr = "-0" + String.valueOf(Math.abs(timeZoneInt));
+            }else{
+                timeZoneStr = String.valueOf(timeZoneInt);
+            }
         }
-        date = sdf.format(currentTime)+"+"+timeZoneStr+":00";
+
+        Log.d("Жирный", timeZoneStr);
+        date = sdf.format(currentTime)+timeZoneStr+":00";
         //String date = LocalDate.now().toString();
-        Log.d("BEARER", date);
+        Log.d("Жирный", date);
        // Log.d("LOCALDATE", "now " + date);
        // Log.d("TAG", date);
         Disposable backgroundImageInfo = mApiUtils.getBackgroundImageInfo(token, date)
@@ -107,9 +123,38 @@ public class MainPresenter implements BaseContract.BasePresenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d("BEARER", "ERROR");
-                        Toast.makeText(mActivity.getApplicationContext(), "The device has an incorrect date", Toast.LENGTH_LONG).show();
-                        e.printStackTrace();
+                        //Log.d("BEARER", "ERROR");
+                        //Toast.makeText(mActivity.getApplicationContext(), "The device has an incorrect date", Toast.LENGTH_LONG).show();
+                        //e.printStackTrace();
+                        if (e instanceof HttpException) {
+                            HttpException exception = (HttpException) e;
+                            ResponseBody responseBody = exception.response().errorBody();
+                            try {
+                                JSONObject responseError = new JSONObject(responseBody.string());
+                                JSONArray arrayError = responseError.getJSONArray("errors");
+                                JSONObject errorMessage = arrayError.getJSONObject(0);
+                                final SimpleDateFormat errorFormat =
+                                        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+                                final SimpleDateFormat newFormat = new SimpleDateFormat("yyyy MM dd, HH:mm");
+                                Date date = errorFormat.parse(errorMessage.getString("server_time"));
+                                String serverTime = newFormat.format(date);
+                                String yourTime = newFormat.format(Calendar.getInstance().getTime());
+
+                                Dialog dialog = getTimeDialog(serverTime, yourTime);
+                                dialog.show();
+                                Toast.makeText(mActivity.getApplicationContext(), "You have time difference with Greenwich time more than 12 hours\nGreenwich time: "
+                                        + serverTime
+                                        + "\nYour device time:" + yourTime,
+                                        Toast.LENGTH_LONG).show();
+                                Log.d("TAG", errorMessage.getString("server_time"));
+                            } catch (JSONException e1) {
+                                e1.printStackTrace();
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
                     }
                 });
 
@@ -117,6 +162,25 @@ public class MainPresenter implements BaseContract.BasePresenter {
         mDisposables.add(backgroundImageInfo);
     }
 
+    private Dialog getTimeDialog(String timeGreenwich, String yourTime){
+        final Dialog dialog = new Dialog(mActivity, R.style.DialogTheme);
+        dialog.setContentView(R.layout.error_dialog);
+
+        dialog.setTitle("");
+        //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
+        final TextView textViewGreenwichTime = (TextView) dialog.findViewById(R.id.textViewGreenwichTime);
+        final TextView textViewYourTime = (TextView) dialog.findViewById(R.id.textViewYourTime);
+        textViewGreenwichTime.setText(timeGreenwich);
+        textViewYourTime.setText(yourTime);
+        Button buttonOk = (Button) dialog.findViewById(R.id.buttonOk);
+        buttonOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        return dialog;
+    }
 
     //public void fetchEventsForYearNew(String token){
     //    Calendar calendar1 = Calendar.getInstance();

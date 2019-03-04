@@ -68,7 +68,20 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             }else {
                 SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
                 Date date = oldFormat.parse(mEvents.get(position).startTime);
-                holder.textViewTime.setText(new SimpleDateFormat("HH:mm").format(date));
+
+                String timeStart = new SimpleDateFormat("HH:mm").format(date);
+                String[] bufferTimeStart = timeStart.split(":");
+                String AM_PM = "";
+                int hoursStart = Integer.parseInt(bufferTimeStart[0]);
+                if(hoursStart < 12) {
+                    AM_PM = "AM";
+                } else {
+                    AM_PM = "PM";
+                    hoursStart = hoursStart-12;
+                }
+                timeStart = hoursStart + ":" + bufferTimeStart[1] +" "+AM_PM;
+
+                holder.textViewTime.setText(timeStart);
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
