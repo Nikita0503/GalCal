@@ -19,6 +19,7 @@ public class RegistrationActivity extends AppCompatActivity implements BaseContr
 
     private RegistrationPresenter mPresenter;
     private EditText mEditTextEmail;
+    private EditText mEditTextRepeatEmail;
     private EditText mEditTextPassword;
     private EditText mEditTextRepeatPassword;
     private Button mSingUpButton;
@@ -31,6 +32,7 @@ public class RegistrationActivity extends AppCompatActivity implements BaseContr
         mPresenter = new RegistrationPresenter(this);
         mPresenter.onStart();
         mEditTextEmail = (EditText) findViewById(R.id.login_registration);
+        mEditTextRepeatEmail = (EditText) findViewById(R.id.login_registration_repeat);
         mEditTextPassword = (EditText) findViewById(R.id.registration_password);
         mEditTextRepeatPassword = (EditText) findViewById(R.id.password_registration_repeat);
         mSingUpButton = (Button) findViewById(R.id.sign_up_button_registration);
@@ -40,11 +42,16 @@ public class RegistrationActivity extends AppCompatActivity implements BaseContr
             @Override
             public void onClick(View v) {
                 String login = mEditTextEmail.getText().toString();
+                String loginRepeat = mEditTextRepeatEmail.getText().toString();
                 String password = mEditTextPassword.getText().toString();
                 String repeatPassword = mEditTextRepeatPassword.getText().toString();
                 //Toast.makeText(getApplicationContext(), "Sing Up", Toast.LENGTH_SHORT).show();
                 if(login.equals("")) {
                     mEditTextEmail.setError(getResources().getString(R.string.required));
+                    return;
+                }
+                if(loginRepeat.equals("")){
+                    mEditTextRepeatEmail.setError(getResources().getString(R.string.required));
                     return;
                 }
                 if(password.equals("")) {
@@ -53,6 +60,10 @@ public class RegistrationActivity extends AppCompatActivity implements BaseContr
                 }
                 if(repeatPassword.equals("")) {
                     mEditTextRepeatPassword.setError(getResources().getString(R.string.required));
+                    return;
+                }
+                if(!login.equals(loginRepeat)){
+                    mEditTextRepeatEmail.setError(getResources().getString(R.string.emails_error));
                     return;
                 }
                 if(!password.equals(repeatPassword)){

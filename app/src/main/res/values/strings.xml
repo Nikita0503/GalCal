@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">GalCal</string>
     <string name="required">Required</string>
+    <string name="emails_error">Emails are not the same</string>
     <string name="passwords_error">Passwords are not the same</string>
     <string name="email_error">email is not correct</string>
     <string name="welcome">Welcome!</string>
