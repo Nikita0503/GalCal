@@ -74,8 +74,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     private SettingsFragment mSettingsFragment;
 
     private ImageView mImageViewBackground;
-    //private ProgressBar mProgressBar;
-    //private View mTutorial;
+
 
     private ImageView mUnlockedPhoto;
     private TextView mTextViewThatsIt;
