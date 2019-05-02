@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "306465606943",
+    "firebase_url": "https://galcal-1aa28.firebaseio.com",
+    "project_id": "galcal-1aa28",
+    "storage_bucket": "galcal-1aa28.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:306465606943:android:0150f8dffd085313",
+        "android_client_info": {
+          "package_name": "com.galCalApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "306465606943-ubtbr0pg3la3l5g6qtn51h913kkqt3t2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUVOSwTJsd5xJUqZiIuV2jNX4iLzbE23o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "306465606943-ubtbr0pg3la3l5g6qtn51h913kkqt3t2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

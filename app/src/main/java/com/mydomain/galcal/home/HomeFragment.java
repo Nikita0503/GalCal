@@ -106,28 +106,34 @@ public class HomeFragment extends Fragment implements BaseContract.BaseView{
                 textViewPhotographer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(textViewPhotographer.getText().toString()));
-                        startActivity(browserIntent);
+                        try {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(textViewPhotographer.getText().toString()));
+                            startActivity(browserIntent);
+                        }catch (Exception c){
+                            c.printStackTrace();
+                        }
                     }
                 });
                 textViewModel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(textViewModel.getText().toString()));
-                        startActivity(browserIntent);
+                        try {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(textViewModel.getText().toString()));
+                            startActivity(browserIntent);
+                        }catch (Exception c){
+                            c.printStackTrace();
+                        }
                     }
                 });
                 dialog.show();
             }
         });
         if(mDate!=null){
-            Log.d("TAG6", "ochko");
             Log.d("TAG6", mDate);
             mPresenter.setDate(mDate);
             Log.d("TAGS", mDate);
             can = false;
             if(!can){
-                Log.d("TAG6", "ochko2");
                 mPresenter.fetchTodayEventList(mToken);
             }
         }

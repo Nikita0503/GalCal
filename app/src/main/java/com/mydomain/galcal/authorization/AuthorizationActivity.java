@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mydomain.galcal.BaseContract;
 import com.mydomain.galcal.MainActivity;
 import com.mydomain.galcal.R;
@@ -25,9 +26,12 @@ public class AuthorizationActivity extends AppCompatActivity implements BaseCont
     private Button mLoginButton;
     private Button mSingUpButton;
     private SharedPreferences mPref;
+    private FirebaseAnalytics mFBanalytics;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFBanalytics = FirebaseAnalytics.getInstance(this);
+
         mPref = getSharedPreferences("GalCal", MODE_PRIVATE);
         String token = mPref.getString("token", "");
         Log.d("TOKEN", token);
@@ -92,6 +96,9 @@ public class AuthorizationActivity extends AppCompatActivity implements BaseCont
 
     public void openMainActivity(String token){
         String userName = mEditTextEmail.getText().toString();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, userName);
+        mFBanalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
         SharedPreferences.Editor editor = mPref.edit();
         editor.putString("token", token);
         editor.putString("userName", userName);

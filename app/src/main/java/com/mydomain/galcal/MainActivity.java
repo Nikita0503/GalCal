@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.Circle;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mydomain.galcal.addEvent.AddEventFragment;
 import com.mydomain.galcal.calendar.CalendarFragment;
 import com.mydomain.galcal.data.BackgroundImageInfo;
@@ -82,11 +84,13 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
     private SharedPreferences mPref;
     private EditEventFragment mEditFragment;
+    private FirebaseAnalytics mFBanalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mFBanalytics = FirebaseAnalytics.getInstance(this);
         //DateFormat df = DateFormat.getTimeInstance();
         //df.setTimeZone(TimeZone.getTimeZone("gmt"));
         //String gmtTime = df.format(new Date());
@@ -99,12 +103,16 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         downloaded = false;
         mPref = getSharedPreferences("GalCal", MODE_PRIVATE);
         String tutorial = mPref.getString("tutorial", "");
+        String userName = mPref.getString("userName", "no");
+        Bundle params = new Bundle();
+        params.putString("user", userName);
+        mFBanalytics.logEvent(userName, params);
         if(!tutorial.equals("")){
             isTutirial = false;
 
         }else{
-            isTutirial = true;
-
+            //isTutirial = true;
+            isTutirial = false;
         }
 
         mUnlockedPhoto = (ImageView) findViewById(R.id.imageViewGirl);
@@ -139,6 +147,10 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mBottomNavigation.setVisibility(View.INVISIBLE);
         mBottomNavigation.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_UNLABELED);
         if (isTutirial) {
+
+
+
+
             mBottomNavigation.getMenu().getItem(0).setIcon(null);
             mBottomNavigation.getMenu().getItem(1).setIcon(null);
             mBottomNavigation.getMenu().getItem(3).setIcon(null);
@@ -255,6 +267,29 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         }
     }
 
+    private Dialog getTutorialDialog(){
+        final Dialog dialog = new Dialog(getApplicationContext());
+        dialog.setContentView(R.layout.tutorial_dialog);
+        //dialog.setTitle(getResources().getString(R.string.change_email_dialog));
+        //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
+        Button buttonOk = (Button) dialog.findViewById(R.id.buttonNo);
+        Button buttonCancel = (Button) dialog.findViewById(R.id.buttonYes);
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        buttonOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dialog.dismiss();
+            }
+        });
+        return dialog;
+    }
+
     private Dialog getConnectionDialog(String message){
         final Dialog dialog = new Dialog(MainActivity.this, R.style.DialogTheme);
         dialog.setContentView(R.layout.connection_dialog);
@@ -289,7 +324,6 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
             }
         }, 0, 3, TimeUnit.HOURS);
-
     }
 
     public void showAddEventElements(){
@@ -305,7 +339,6 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     }
 
     public void updateCalendarTab(){
-
         tutorialDay = null;
         mCalendarFragment = new CalendarFragment();
         mCalendarFragment.setToken(mToken);
@@ -359,9 +392,16 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
 
             }
-            Picasso.with(getApplicationContext()) //передаем контекст приложения
-                    .load(image)
-                    .into(mImageViewBackground);
+            try{
+                Picasso.with(getApplicationContext()) //передаем контекст приложения
+                        .load(image)
+                        .into(mImageViewBackground);
+            }catch (Exception c){
+                Picasso.with(getApplicationContext())
+                        .load(R.drawable.login1)
+                        .into(mImageViewBackground);
+            }
+
 
     }
 

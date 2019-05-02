@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.Circle;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mydomain.galcal.BaseContract;
 import com.mydomain.galcal.MainActivity;
 import com.mydomain.galcal.R;
@@ -91,7 +92,9 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
     private ImageView mImageViewGirl2;
     private ImageView mImageVIewGirl3;
     private ImageView mImageViewPulsating;
+    private FirebaseAnalytics mFBanalytics;
     private ConstraintLayout mLayout;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +105,7 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
         endDate = "To";
         startTime = "Time";
         endTime = "Time";
+        mFBanalytics = FirebaseAnalytics.getInstance(getContext());
     }
 
 
@@ -1514,6 +1518,13 @@ public class AddEventFragment extends Fragment implements BaseContract.BaseView{
             mTextViewNext.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    public void sendEventToGoogleAnalytics(){
+        Bundle params = new Bundle();
+        String eventName = mEditTextTitleEvent.getText().toString();
+        params.putString("event_name", eventName);
+        mFBanalytics.logEvent("new_event", params);
     }
 
     @Override
