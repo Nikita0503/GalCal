@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorWhite"
+    android:layout_width="350dp"
+    android:layout_height="320dp">
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="9dp"
+        android:layout_height="350dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/green_button_background" />
+
+    <TextView
+        android:id="@+id/textViewMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:fontFamily="@font/orbitron_medium"
+        android:text="Dear User!
+
+We take care about you and your sensitive data, and we strive to imrove GalCal application for your best experience. Thus, for making the GalCal more convenient to use, it can collect data about your device. That data will use strong only for improving GalCal application and will never be published for public access.
+"
+        android:textColor="@color/colorAccent"
+        android:textColorHint="@color/colorAccent"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonYes"
+        android:layout_width="107dp"
+        android:layout_height="41dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginStart="52dp"
+        android:background="@drawable/button_delete_dialog"
+        android:text="I DISAGREE"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonNo"
+        android:layout_width="107dp"
+        android:layout_height="41dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="52dp"
+        android:background="@drawable/button_delete_no"
+        android:text="I AGREE"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</android.support.constraint.ConstraintLayout>

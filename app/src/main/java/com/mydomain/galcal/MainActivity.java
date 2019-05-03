@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         tutorialGoTo2 = false;
         downloaded = false;
         mPref = getSharedPreferences("GalCal", MODE_PRIVATE);
+
         String tutorial = mPref.getString("tutorial", "");
         String userName = mPref.getString("userName", "no");
         Bundle params = new Bundle();
@@ -272,28 +273,9 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         }
     }
 
-    private Dialog getTutorialDialog(){
-        final Dialog dialog = new Dialog(getApplicationContext());
-        dialog.setContentView(R.layout.tutorial_dialog);
-        //dialog.setTitle(getResources().getString(R.string.change_email_dialog));
-        //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
-        Button buttonOk = (Button) dialog.findViewById(R.id.buttonNo);
-        Button buttonCancel = (Button) dialog.findViewById(R.id.buttonYes);
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        buttonOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                dialog.dismiss();
-            }
-        });
-        return dialog;
-    }
+
+
 
     private Dialog getConnectionDialog(String message){
         final Dialog dialog = new Dialog(MainActivity.this, R.style.DialogTheme);
