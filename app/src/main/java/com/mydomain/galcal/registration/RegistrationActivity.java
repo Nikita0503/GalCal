@@ -1,9 +1,14 @@
 package com.mydomain.galcal.registration;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +29,7 @@ public class RegistrationActivity extends AppCompatActivity implements BaseContr
     private EditText mEditTextRepeatPassword;
     private Button mSingUpButton;
     private Button mLoginButton;
-
+    private CheckBox mCheckBox;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,8 +41,30 @@ public class RegistrationActivity extends AppCompatActivity implements BaseContr
         mEditTextPassword = (EditText) findViewById(R.id.registration_password);
         mEditTextRepeatPassword = (EditText) findViewById(R.id.password_registration_repeat);
         mSingUpButton = (Button) findViewById(R.id.sign_up_button_registration);
+        mSingUpButton.setClickable(false);
+        mSingUpButton.setEnabled(false);
         mLoginButton = (Button) findViewById(R.id.login_button_registration);
-
+        mCheckBox = (CheckBox) findViewById(R.id.checkBox);
+        mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    mSingUpButton.setClickable(true);
+                    mSingUpButton.setEnabled(true);
+                }else{
+                    mSingUpButton.setClickable(false);
+                    mSingUpButton.setEnabled(false);
+                }
+            }
+        });
+        mCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog policyDialog = getPolicyDialog();
+                    policyDialog.setCancelable(false);
+                    policyDialog.show();
+            }
+        });
         mSingUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,6 +107,24 @@ public class RegistrationActivity extends AppCompatActivity implements BaseContr
                 finish();
             }
         });
+    }
+
+    private Dialog getPolicyDialog(){
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.policy_dialog);
+        //dialog.setTitle(getResources().getString(R.string.change_email_dialog));
+        //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
+        Button buttonOk = (Button) dialog.findViewById(R.id.buttonOk);
+
+
+        buttonOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dialog.dismiss();
+            }
+        });
+        return dialog;
     }
 
     @Override

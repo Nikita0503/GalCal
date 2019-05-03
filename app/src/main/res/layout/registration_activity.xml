@@ -173,7 +173,7 @@
         android:id="@+id/sign_up_button_registration"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/green_button_background"
         android:text="Sign Up"
         android:textAllCaps="false"
@@ -182,7 +182,7 @@
         app:layout_constraintEnd_toEndOf="@+id/password_registration_repeat"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/password_registration_repeat"
-        app:layout_constraintTop_toBottomOf="@+id/password_registration_repeat" />
+        app:layout_constraintTop_toBottomOf="@+id/checkBox" />
 
     <Button
         android:id="@+id/login_button_registration"
@@ -201,6 +201,20 @@
         app:layout_constraintStart_toStartOf="@+id/sign_up_button_registration"
         app:layout_constraintTop_toBottomOf="@+id/sign_up_button_registration"
         app:layout_constraintVertical_bias="0.0" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/green_button_background"
+        android:paddingStart="5dp"
+        android:text="I agree with privacy policy"
+        android:textColor="@color/colorWhite"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/password_registration_repeat"
+        app:layout_constraintStart_toStartOf="@+id/password_registration_repeat"
+        app:layout_constraintTop_toBottomOf="@+id/password_registration_repeat" />
 
     <!--<TextView-->
     <!--android:id="@+id/forgot_password"-->

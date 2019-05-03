@@ -35,26 +35,16 @@ We take care about you and your sensitive data, and we strive to imrove GalCal a
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/buttonYes"
+        android:id="@+id/buttonOk"
         android:layout_width="107dp"
         android:layout_height="41dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="24dp"
-        android:layout_marginStart="52dp"
-        android:background="@drawable/button_delete_dialog"
-        android:text="I DISAGREE"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/buttonNo"
-        android:layout_width="107dp"
-        android:layout_height="41dp"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="52dp"
         android:background="@drawable/button_delete_no"
-        android:text="I AGREE"
+        android:text="OK"
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

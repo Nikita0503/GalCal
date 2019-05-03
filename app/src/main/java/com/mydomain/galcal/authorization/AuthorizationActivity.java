@@ -36,12 +36,12 @@ public class AuthorizationActivity extends AppCompatActivity implements BaseCont
         mFBanalytics = FirebaseAnalytics.getInstance(this);
 
         mPref = getSharedPreferences("GalCal", MODE_PRIVATE);
-        String policy = mPref.getString("policy", "");
-        if(policy.equals("")){
-            Dialog policyDialog = getPolicyDialog();
-            policyDialog.setCancelable(false);
-            policyDialog.show();
-        }
+        //String policy = mPref.getString("policy", "");
+        //if(policy.equals("")){
+        //    Dialog policyDialog = getPolicyDialog();
+        //    policyDialog.setCancelable(false);
+        //    policyDialog.show();
+        //}
         String token = mPref.getString("token", "");
         Log.d("TOKEN", token);
         String userName = mPref.getString("userName", "");
@@ -102,34 +102,7 @@ public class AuthorizationActivity extends AppCompatActivity implements BaseCont
         });
     }
 
-    private Dialog getPolicyDialog(){
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.policy_dialog);
-        //dialog.setTitle(getResources().getString(R.string.change_email_dialog));
-        //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorWhite)));
-        Button buttonOk = (Button) dialog.findViewById(R.id.buttonNo);
-        Button buttonCancel = (Button) dialog.findViewById(R.id.buttonYes);
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Toast.makeText(getApplicationContext(), "No", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-                finish();
-            }
-        });
-        buttonOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Toast.makeText(getApplicationContext(), "Yes", Toast.LENGTH_SHORT).show();
-                SharedPreferences pref = getSharedPreferences("GalCal", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = pref.edit();
-                editor.putString("policy", "exist");
-                editor.commit();
-                dialog.dismiss();
-            }
-        });
-        return dialog;
-    }
+
 
     public void openMainActivity(String token){
         String userName = mEditTextEmail.getText().toString();
