@@ -246,8 +246,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
 
         int s = 0;
-        //mPresenter.fetchBackgroundImageInfo(mToken, date);
-        //mTimer.schedule(mMyTimerTask, 1000, 10000);
+
 
         if(isNetworkAvailable()) {
             if(!isTutirial) {
