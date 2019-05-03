@@ -184,6 +184,8 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         mBottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Bundle params = new Bundle();
+                params.putString("event_type", "click");
                 int id = item.getItemId();
                 switch (id){    // попробовать не пересоздавать фрагмент (new SomeFragment() -> SomeFragment())
                     case R.id.mothCalendarView:
@@ -199,19 +201,24 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                         }
                         //mCalendarFragment.setEvents(mEvents);
                         mFragment = mCalendarFragment;
+                        mFBanalytics.logEvent("month_tab", params);
                         break;
                     case R.id.weekFragment:
                         //mWeekFragment.setEvents(mEvents);
                         mFragment = mWeekFragment;
+                        mFBanalytics.logEvent("week_tab", params);
                         break;
                     case R.id.addEventFragment:
                         mFragment = mAddEventFragment;
+                        mFBanalytics.logEvent("add_event_tab", params);
                         break;
                     case R.id.homeTabFragment:
                         mFragment = mHomeFragment;
+                        mFBanalytics.logEvent("home_tab", params);
                         break;
                     case R.id.settingsFragment:;
                         mFragment = mSettingsFragment;
+                        mFBanalytics.logEvent("settings_tab", params);
                         break;
                 }
                 if(!tutorialGoTo1 && !tutorialGoTo2) {
@@ -393,13 +400,17 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
             }
             try{
-                Picasso.with(getApplicationContext()) //передаем контекст приложения
-                        .load(image)
-                        .into(mImageViewBackground);
+                if(image!=null) {
+                    Picasso.with(getApplicationContext()) //передаем контекст приложения
+                            .load(image)
+                            .into(mImageViewBackground);
+                }else{
+                    Picasso.with(getApplicationContext())
+                            .load(R.drawable.login1)
+                            .into(mImageViewBackground);
+                }
             }catch (Exception c){
-                Picasso.with(getApplicationContext())
-                        .load(R.drawable.login1)
-                        .into(mImageViewBackground);
+                c.printStackTrace();
             }
 
 
@@ -436,7 +447,9 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
     }
 
     public void setBackgroundInfo(BackgroundImageInfo info){
-        mHomeFragment.setBackgroundImageInfo(info);
+        if(info!=null) {
+            mHomeFragment.setBackgroundImageInfo(info);
+        }
     }
 
     public void setEditFragment(EditEventFragment editFragment){

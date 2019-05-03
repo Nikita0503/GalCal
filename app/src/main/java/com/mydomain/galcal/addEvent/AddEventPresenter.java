@@ -59,7 +59,7 @@ public class AddEventPresenter implements BaseContract.BasePresenter {
                 .subscribeWith(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-
+                        mFragment.sendEventToGoogleAnalytics();
                         mFragment.showMessage("Event created successfully");
                         MainActivity activity = (MainActivity) mFragment.getActivity();
                         activity.fetchEventsForYear();

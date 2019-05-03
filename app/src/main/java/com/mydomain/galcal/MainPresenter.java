@@ -115,9 +115,14 @@ public class MainPresenter implements BaseContract.BasePresenter {
                 .subscribeWith(new DisposableSingleObserver<ArrayList<BackgroundImageInfo>>() {
                     @Override
                     public void onSuccess(ArrayList<BackgroundImageInfo> info) {
-                        mActivity.setBackgroundInfo(info.get(0));
-                        mActivity.setBackgroundImage(info.get(0).image);
-                        Log.d("BEARER", info.get(0).image);
+                        if(info.size()!=0) {
+                            mActivity.setBackgroundInfo(info.get(0));
+                            mActivity.setBackgroundImage(info.get(0).image);
+                            Log.d("BEARER", info.get(0).image);
+                        }else{
+                            mActivity.setBackgroundInfo(null);
+                            mActivity.setBackgroundImage(null);
+                        }
                         //Toast.makeText(mActivity.getApplicationContext(), date, Toast.LENGTH_SHORT).show();
                     }
 
