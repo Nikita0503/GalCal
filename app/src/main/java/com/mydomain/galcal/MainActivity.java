@@ -245,7 +245,6 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 
-        //Toast.makeText(getApplicationContext(), "HELLO", Toast.LENGTH_SHORT).show();
         int s = 0;
         //mPresenter.fetchBackgroundImageInfo(mToken, date);
         //mTimer.schedule(mMyTimerTask, 1000, 10000);
