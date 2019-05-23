@@ -69,6 +69,25 @@ public class MainPresenter implements BaseContract.BasePresenter {
 
     }
 
+    public void fetchNewbieBackgroundImageInfo(String token){
+        Disposable newbieImage = mApiUtils.getNewbieImage(token)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<String>() {
+                    @Override
+                    public void onSuccess(String image) {
+                        mActivity.setBackgroundInfo(null);
+                        mActivity.setBackgroundImage(image);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+                });
+        mDisposables.add(newbieImage);
+    }
+
     public void fetchBackgroundImageInfo(String token){
         //String date = LocalDate.now().toString();
        // DateFormat df = DateFormat.getTimeInstance();

@@ -104,7 +104,7 @@ public class AuthorizationActivity extends AppCompatActivity implements BaseCont
 
 
 
-    public void openMainActivity(String token){
+    public void openMainActivity(String token, String first_login_time){
         String userName = mEditTextEmail.getText().toString();
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, userName);
@@ -112,10 +112,12 @@ public class AuthorizationActivity extends AppCompatActivity implements BaseCont
         SharedPreferences.Editor editor = mPref.edit();
         editor.putString("token", token);
         editor.putString("userName", userName);
+        editor.putString("firstLoginTime", first_login_time);
         editor.commit();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("token", token);
         intent.putExtra("userName", userName);
+        //intent.putExtra("firstLoginTime", first_login_time);
         startActivity(intent);
         finish();
     }

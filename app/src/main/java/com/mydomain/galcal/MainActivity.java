@@ -43,16 +43,19 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements BaseContract.BaseView {
 
+    private String mFirstLoginTime;
     public CalendarDay tutorialDay;
     public boolean tutorialGoTo1;
     public boolean tutorialGoTo2;
@@ -105,6 +108,13 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
         String tutorial = mPref.getString("tutorial", "");
         String userName = mPref.getString("userName", "no");
+        mFirstLoginTime = mPref.getString("firstLoginTime", null);
+        if(mFirstLoginTime!=null){
+            Log.d("FIRSTLOGINTIME", mFirstLoginTime);
+        }else{
+            Log.d("FIRSTLOGINTIME", "is null");
+        }
+
         Bundle params = new Bundle();
         params.putString("user", userName);
         mFBanalytics.logEvent(userName, params);
@@ -144,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         Intent intent = getIntent();
         mToken = intent.getStringExtra("token");
         mUserName = intent.getStringExtra("userName");
+        //mFirstLoginTime = intent.getStringExtra("firstLoginTime");
         mBottomNavigation = (BottomNavigationView)findViewById(R.id.bottom_navigation);
         mBottomNavigation.setVisibility(View.INVISIBLE);
         mBottomNavigation.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_UNLABELED);
@@ -254,9 +265,11 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                 Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
                     @Override
                     public void run() {
-
-                        mPresenter.fetchBackgroundImageInfo(mToken);
-
+                        if(isNewbie()) {
+                            mPresenter.fetchNewbieBackgroundImageInfo(mToken);
+                        }else{
+                            mPresenter.fetchBackgroundImageInfo(mToken);
+                        }
                     }
                 }, 0, 3, TimeUnit.HOURS);
 
@@ -275,7 +288,40 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
 
 
+    private boolean isNewbie(){
+        Date dateNow = new Date();
+        dateNow.setTime(dateNow.getTime()+3600000*25);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        //Log.d("FIRSTTIMELOGIN", dateFormat.getTimeZone().getRawOffset()+"");
+        Log.d("FIRSTTIMELOGINnow", dateFormat.format(dateNow));
+        //mFirstLoginTime = "2019-05-23T10:41:18Z";
+        if(mFirstLoginTime==null){
+            Log.d("FIRSTTIMELOGIN", "No newbie without checking");
+            return false;
+        }
+        try {
+            //Date dateNow = new Date();
+            //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+            //Date firstLoginTimeDate = dateFormat.parse(mFirstLoginTime);
+            Date firstLoginTimeDate = dateFormat.parse(mFirstLoginTime);
+            long milliseconds = dateNow.getTime() - firstLoginTimeDate.getTime();
+            int hours = (int) (milliseconds / (60 * 60 * 1000));
+            Log.d("FIRSTTIMELOGINfirst", dateFormat.format(firstLoginTimeDate));
+            Log.d("FIRSTTIMELOGINdiff", String.valueOf(hours));
+            if(Math.abs(hours)>24){
+                Log.d("FIRSTTIMELOGIN", "No newbie");
+                return false;
+            }else{
+                Log.d("FIRSTTIMELOGIN", "Newbie");
+                return true;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
 
+    }
 
     private Dialog getConnectionDialog(String message){
         final Dialog dialog = new Dialog(MainActivity.this, R.style.DialogTheme);
@@ -306,9 +352,11 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-
-                mPresenter.fetchBackgroundImageInfo(mToken);
-
+                if(isNewbie()) {
+                    mPresenter.fetchNewbieBackgroundImageInfo(mToken);
+                }else{
+                    mPresenter.fetchBackgroundImageInfo(mToken);
+                }
             }
         }, 0, 3, TimeUnit.HOURS);
     }

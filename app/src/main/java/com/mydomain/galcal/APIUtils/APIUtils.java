@@ -116,6 +116,12 @@ public class APIUtils {
         return apiService.sendConfirm(key);
     }
 
+    public Single<String> getNewbieImage(String token){
+        Retrofit retrofit = getClient(BASE_URL);
+        APIService apiService = retrofit.create(APIService.class);
+        return apiService.getNewbieImage("Bearer " + token);
+    }
+
     public static Retrofit getClient(String baseUrl) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)

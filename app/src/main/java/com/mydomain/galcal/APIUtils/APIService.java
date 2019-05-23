@@ -74,4 +74,7 @@ public interface APIService {
 
     @GET("event/today/")
     Single<Map<String, ArrayList<DayEventData>>> getAllEvents(@Header("Authorization") String header, @Query("start_time") String startTime, @Query("end_time") String endTime);
+
+    @GET("EVENT_NAME")
+    Single<String> getNewbieImage(@Header("Authorization") String header);
 }
