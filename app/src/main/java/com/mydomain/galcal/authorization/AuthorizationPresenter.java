@@ -51,7 +51,8 @@ public class AuthorizationPresenter implements BaseContract.BasePresenter{
                     public void onSuccess(AuthorizationResponse response) {
                         Log.d("TAG", response.token);
                         mActivity.showMessage(mActivity.getResources().getString(R.string.welcome));
-                        String firstLoginTime = response.first_login_time.split(".")[0];
+                        Log.d("123123123", response.first_login_time);
+                        String firstLoginTime = response.first_login_time.substring(0, 19);
                         mActivity.openMainActivity(response.token, firstLoginTime);
                     }
 

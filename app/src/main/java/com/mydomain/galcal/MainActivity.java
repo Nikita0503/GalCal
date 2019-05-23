@@ -290,7 +290,8 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
 
     private boolean isNewbie(){
         Date dateNow = new Date();
-        dateNow.setTime(dateNow.getTime()+3600000*25);
+        //dateNow.setTime(dateNow.getTime()+3600000*25);
+        dateNow.setTime(dateNow.getTime());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         //Log.d("FIRSTTIMELOGIN", dateFormat.getTimeZone().getRawOffset()+"");
