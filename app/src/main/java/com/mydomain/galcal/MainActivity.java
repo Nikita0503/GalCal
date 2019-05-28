@@ -267,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                     public void run() {
                         if(isNewbie()) {
                             mPresenter.fetchNewbieBackgroundImageInfo(mToken);
+                            //mPresenter.fetchBackgroundImageInfo(mToken);
                         }else{
                             mPresenter.fetchBackgroundImageInfo(mToken);
                         }
@@ -310,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
             int hours = (int) (milliseconds / (60 * 60 * 1000));
             Log.d("FIRSTTIMELOGINfirst", dateFormat.format(firstLoginTimeDate));
             Log.d("FIRSTTIMELOGINdiff", String.valueOf(hours));
-            if(Math.abs(hours)>24){
+            if(Math.abs(hours)>=24){
                 Log.d("FIRSTTIMELOGIN", "No newbie");
                 return false;
             }else{
@@ -354,6 +355,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
             @Override
             public void run() {
                 if(isNewbie()) {
+                    //mPresenter.fetchBackgroundImageInfo(mToken);
                     mPresenter.fetchNewbieBackgroundImageInfo(mToken);
                 }else{
                     mPresenter.fetchBackgroundImageInfo(mToken);
@@ -435,7 +437,7 @@ public class MainActivity extends AppCompatActivity implements BaseContract.Base
                             .into(mImageViewBackground);
                 }else{
                     Picasso.with(getApplicationContext())
-                            .load(R.drawable.login1)
+                            .load(R.drawable.pictureforfirstusers)
                             .into(mImageViewBackground);
                 }
             }catch (Exception c){

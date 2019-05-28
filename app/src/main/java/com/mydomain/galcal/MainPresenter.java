@@ -77,11 +77,14 @@ public class MainPresenter implements BaseContract.BasePresenter {
                     @Override
                     public void onSuccess(String image) {
                         mActivity.setBackgroundInfo(null);
-                        mActivity.setBackgroundImage(image);
+                        mActivity.setBackgroundImage(null);
                     }
 
                     @Override
-                    public void onError(Throwable e) {
+                    public void onError(Throwable e)
+                    {
+                        mActivity.setBackgroundInfo(null);
+                        mActivity.setBackgroundImage(null);
                         e.printStackTrace();
                     }
                 });
