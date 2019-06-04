@@ -6,6 +6,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 import com.mydomain.galcal.APIUtils.APIUtils;
 import com.mydomain.galcal.BaseContract;
 import com.mydomain.galcal.R;
+import com.mydomain.galcal.data.AuthorizationResponse;
 import com.mydomain.galcal.data.ErrorData;
 
 import org.json.JSONArray;
@@ -18,6 +19,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableCompletableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
@@ -50,6 +52,7 @@ public class RegistrationPresenter implements BaseContract.BasePresenter {
                     @Override
                     public void onComplete() {
                         mActivity.showMessage(mActivity.getResources().getString(R.string.successful_registration));
+                        authorization(login, password);
                     }
 
                     @Override
@@ -71,6 +74,28 @@ public class RegistrationPresenter implements BaseContract.BasePresenter {
                     }
                 });
         mDisposables.add(userRegistrationResponse);
+    }
+
+    private void authorization(String login, String password){
+        Disposable loginResponse = mApiUtils.getAuthorizationToken(login, password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<AuthorizationResponse>() {
+                    @Override
+                    public void onSuccess(AuthorizationResponse response) {
+                        Log.d("TAG", response.token);
+                        mActivity.showMessage(mActivity.getResources().getString(R.string.welcome));
+                        Log.d("123123123", response.first_login_time);
+                        String firstLoginTime = response.first_login_time.substring(0, 19);
+                        mActivity.openMainActivity(response.token, firstLoginTime);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+        mDisposables.add(loginResponse);
     }
 
 

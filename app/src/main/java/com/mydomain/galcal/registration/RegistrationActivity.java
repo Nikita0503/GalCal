@@ -2,6 +2,7 @@ package com.mydomain.galcal.registration;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mydomain.galcal.BaseContract;
+import com.mydomain.galcal.MainActivity;
 import com.mydomain.galcal.R;
 
 /**
@@ -30,10 +33,13 @@ public class RegistrationActivity extends AppCompatActivity implements BaseContr
     private Button mSingUpButton;
     private Button mLoginButton;
     private CheckBox mCheckBox;
+    private SharedPreferences mPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registration_activity);
+        mPref = getSharedPreferences("GalCal", MODE_PRIVATE);
         mPresenter = new RegistrationPresenter(this);
         mPresenter.onStart();
         mEditTextEmail = (EditText) findViewById(R.id.login_registration);
@@ -107,6 +113,24 @@ public class RegistrationActivity extends AppCompatActivity implements BaseContr
                 finish();
             }
         });
+    }
+
+    public void openMainActivity(String token, String first_login_time){
+        String userName = mEditTextEmail.getText().toString();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, userName);
+        //mFBanalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
+        SharedPreferences.Editor editor = mPref.edit();
+        editor.putString("token", token);
+        editor.putString("userName", userName);
+        editor.putString("firstLoginTime", first_login_time);
+        editor.commit();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("token", token);
+        intent.putExtra("userName", userName);
+        //intent.putExtra("firstLoginTime", first_login_time);
+        startActivity(intent);
+        finish();
     }
 
     private Dialog getPolicyDialog(){
