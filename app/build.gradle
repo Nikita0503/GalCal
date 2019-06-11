@@ -6,7 +6,7 @@ android {
         applicationId "com.galCalApp"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 53
+        versionCode 55
         versionName "2.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

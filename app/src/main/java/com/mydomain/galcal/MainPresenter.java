@@ -16,7 +16,6 @@ import com.mydomain.galcal.data.BackgroundImageInfo;
 import com.mydomain.galcal.data.DayEventData;
 import com.mydomain.galcal.data.new_data.Day;
 import com.mydomain.galcal.data.new_data.Event;
-import com.mydomain.galcal.data.new_data.Response;
 import com.mydomain.galcal.settings.SettingsFragment;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.squareup.picasso.Picasso;
@@ -52,6 +51,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
+import retrofit2.Response;
 
 /**
  * Created by Nikita on 21.01.2019.
@@ -70,14 +70,26 @@ public class MainPresenter implements BaseContract.BasePresenter {
     }
 
     public void fetchNewbieBackgroundImageInfo(String token){
+        Log.d("NEWBIE", "1");
         Disposable newbieImage = mApiUtils.getNewbieImage(token)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<String>() {
+                .subscribeWith(new DisposableSingleObserver<ResponseBody>() {
                     @Override
-                    public void onSuccess(String image) {
-                        mActivity.setBackgroundInfo(null);
-                        mActivity.setBackgroundImage(null);
+                    public void onSuccess(ResponseBody responseBody) {
+                        try {
+                            Log.d("NEWBIE", "2");
+
+                            JSONArray mass = new JSONArray(responseBody.string());
+                            JSONObject object = mass.getJSONObject(0);
+                            Log.d("NEWBIE", object.toString(4));
+                            mActivity.setBackgroundInfo(null);
+                            mActivity.setBackgroundImage(object.getString("image"));
+                        } catch (Exception c){
+                            mActivity.setBackgroundInfo(null);
+                            mActivity.setBackgroundImage(null);
+                            c.printStackTrace();
+                        }
                     }
 
                     @Override

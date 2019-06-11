@@ -11,7 +11,6 @@ import com.mydomain.galcal.data.UserData;
 import com.mydomain.galcal.data.AuthorizationResponse;
 import com.mydomain.galcal.data.new_data.Day;
 import com.mydomain.galcal.data.new_data.Event;
-import com.mydomain.galcal.data.new_data.Response;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +18,8 @@ import java.util.Map;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
+import okhttp3.ResponseBody;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -75,6 +76,6 @@ public interface APIService {
     @GET("event/today/")
     Single<Map<String, ArrayList<DayEventData>>> getAllEvents(@Header("Authorization") String header, @Query("start_time") String startTime, @Query("end_time") String endTime);
 
-    @GET("EVENT_NAME")
-    Single<String> getNewbieImage(@Header("Authorization") String header);
+    @GET("default-photo/")
+    Single<ResponseBody> getNewbieImage(@Header("Authorization") String header);
 }

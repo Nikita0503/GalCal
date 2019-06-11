@@ -14,7 +14,6 @@ import com.mydomain.galcal.data.UserData;
 import com.mydomain.galcal.data.AuthorizationResponse;
 import com.mydomain.galcal.data.new_data.Day;
 import com.mydomain.galcal.data.new_data.Event;
-import com.mydomain.galcal.data.new_data.Response;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -23,6 +22,8 @@ import java.util.Map;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
+import okhttp3.ResponseBody;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -116,7 +117,7 @@ public class APIUtils {
         return apiService.sendConfirm(key);
     }
 
-    public Single<String> getNewbieImage(String token){
+    public Single<ResponseBody> getNewbieImage(String token){
         Retrofit retrofit = getClient(BASE_URL);
         APIService apiService = retrofit.create(APIService.class);
         return apiService.getNewbieImage("Bearer " + token);
